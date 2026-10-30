@@ -24,12 +24,16 @@ Esta versão é um MVP de demonstração. Os anúncios são armazenados no naveg
 
 Ainda não estão ativos: autenticação, banco de dados remoto, perfis verificados, upload de imagens, chat interno, moderação administrativa e pagamentos. O botão de contato abre o WhatsApp do anunciante quando há um número válido.
 
+## Base de dados preparada
+
+O arquivo `supabase/schema.sql` contém a estrutura inicial para cidades, categorias, perfis, anúncios, imagens, favoritos, conversas, mensagens e denúncias, com políticas Row Level Security (RLS). O SQL ainda precisa ser executado e testado em um projeto Supabase; a presença do arquivo não significa que o backend esteja conectado.
+
 ## Próximas etapas técnicas
 
-1. Criar projeto Supabase e configurar variáveis públicas de conexão.
-2. Implementar autenticação e perfis com políticas RLS.
-3. Migrar anúncios para PostgreSQL sem apagar dados locais existentes.
+1. Criar projeto Supabase e executar/revisar o schema.
+2. Configurar autenticação e variáveis públicas de conexão.
+3. Integrar o frontend sem apagar os anúncios locais existentes.
 4. Implementar armazenamento e validação de imagens.
-5. Criar denúncias, moderação e controles administrativos.
-6. Implementar conversas internas e notificações.
-7. Testar com usuários e comerciantes locais antes de monetizar.
+5. Criar moderação e controles administrativos.
+6. Testar fluxos de conta, anúncio e conversa com usuários reais.
+7. Validar com moradores e comerciantes antes de monetizar.
