@@ -144,6 +144,62 @@
     } catch (error) { showError(error); }
   }
   document.addEventListener("click", async event => {
+
+  async function openPublicProfile(userId) {
+    if (!window.XP_REMOTE.user) return toast("Entre na sua conta para consultar perfis.");
+    try {
+      const { data: profile, error: profileError } = await client.from("profiles")
+        .select("id,display_name,account_type,bio,created_at").eq("id", userId).maybeSingle();
+      if (profileError) throw profileError;
+      if (!profile) return toast("Este perfil não está disponível.");
+      const { data: rows, error: listingError } = await client.from("listings")
+        .select("id,title,description,price,price_label,created_at,categories(name)")
+        .eq("owner_id", userId).eq("status", "published")
+        .order("created_at", {ascending:false}).limit(8);
+      if (listingError) throw listingError;
+      const types = {person:"Pessoa física",professional:"Profissional",business:"Comércio / empresa"};
+      const ads = (rows||[]).map(a => '<div class="profile-ad"><strong>'+esc(a.title)+'</strong><span>'+esc(a.categories?.name||"Classificados")+' · '+money(a.price_label || (a.price!=null?"R$ "+Number(a.price).toLocaleString("pt-BR",{minimumFractionDigits:2}):""))+'</span><button class="btn secondary detail" data-id="'+esc(a.id)+'" type="button">Ver anúncio</button></div>').join("");
+      showAccountAction("Perfil do anunciante", '<div class="public-profile"><div class="public-profile-avatar">'+esc((profile.display_name||"U").trim().charAt(0).toUpperCase())+'</div><h3>'+esc(profile.display_name||"Usuário NEXAP")+'</h3><span>'+esc(types[profile.account_type]||"Pessoa física")+'</span><p>'+esc(profile.bio||"Este usuário ainda não adicionou uma descrição.")+'</p><div class="account-group-title">ANÚNCIOS PUBLICADOS</div>'+(ads||'<div class="empty">Nenhum anúncio publicado no momento.</div>')+'</div>');
+    } catch(error) { showError(error); }
+  }
+
+  function openReportForm(listingId) {
+    if (!window.XP_REMOTE.user) return toast("Entre na sua conta para denunciar um anúncio.");
+    showAccountAction("Denunciar anúncio", '<p class="sub">A denúncia será enviada para análise. Use este recurso apenas para sinalizar problemas reais.</p><form id="listingReportForm" data-listing-id="'+esc(listingId)+'"><div class="field"><label for="reportReason">Motivo da denúncia *</label><select id="reportReason" required><option value="">Selecione</option><option value="Informação falsa">Informação falsa</option><option value="Golpe ou fraude">Golpe ou fraude</option><option value="Produto ou serviço proibido">Produto ou serviço proibido</option><option value="Conteúdo ofensivo">Conteúdo ofensivo</option><option value="Anúncio duplicado">Anúncio duplicado</option><option value="Outro">Outro</option></select></div><div class="field"><label for="reportDetails">Detalhes (opcional)</label><textarea id="reportDetails" maxlength="1500" placeholder="Explique o que aconteceu..."></textarea></div><button class="btn" type="submit" style="width:100%">Enviar denúncia</button></form>');
+  }
+
+  document.addEventListener("click", event => {
+    const profileButton = event.target.closest("#viewSellerProfile");
+    if (profileButton) openPublicProfile(profileButton.dataset.userId);
+    const reportButton = event.target.closest("#reportListing");
+    if (reportButton) openReportForm(reportButton.dataset.listingId);
+  });
+
+  document.addEventListener("submit", async event => {
+    if (event.target.id !== "listingReportForm") return;
+    event.preventDefault();
+    const user = window.XP_REMOTE.user;
+    if (!user) return toast("Entre na sua conta para enviar uma denúncia.");
+    const reason = el("reportReason").value;
+    const details = el("reportDetails").value.trim();
+    const submit = event.target.querySelector('button[type="submit"]');
+    submit.disabled = true;
+    submit.textContent = "Enviando...";
+    try {
+      const { error } = await client.from("reports").insert({
+        reporter_id:user.id, listing_id:event.target.dataset.listingId,
+        reason, details
+      });
+      if (error) throw error;
+      actionModal().classList.remove("open");
+      toast("Denúncia enviada para análise.");
+    } catch(error) {
+      showError(error);
+      submit.disabled = false;
+      submit.textContent = "Enviar denúncia";
+    }
+  });
+
     const item = event.target.closest("[data-account-action]");
     if (!item) return;
     const action = item.dataset.accountAction;
@@ -626,6 +682,14 @@
   openDetail = function(id) {
     baseOpenDetail(id);
     const item = listings.find(a => a.id === id);
+    if (item?.owner === "remote" && item.ownerId !== window.XP_REMOTE.user?.id) {
+      const trustActions = document.createElement("div");
+      trustActions.className = "listing-trust-actions";
+      trustActions.innerHTML =
+        '<button class="btn secondary" id="viewSellerProfile" data-user-id="' + esc(item.ownerId) + '" type="button">Ver perfil do anunciante</button>' +
+        '<button class="btn ghost" id="reportListing" data-listing-id="' + esc(item.id) + '" type="button">Denunciar anúncio</button>';
+      el("listingPageContent").appendChild(trustActions);
+    }
     if (item?.owner === "remote" && item.ownerId === window.XP_REMOTE.user?.id) {
       el("listingPageContent").insertAdjacentHTML("beforeend",
         '<button class="btn secondary" id="editAd" data-id="' + esc(item.id) + '" style="width:100%;margin-top:10px">Editar anúncio</button>' +
