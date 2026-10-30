@@ -614,8 +614,9 @@
       const { error } = await client.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: window.location.origin + window.location.pathname +
-            (new URLSearchParams(window.location.search).get("app") === "android" ? "?app=android" : "")
+          redirectTo: new URLSearchParams(window.location.search).get("app") === "android"
+            ? "nexap://auth/callback"
+            : window.location.origin + window.location.pathname
         }
       });
       if (error) throw error;
