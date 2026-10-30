@@ -808,7 +808,7 @@ window.addEventListener("load",()=>setTimeout(openListingFromUrl,900));
  const state=document.getElementById("connectionState");
  function loadApp(){
   const app=document.createElement("script");
-  app.src="./supabase-client.js?v=20261030-4";
+  app.src="./supabase-client.js?v=20261030-5";
   app.onerror=()=>{if(state)state.textContent="Falha ao carregar o login";};
   document.body.appendChild(app);
  }
