@@ -8,5 +8,18 @@
   "background_color": "#f5faf5",
   "theme_color": "#2E7D32",
   "lang": "pt-BR",
-  "icons": []
+  "icons": [
+    {
+      "src": "./nexap-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "./nexap-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
 }
