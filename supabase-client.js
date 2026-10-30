@@ -88,7 +88,7 @@
   let favoriteIds = new Set();
   const actionModal = () => el("detailModal");
   function showAccountAction(title, body) {
-    el("detailContent").innerHTML = '<h2 style="font-size:20px;margin:12px 0">' + title + '</h2>' + body;
+    el("listingPageContent").innerHTML = '<h2 style="font-size:20px;margin:12px 0">' + title + '</h2>' + body;
     actionModal().classList.add("open");
   }
   async function openFavorites() {
@@ -339,7 +339,7 @@
   function openEditAd(item) {
     const categories = ["Serviços","Comércio","Classificados","Entregas","Empregos","Eventos"];
     const options = categories.map(name => '<option value="'+name+'" '+(item.category===name?'selected':'')+'>'+name+'</option>').join("");
-    el("detailContent").innerHTML =
+    el("listingPageContent").innerHTML =
       '<h2 style="font-size:20px;margin:8px 0">Editar anúncio</h2>' +
       '<form id="editAdForm" data-id="'+esc(item.id)+'">' +
       '<div class="field"><label for="editAdTitle">Título</label><input id="editAdTitle" maxlength="70" required value="'+esc(item.title)+'"></div>' +
@@ -448,7 +448,7 @@
       button.dataset.id = item.id;
       button.style.cssText = "width:100%;margin-top:10px";
       button.textContent = favoriteIds.has(item.id) ? "♥ Remover dos favoritos" : "♡ Salvar nos favoritos";
-      el("detailContent").appendChild(button);
+      el("listingPageContent").appendChild(button);
     }
   };
   const baseOpenDetail = openDetail;
@@ -456,7 +456,7 @@
     baseOpenDetail(id);
     const item = listings.find(a => a.id === id);
     if (item?.owner === "remote" && item.ownerId === window.XP_REMOTE.user?.id) {
-      el("detailContent").insertAdjacentHTML("beforeend",
+      el("listingPageContent").insertAdjacentHTML("beforeend",
         '<button class="btn secondary" id="editAd" data-id="' + esc(item.id) + '" style="width:100%;margin-top:10px">Editar anúncio</button>' +
         '<button class="btn ghost" id="deleteAd" data-id="' + esc(item.id) + '" style="width:100%;margin-top:8px">Excluir meu anúncio</button>');
     }
