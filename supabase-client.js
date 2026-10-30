@@ -9,10 +9,25 @@
   window.XP_REMOTE = { client, user: null, cityId: null, categories: {}, profile: null };
   let profileSetupOpen = false;
 
-  async function ensureProfile(user) {
-    const { data: existing, error: readError } = await client.from("profiles")
+  async function readProfile(userId, single = false) {
+    let result = await client.from("profiles")
       .select("id,display_name,account_type,bio,city_id,avatar_url")
-      .eq("id", user.id).maybeSingle();
+      .eq("id", userId);
+    result = single ? await result.single() : await result.maybeSingle();
+    if (result.error && (result.error.code === "42703" || /avatar_url.*does not exist|column.*avatar_url/i.test(result.error.message || ""))) {
+      let fallback = await client.from("profiles")
+        .select("id,display_name,account_type,bio,city_id")
+        .eq("id", userId);
+      fallback = single ? await fallback.single() : await fallback.maybeSingle();
+      if (fallback.error) throw fallback.error;
+      return { ...fallback, data: fallback.data ? { ...fallback.data, avatar_url: null } : null, avatarColumnAvailable: false };
+    }
+    if (result.error) throw result.error;
+    return { ...result, avatarColumnAvailable: true };
+  }
+
+  async function ensureProfile(user) {
+    const { data: existing, error: readError } = await readProfile(user.id);
     if (readError) throw readError;
     if (!existing) {
       const displayName = (user.user_metadata?.display_name || user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split("@")[0] || "Usuário").slice(0, 60);
@@ -25,11 +40,10 @@
         .update({ city_id: window.XP_REMOTE.cityId }).eq("id", user.id);
       if (cityError) throw cityError;
     }
-    const { data, error } = await client.from("profiles")
-      .select("id,display_name,account_type,bio,city_id,avatar_url")
-      .eq("id", user.id).single();
+    const { data, error, avatarColumnAvailable } = await readProfile(user.id, true);
     if (error) throw error;
     window.XP_REMOTE.profile = data;
+    window.XP_REMOTE.avatarColumnAvailable = avatarColumnAvailable;
     if (!data.bio?.trim()) openProfileSetup(data, false);
     else updateProfileSummary(data);
   }
@@ -112,6 +126,12 @@
         profile.avatar_url = publicUrl.publicUrl + "?v=" + Date.now();
       } else if (el("removeProfilePhoto").dataset.remove === "true") {
         profile.avatar_url = null;
+      }
+      if (Object.prototype.hasOwnProperty.call(profile, "avatar_url") && window.XP_REMOTE.avatarColumnAvailable === false) {
+        delete profile.avatar_url;
+        if (selectedProfilePhoto || el("removeProfilePhoto").dataset.remove === "true") {
+          toast("Os dados serão salvos, mas a foto precisa da configuração de armazenamento do Supabase.");
+        }
       }
       const { error } = await client.from("profiles").update(profile).eq("id", user.id);
       if (error) throw error;
@@ -249,7 +269,11 @@
     if (!item) return;
     const action = item.dataset.accountAction;
     if (action === "personal") {
-      if (window.XP_REMOTE.profile) openProfileSetup(window.XP_REMOTE.profile, true);
+      if (!window.XP_REMOTE.user) return toast("Entre na sua conta para editar o perfil.");
+      openProfileSetup(window.XP_REMOTE.profile || {
+        display_name: window.XP_REMOTE.user.user_metadata?.display_name || window.XP_REMOTE.user.user_metadata?.full_name || window.XP_REMOTE.user.email?.split("@")[0] || "",
+        account_type: "person", bio: "", avatar_url: null
+      }, true);
     } else if (action === "ads") {
       page("activity");
       setTimeout(() => el("activityMyGrid")?.scrollIntoView({behavior:"smooth",block:"start"}), 80);
