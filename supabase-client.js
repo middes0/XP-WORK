@@ -225,6 +225,9 @@
     if (user) {
       await loadRemote();
       await ensureProfile(user);
+      const { data: savedFavorites, error: favoritesError } = await client.from("favorites").select("listing_id").eq("user_id", user.id);
+      if (favoritesError) throw favoritesError;
+      favoriteIds = new Set((savedFavorites || []).map(row => row.listing_id));
       el("accountLabel").textContent = user.email || "";
       const profile = window.XP_REMOTE.profile || {};
       el("accountDisplayName").textContent = profile.display_name || user.user_metadata?.full_name || user.email?.split("@")[0] || "Usuário XP WORK";
