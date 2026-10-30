@@ -6,15 +6,88 @@
     auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
   });
   const el = id => document.getElementById(id);
-  window.XP_REMOTE = { client, user: null, cityId: null, categories: {} };
+  window.XP_REMOTE = { client, user: null, cityId: null, categories: {}, profile: null };
+  let profileSetupOpen = false;
 
   async function ensureProfile(user) {
-    const displayName = (user.user_metadata?.display_name || user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split("@")[0] || "Usuário").slice(0, 60);
-    const { error } = await client.from("profiles").upsert({
-      id: user.id, display_name: displayName, city_id: window.XP_REMOTE.cityId
-    }, { onConflict: "id" });
+    const { data: existing, error: readError } = await client.from("profiles")
+      .select("id,display_name,account_type,bio,city_id")
+      .eq("id", user.id).maybeSingle();
+    if (readError) throw readError;
+    if (!existing) {
+      const displayName = (user.user_metadata?.display_name || user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split("@")[0] || "Usuário").slice(0, 60);
+      const { error: insertError } = await client.from("profiles").insert({
+        id: user.id, display_name: displayName, city_id: window.XP_REMOTE.cityId
+      });
+      if (insertError) throw insertError;
+    } else if (!existing.city_id && window.XP_REMOTE.cityId) {
+      const { error: cityError } = await client.from("profiles")
+        .update({ city_id: window.XP_REMOTE.cityId }).eq("id", user.id);
+      if (cityError) throw cityError;
+    }
+    const { data, error } = await client.from("profiles")
+      .select("id,display_name,account_type,bio,city_id")
+      .eq("id", user.id).single();
     if (error) throw error;
+    window.XP_REMOTE.profile = data;
+    if (!data.bio?.trim()) openProfileSetup(data, false);
+    else updateProfileSummary(data);
   }
+
+  function updateProfileSummary(profile) {
+    const summary = el("profileSummary");
+    if (!summary) return;
+    const types = { person: "Pessoa física", professional: "Profissional", business: "Comércio / empresa" };
+    summary.textContent = profile.display_name + " • " + (types[profile.account_type] || "Pessoa física") + (profile.bio ? "\n" + profile.bio : "");
+    summary.style.whiteSpace = "pre-line";
+  }
+
+  function openProfileSetup(profile = {}, editing = true) {
+    if (profileSetupOpen) return;
+    profileSetupOpen = true;
+    el("profileSetupTitle").textContent = editing ? "Editar suas informações" : "Complete seu perfil";
+    el("profileDisplayName").value = profile.display_name || "";
+    el("profileAccountType").value = profile.account_type || "person";
+    el("profileBio").value = profile.bio || "";
+    el("profileSetupModal").classList.add("open");
+  }
+
+  el("profileSetupForm").addEventListener("submit", async event => {
+    event.preventDefault();
+    const user = window.XP_REMOTE.user;
+    if (!user) return;
+    const button = el("saveProfileBtn");
+    button.disabled = true;
+    button.textContent = "Salvando...";
+    try {
+      const profile = {
+        display_name: el("profileDisplayName").value.trim(),
+        account_type: el("profileAccountType").value,
+        bio: el("profileBio").value.trim(),
+        city_id: window.XP_REMOTE.cityId
+      };
+      if (profile.display_name.length < 2 || profile.bio.length < 10) {
+        toast("Informe seu nome e uma descrição com pelo menos 10 caracteres.");
+        return;
+      }
+      const { error } = await client.from("profiles").update(profile).eq("id", user.id);
+      if (error) throw error;
+      window.XP_REMOTE.profile = { ...window.XP_REMOTE.profile, ...profile };
+      updateProfileSummary(window.XP_REMOTE.profile);
+      el("profileSetupModal").classList.remove("open");
+      profileSetupOpen = false;
+      toast("Informações do perfil salvas.");
+    } catch (error) {
+      showError(error);
+    } finally {
+      button.disabled = false;
+      button.textContent = "Salvar e continuar";
+    }
+  });
+
+  el("editProfileBtn").addEventListener("click", () => {
+    if (window.XP_REMOTE.profile) openProfileSetup(window.XP_REMOTE.profile, true);
+  });
 
   async function loadRemote() {
     const [cityResult, categoryResult] = await Promise.all([
@@ -47,12 +120,14 @@
     el("signedIn").hidden = !user;
     if (user) {
       el("accountLabel").textContent = "Conectado como " + user.email;
+      await loadRemote();
       await ensureProfile(user);
       el("connectionState").textContent = "Conta conectada";
     } else {
+      window.XP_REMOTE.profile = null;
       el("connectionState").textContent = "Conectado • entre na sua conta";
+      await loadRemote();
     }
-    await loadRemote();
   }
 
   function showError(error) {
