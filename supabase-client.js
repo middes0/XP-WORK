@@ -266,25 +266,55 @@
     window.XP_REMOTE.user = user;
     el("signedOut").hidden = !!user;
     el("signedIn").hidden = !user;
-    el("memberAccountContent").hidden = !user;
+    el("memberAccountContent").hidden = true;
     el("accountHero").hidden = !!user;
     el("accountPanelTitle").textContent = user ? "Minha conta" : "Acesse sua conta";
-    if (user) {
-      await loadRemote();
-      await ensureProfile(user);
-      const { data: savedFavorites, error: favoritesError } = await client.from("favorites").select("listing_id").eq("user_id", user.id);
-      if (favoritesError) throw favoritesError;
-      favoriteIds = new Set((savedFavorites || []).map(row => row.listing_id));
-      el("accountLabel").textContent = user.email || "";
-      const profile = window.XP_REMOTE.profile || {};
-      el("publishIdentity").textContent = "Anúncio identificado como: " + (profile.display_name || user.user_metadata?.full_name || "Seu perfil");
-      el("accountDisplayName").textContent = profile.display_name || user.user_metadata?.full_name || user.email?.split("@")[0] || "Usuário XP WORK";
-      el("accountAvatar").textContent = (el("accountDisplayName").textContent.trim()[0] || "U").toUpperCase();
-      el("connectionState").textContent = "Conta conectada";
-    } else {
+
+    if (!user) {
       window.XP_REMOTE.profile = null;
       el("connectionState").textContent = "Entre ou cadastre-se";
+      try { await loadRemote(); } catch (error) { showError(error); }
+      return;
+    }
+
+    // A sessão autenticada confirma a conexão da conta. Dados auxiliares
+    // são carregados separadamente para que uma consulta não derrube a tela.
+    el("connectionState").textContent = "Conta conectada";
+    el("accountLabel").textContent = user.email || "";
+    el("accountDisplayName").textContent =
+      user.user_metadata?.display_name || user.user_metadata?.full_name ||
+      user.email?.split("@")[0] || "Usuário XP WORK";
+    el("accountAvatar").textContent =
+      (el("accountDisplayName").textContent.trim()[0] || "U").toUpperCase();
+
+    try {
       await loadRemote();
+    } catch (error) {
+      console.error("XP WORK: falha ao carregar anúncios", error);
+      toast("Conta conectada, mas não foi possível atualizar os anúncios.");
+    }
+
+    try {
+      await ensureProfile(user);
+      const profile = window.XP_REMOTE.profile || {};
+      el("accountDisplayName").textContent =
+        profile.display_name || el("accountDisplayName").textContent;
+      el("accountAvatar").textContent =
+        (el("accountDisplayName").textContent.trim()[0] || "U").toUpperCase();
+      el("publishIdentity").textContent =
+        "Anúncio identificado como: " + (profile.display_name || "Seu perfil");
+    } catch (error) {
+      console.error("XP WORK: falha ao carregar perfil", error);
+      toast("Conta conectada, mas não foi possível carregar os dados do perfil.");
+    }
+
+    try {
+      const { data: savedFavorites, error: favoritesError } = await client
+        .from("favorites").select("listing_id").eq("user_id", user.id);
+      if (favoritesError) throw favoritesError;
+      favoriteIds = new Set((savedFavorites || []).map(row => row.listing_id));
+    } catch (error) {
+      console.error("XP WORK: falha ao carregar favoritos", error);
     }
   }
 
