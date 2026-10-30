@@ -533,7 +533,9 @@
         "Anúncio identificado como: " + (profile.display_name || "Seu perfil");
     } catch (error) {
       console.error("XP WORK: falha ao carregar perfil", error);
-      toast("Conta conectada, mas não foi possível carregar os dados do perfil.");
+      const detail = [error?.code, error?.message, error?.details, error?.hint]
+        .filter(Boolean).join(" — ").slice(0, 220);
+      toast("Falha ao carregar perfil: " + (detail || "erro não identificado. Consulte o console."));
     }
 
     try {
