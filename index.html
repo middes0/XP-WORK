@@ -530,6 +530,22 @@ html[data-theme="dark"] .modal{background:rgba(3,10,6,.72)}
 #home .listing .detail{margin-top:9px!important;min-height:32px;padding:7px 9px!important;font-size:10px!important;box-shadow:none}
 @media(min-width:700px){#home #listingGrid{gap:14px}#home .listing-body{padding:15px}}
 
+
+/* NEXAP — cartões de anúncios compactos */
+.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.listing{border-radius:14px;box-shadow:0 2px 8px rgba(20,48,34,.035)}
+.listing-cover{aspect-ratio:16/8;object-fit:cover}
+.listing-body{padding:10px}
+.listing .tag{font-size:8px;padding:3px 7px;margin-bottom:6px}
+.listing h3{font-size:12px;line-height:1.3;margin:0 0 5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.listing p{font-size:10px;line-height:1.35;margin:0 0 7px;-webkit-line-clamp:1}
+.listing .meta{display:flex;flex-direction:row;align-items:center;justify-content:space-between;gap:5px;font-size:9px}
+.listing .meta b{font-size:11px;white-space:nowrap}
+.listing .listing-submeta{display:none}
+.listing .detail{margin-top:8px!important;min-height:30px;padding:6px 8px!important;font-size:10px!important;box-shadow:none}
+@media(min-width:700px){.grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}.listing-body{padding:12px}}
+@media(max-width:360px){.grid{gap:7px}.listing-body{padding:8px}.listing .meta{font-size:8px}.listing .meta b{font-size:10px}}
+
 </style>
 </head>
 <body>
