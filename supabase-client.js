@@ -203,10 +203,17 @@
       .select("id,owner_id,title,description,price,price_label,contact_phone,status,created_at,categories(name),cities(name)")
       .eq("status", "published").order("created_at", { ascending: false }).limit(100);
     if (error) throw error;
+    const ownerIds = [...new Set((data || []).map(a => a.owner_id).filter(Boolean))];
+    let names = {};
+    if (window.XP_REMOTE.user && ownerIds.length) {
+      const { data: profiles, error: profileError } = await client.from("profiles").select("id,display_name").in("id", ownerIds);
+      if (profileError) throw profileError;
+      names = Object.fromEntries((profiles || []).map(profile => [profile.id, profile.display_name]));
+    }
     const remote = (data || []).map(a => ({
       id: a.id, title: a.title, category: a.categories?.name || "Classificados",
       description: a.description, price: a.price_label || (a.price != null ? "R$ " + Number(a.price).toLocaleString("pt-BR", {minimumFractionDigits: 2}) : ""),
-      contact: a.contact_phone || "", author: "Usuário XP WORK",
+      contact: a.contact_phone || "", author: names[a.owner_id] || "Anunciante XP WORK",
       city: a.cities?.name || "Xapuri", createdAt: new Date(a.created_at).getTime(),
       owner: "remote", ownerId: a.owner_id
     }));
@@ -304,37 +311,70 @@
     }
   });
 
-  // Intercepta a publicação antiga para não salvar anúncios novos apenas no aparelho.
-  el("publishForm").addEventListener("submit", async event => {
+  // Publicação validada e associada ao perfil autenticado.
+  const publishForm = el("publishForm");
+  const publishTitle = el("title");
+  const publishDescription = el("description");
+  const publishContact = el("contact");
+  const updatePublishCounters = () => {
+    el("titleCount").textContent = publishTitle.value.length + "/70 caracteres";
+    el("descriptionCount").textContent = publishDescription.value.length + "/500 caracteres (mínimo 10)";
+  };
+  publishTitle.addEventListener("input", updatePublishCounters);
+  publishDescription.addEventListener("input", updatePublishCounters);
+  publishContact.addEventListener("input", () => {
+    const digits = publishContact.value.replace(/\\D/g, "").slice(0, 13);
+    if (digits.length <= 2) publishContact.value = digits;
+    else if (digits.length <= 7) publishContact.value = "(" + digits.slice(0,2) + ") " + digits.slice(2);
+    else publishContact.value = "(" + digits.slice(0,2) + ") " + digits.slice(2, digits.length > 10 ? 7 : 6) + "-" + digits.slice(digits.length > 10 ? 7 : 6);
+  });
+  publishForm.addEventListener("submit", async event => {
     event.preventDefault();
     event.stopImmediatePropagation();
     const user = window.XP_REMOTE.user;
     if (!user) { toast("Entre na sua conta antes de publicar."); page("profile"); return; }
+    const title = publishTitle.value.trim();
+    const description = publishDescription.value.trim();
+    const phone = publishContact.value.replace(/\\D/g, "");
     const category = el("category").value;
     const categoryId = window.XP_REMOTE.categories[category];
     const cityId = window.XP_REMOTE.cityId;
-    if (!categoryId || !cityId) { toast("Não foi possível carregar cidade e categoria."); return; }
+    if (title.length < 4 || title.length > 70) return toast("O título deve ter entre 4 e 70 caracteres.");
+    if (!categoryId || !cityId) return toast("Não foi possível carregar cidade e categoria.");
+    if (description.length < 10 || description.length > 500) return toast("A descrição deve ter entre 10 e 500 caracteres.");
+    if (phone.length < 10 || phone.length > 13) return toast("Informe um WhatsApp válido com DDD.");
     const rawPrice = el("price").value.trim();
     let price = null, priceLabel = rawPrice || null;
-    if (rawPrice) {
-      const normalized = rawPrice.replace(/[^0-9,.]/g, "").replace(",", ".");
-      if (/^\d+(\.\d{1,2})?$/.test(normalized)) { price = Number(normalized); priceLabel = null; }
+    if (rawPrice && !/^a combinar$/i.test(rawPrice)) {
+      const normalized = rawPrice.replace(/R\\$\\s?/gi, "").replace(/\\./g, "").replace(",", ".").replace(/\\s/g, "");
+      if (!/^\\d+(\\.\\d{1,2})?$/.test(normalized) || Number(normalized) < 0) return toast("Informe um preço válido, como 50,00, ou escreva A combinar.");
+      price = Number(normalized);
+      priceLabel = null;
     }
+    const button = el("publishSubmit");
+    button.disabled = true;
+    button.textContent = "Publicando...";
     try {
-      const { error } = await client.from("listings").insert({
+      const { data, error } = await client.from("listings").insert({
         owner_id: user.id, city_id: cityId, category_id: categoryId,
-        title: el("title").value.trim(), description: el("description").value.trim(),
-        price, price_label: priceLabel, contact_phone: el("contact").value.trim(),
-        status: "published"
-      });
+        title, description, price, price_label: priceLabel,
+        contact_phone: phone, status: "published"
+      }).select("id").single();
       if (error) throw error;
-      event.target.reset();
+      publishForm.reset();
+      updatePublishCounters();
       await loadRemote();
       toast("Anúncio publicado para todos.");
       page("profile");
-    } catch (error) { showError(error); }
+      if (data?.id) setTimeout(() => openDetail(data.id), 120);
+    } catch (error) {
+      showError(error);
+    } finally {
+      button.disabled = false;
+      button.textContent = "Publicar anúncio";
+    }
   }, true);
-
+  el("publishIdentity").textContent = "Anúncio identificado como: " + (window.XP_REMOTE.profile?.display_name || window.XP_REMOTE.user?.user_metadata?.full_name || "Seu perfil");
   // Edição online restrita ao proprietário autenticado.
   function openEditAd(item) {
     const categories = ["Serviços","Comércio","Classificados","Entregas","Empregos","Eventos"];
