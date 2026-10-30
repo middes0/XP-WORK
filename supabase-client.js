@@ -38,8 +38,7 @@
     const summary = el("profileSummary");
     if (!summary) return;
     const types = { person: "Pessoa física", professional: "Profissional", business: "Comércio / empresa" };
-    summary.textContent = profile.display_name + " • " + (types[profile.account_type] || "Pessoa física") + (profile.bio ? "
-" + profile.bio : "");
+    summary.textContent = profile.display_name + " • " + (types[profile.account_type] || "Pessoa física") + (profile.bio ? "\n" + profile.bio : "");
     summary.style.whiteSpace = "pre-line";
     const avatar = el("accountAvatar");
     const preview = el("profilePhotoPreview");
