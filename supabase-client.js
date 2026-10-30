@@ -11,7 +11,7 @@
 
   async function ensureProfile(user) {
     const { data: existing, error: readError } = await client.from("profiles")
-      .select("id,display_name,account_type,bio,city_id")
+      .select("id,display_name,account_type,bio,city_id,avatar_url")
       .eq("id", user.id).maybeSingle();
     if (readError) throw readError;
     if (!existing) {
@@ -26,7 +26,7 @@
       if (cityError) throw cityError;
     }
     const { data, error } = await client.from("profiles")
-      .select("id,display_name,account_type,bio,city_id")
+      .select("id,display_name,account_type,bio,city_id,avatar_url")
       .eq("id", user.id).single();
     if (error) throw error;
     window.XP_REMOTE.profile = data;
@@ -40,6 +40,10 @@
     const types = { person: "Pessoa física", professional: "Profissional", business: "Comércio / empresa" };
     summary.textContent = profile.display_name + " • " + (types[profile.account_type] || "Pessoa física") + (profile.bio ? "\n" + profile.bio : "");
     summary.style.whiteSpace = "pre-line";
+    const avatar = el("accountAvatar");
+    const preview = el("profilePhotoPreview");
+    const initials = (profile.display_name || "U").trim()[0]?.toUpperCase() || "U";
+    [avatar, preview].forEach(target => { if (!target) return; target.innerHTML = profile.avatar_url ? `<img src="${esc(profile.avatar_url)}" alt="Foto de perfil">` : initials; });
   }
 
   function openProfileSetup(profile = {}, editing = true) {
@@ -49,8 +53,37 @@
     el("profileDisplayName").value = profile.display_name || "";
     el("profileAccountType").value = profile.account_type || "person";
     el("profileBio").value = profile.bio || "";
+    const preview = el("profilePhotoPreview");
+    const initials = (profile.display_name || "U").trim()[0]?.toUpperCase() || "U";
+    preview.innerHTML = profile.avatar_url ? `<img src="${esc(profile.avatar_url)}" alt="Prévia da foto">` : initials;
+    el("profilePhotoInput").value = "";
+    el("removeProfilePhoto").dataset.remove = "false";
     el("profileSetupModal").classList.add("open");
   }
+
+  let selectedProfilePhoto = null;
+  el("profilePhotoInput").addEventListener("change", event => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    if (!["image/jpeg","image/png","image/webp"].includes(file.type) || file.size > 3 * 1024 * 1024) {
+      toast("Escolha uma imagem JPG, PNG ou WebP de até 3 MB.");
+      event.target.value = "";
+      return;
+    }
+    selectedProfilePhoto = file;
+    el("profilePhotoPreview").innerHTML = "";
+    const image = document.createElement("img");
+    image.alt = "Prévia da foto de perfil";
+    image.src = URL.createObjectURL(file);
+    el("profilePhotoPreview").appendChild(image);
+    el("removeProfilePhoto").dataset.remove = "false";
+  });
+  el("removeProfilePhoto").addEventListener("click", () => {
+    selectedProfilePhoto = null;
+    el("profilePhotoInput").value = "";
+    el("profilePhotoPreview").textContent = (el("profileDisplayName").value.trim()[0] || "U").toUpperCase();
+    el("removeProfilePhoto").dataset.remove = "true";
+  });
 
   el("profileSetupForm").addEventListener("submit", async event => {
     event.preventDefault();
@@ -70,13 +103,13 @@
         toast("Informe seu nome e uma descrição com pelo menos 10 caracteres.");
         return;
       }
-      const { error } = await client.from("profiles").update(profile).eq("id", user.id);
+      if (selectedProfilePhoto) {\n        const extension = selectedProfilePhoto.type === "image/png" ? "png" : selectedProfilePhoto.type === "image/webp" ? "webp" : "jpg";\n        const path = user.id + "/avatar." + extension;\n        const { error: uploadError } = await client.storage.from("profile-avatars").upload(path, selectedProfilePhoto, { upsert: true, contentType: selectedProfilePhoto.type, cacheControl: "3600" });\n        if (uploadError) throw uploadError;\n        const { data: publicUrl } = client.storage.from("profile-avatars").getPublicUrl(path);\n        profile.avatar_url = publicUrl.publicUrl + "?v=" + Date.now();\n      } else if (el("removeProfilePhoto").dataset.remove === "true") {\n        profile.avatar_url = null;\n      }\n      const { error } = await client.from("profiles").update(profile).eq("id", user.id);
       if (error) throw error;
       window.XP_REMOTE.profile = { ...window.XP_REMOTE.profile, ...profile };
       updateProfileSummary(window.XP_REMOTE.profile);
       el("profileSetupModal").classList.remove("open");
       profileSetupOpen = false;
-      toast("Informações do perfil salvas.");
+      selectedProfilePhoto = null;\n      updateProfileSummary(window.XP_REMOTE.profile);\n      toast("Informações do perfil salvas.");
     } catch (error) {
       showError(error);
     } finally {
