@@ -158,7 +158,7 @@
         .order("created_at", {ascending:false}).limit(8);
       if (listingError) throw listingError;
       const types = {person:"Pessoa física",professional:"Profissional",business:"Comércio / empresa"};
-      const ads = (rows||[]).map(a => '<div class="profile-ad"><strong>'+esc(a.title)+'</strong><span>'+esc(a.categories?.name||"Classificados")+' · '+money(a.price_label || (a.price!=null?"R$ "+Number(a.price).toLocaleString("pt-BR",{minimumFractionDigits:2}):""))+'</span><button class="btn secondary detail" data-id="'+esc(a.id)+'" type="button">Ver anúncio</button></div>').join("");
+      const ads = (rows||[]).map(a => '<div class="profile-ad"><strong>'+esc(a.title)+'</strong><span>'+esc(a.categories?.name||"Classificados")+' · '+money(a.price_label || (a.price!=null?"R$ "+Number(a.price).toLocaleString("pt-BR",{minimumFractionDigits:2}):""))+'</span><span class="profile-ad-open">Anúncio publicado</span></div>').join("");
       showAccountAction("Perfil do anunciante", '<div class="public-profile"><div class="public-profile-avatar">'+esc((profile.display_name||"U").trim().charAt(0).toUpperCase())+'</div><h3>'+esc(profile.display_name||"Usuário NEXAP")+'</h3><span>'+esc(types[profile.account_type]||"Pessoa física")+'</span><p>'+esc(profile.bio||"Este usuário ainda não adicionou uma descrição.")+'</p><div class="account-group-title">ANÚNCIOS PUBLICADOS</div>'+(ads||'<div class="empty">Nenhum anúncio publicado no momento.</div>')+'</div>');
     } catch(error) { showError(error); }
   }
