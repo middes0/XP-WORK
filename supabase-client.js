@@ -419,6 +419,8 @@
   el("publishIdentity").textContent = "Anúncio identificado como: " + (window.XP_REMOTE.profile?.display_name || window.XP_REMOTE.user?.user_metadata?.full_name || "Seu perfil");
   // Edição online restrita ao proprietário autenticado.
   function openEditAd(item) {
+    pendingEditImages = [];
+    removedEditImages.clear();
     const categories = ["Serviços","Comércio","Classificados","Entregas","Empregos","Eventos"];
     const options = categories.map(name => '<option value="'+name+'" '+(item.category===name?'selected':'')+'>'+name+'</option>').join("");
     el("listingPageContent").innerHTML =
