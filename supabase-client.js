@@ -428,10 +428,33 @@
       '<div class="field"><label for="editAdCategory">Categoria</label><select id="editAdCategory" required>'+options+'</select></div>' +
       '<div class="field"><label for="editAdPrice">Preço</label><input id="editAdPrice" value="'+esc(item.price||'')+'" placeholder="Ex.: A combinar"></div>' +
       '<div class="field"><label for="editAdDescription">Descrição</label><textarea id="editAdDescription" maxlength="500" required>'+esc(item.description)+'</textarea></div>' +
+      '<div class="field"><label>Fotos atuais</label><div class="image-preview-grid" id="editCurrentImages">' +
+        (item.images || []).map(img => '<div class="image-preview"><img src="'+esc(img.url)+'" alt="'+esc(img.alt||item.title)+'"><button type="button" data-remove-image="'+esc(img.id)+'" aria-label="Remover foto">×</button></div>').join('') +
+        '</div><small class="sub">Toque no × para remover uma foto.</small></div>' +
+      '<div class="field"><label for="editAdImages">Adicionar fotos (até 5 no total)</label><input id="editAdImages" type="file" accept="image/jpeg,image/png,image/webp" multiple><small class="sub">JPG, PNG ou WebP. Até 5 MB por foto.</small><div id="editImagePreview" class="image-preview-grid"></div></div>' +
       '<div class="field"><label for="editAdContact">WhatsApp ou telefone</label><input id="editAdContact" inputmode="tel" required value="'+esc(item.contact||'')+'"></div>' +
       '<button class="btn" type="submit" style="width:100%">Salvar alterações</button>' +
       '<button class="btn ghost" id="cancelEditAd" type="button" style="width:100%;margin-top:8px">Cancelar</button></form>';
   }
+
+  let pendingEditImages = [];
+  let removedEditImages = new Set();
+  document.addEventListener("change", event => {
+    if (event.target.id !== "editAdImages") return;
+    const item = listings.find(a => a.id === el("editAdForm")?.dataset.id);
+    const currentCount = (item?.images || []).filter(img => !removedEditImages.has(img.id)).length;
+    const files = Array.from(event.target.files || []);
+    if (currentCount + files.length > MAX_LISTING_IMAGES) { event.target.value = ""; pendingEditImages = []; el("editImagePreview").innerHTML = ""; return toast("O anúncio pode ter no máximo 5 fotos."); }
+    if (files.some(file => !allowedImageTypes.includes(file.type) || file.size > MAX_IMAGE_BYTES)) { event.target.value = ""; pendingEditImages = []; el("editImagePreview").innerHTML = ""; return toast("Use JPG, PNG ou WebP de até 5 MB por foto."); }
+    pendingEditImages = files;
+    el("editImagePreview").innerHTML = files.map((file,index) => '<div class="image-preview"><img src="' + URL.createObjectURL(file) + '" alt="Nova foto ' + (index+1) + '"></div>').join("");
+  });
+  document.addEventListener("click", event => {
+    const button = event.target.closest("[data-remove-image]");
+    if (!button) return;
+    removedEditImages.add(button.dataset.removeImage);
+    button.closest(".image-preview")?.remove();
+  });
   document.addEventListener("click", event => {
     const button = event.target.closest("#editAd");
     if (!button) return;
@@ -482,6 +505,11 @@
       }).eq("id", item.id).eq("owner_id", user.id).select("id").maybeSingle();
       if (error) throw error;
       if (!data) throw new Error("O anúncio não foi atualizado. Verifique se ele ainda pertence à sua conta.");
+      for (const image of (item.images || []).filter(img => removedEditImages.has(img.id))) await removeListingImage(image);
+      const remaining = (item.images || []).filter(img => !removedEditImages.has(img.id)).length;
+      if (pendingEditImages.length) await uploadListingImages(item.id, pendingEditImages.slice(0, MAX_LISTING_IMAGES - remaining));
+      pendingEditImages = [];
+      removedEditImages.clear();
       await loadRemote();
       openDetail(item.id);
       toast("Anúncio atualizado.");
