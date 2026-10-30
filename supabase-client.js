@@ -26,13 +26,13 @@
     window.XP_REMOTE.cityId = cityResult.data?.id || null;
     window.XP_REMOTE.categories = Object.fromEntries((categoryResult.data || []).map(c => [c.name, c.id]));
     const { data, error } = await client.from("listings")
-      .select("id,owner_id,title,description,price,price_label,contact_phone,status,created_at,categories(name),profiles(display_name),cities(name)")
+      .select("id,owner_id,title,description,price,price_label,contact_phone,status,created_at,categories(name),cities(name)")
       .eq("status", "published").order("created_at", { ascending: false }).limit(100);
     if (error) throw error;
     const remote = (data || []).map(a => ({
       id: a.id, title: a.title, category: a.categories?.name || "Classificados",
       description: a.description, price: a.price_label || (a.price != null ? "R$ " + Number(a.price).toLocaleString("pt-BR", {minimumFractionDigits: 2}) : ""),
-      contact: a.contact_phone || "", author: a.profiles?.display_name || "Usuário XP WORK",
+      contact: a.contact_phone || "", author: "Usuário XP WORK",
       city: a.cities?.name || "Xapuri", createdAt: new Date(a.created_at).getTime(),
       owner: "remote", ownerId: a.owner_id
     }));
