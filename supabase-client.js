@@ -259,6 +259,7 @@
     }));
     listings = listings.filter(a => a.owner !== "remote").concat(remote);
     render();
+    if (typeof window.openListingFromUrl === "function") window.openListingFromUrl();
   }
 
   async function refreshAccount(session) {
