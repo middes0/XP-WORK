@@ -2,6 +2,8 @@
 -- Execute no SQL Editor do Supabase depois de confirmar que a conta principal
 -- kalewoliveira04@gmail.com já está cadastrada no Auth.
 
+alter table public.profiles add column if not exists avatar_url text;
+
 create table if not exists public.admin_roles (
   user_id uuid primary key references auth.users(id) on delete cascade,
   role text not null default 'admin' check (role in ('owner', 'admin')),
@@ -109,7 +111,7 @@ begin
   from public.admin_roles
   where user_id = auth.uid();
 
-  if v_actor_role <> 'owner' then
+  if coalesce(v_actor_role, '') <> 'owner' then
     raise exception 'Somente o administrador principal pode alterar administradores.';
   end if;
 
