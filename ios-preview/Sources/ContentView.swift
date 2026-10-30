@@ -1,5 +1,6 @@
 import SwiftUI
 import WebKit
+import UIKit
 
 struct ContentView: View {
     var body: some View {
