@@ -87,6 +87,7 @@ create table if not exists public.favorites (
 
 create table if not exists public.conversations (
   id uuid primary key default gen_random_uuid(),
+  created_by uuid not null references auth.users(id) on delete cascade,
   listing_id uuid references public.listings(id) on delete set null,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
@@ -123,6 +124,24 @@ create table if not exists public.reports (
   created_at timestamptz not null default now(),
   check (listing_id is not null or reported_user_id is not null)
 );
+
+-- Função SECURITY DEFINER evita recursão nas políticas de participantes.
+create or replace function public.is_conversation_member(p_conversation_id uuid, p_user_id uuid)
+returns boolean
+language sql
+stable
+security definer
+set search_path = public
+as $
+  select exists (
+    select 1 from public.conversation_participants cp
+    where cp.conversation_id = p_conversation_id
+      and cp.user_id = p_user_id
+  );
+$;
+
+revoke all on function public.is_conversation_member(uuid, uuid) from public;
+grant execute on function public.is_conversation_member(uuid, uuid) to authenticated;
 
 -- Atualiza updated_at automaticamente nas tabelas editáveis.
 create or replace function public.set_updated_at()
@@ -230,37 +249,40 @@ for all to authenticated using (user_id = (select auth.uid()))
 with check (user_id = (select auth.uid()));
 
 -- Conversas: acesso limitado aos participantes.
+drop policy if exists "Users create conversations" on public.conversations;
+create policy "Users create conversations" on public.conversations
+for insert to authenticated with check (created_by = (select auth.uid()));
+
 drop policy if exists "Participants read conversations" on public.conversations;
 create policy "Participants read conversations" on public.conversations
 for select to authenticated using (
-  exists (select 1 from public.conversation_participants cp
-    where cp.conversation_id = id and cp.user_id = (select auth.uid()))
+  public.is_conversation_member(id, (select auth.uid()))
 );
 
 drop policy if exists "Participants read participant list" on public.conversation_participants;
 create policy "Participants read participant list" on public.conversation_participants
 for select to authenticated using (
-  exists (select 1 from public.conversation_participants cp
-    where cp.conversation_id = conversation_id and cp.user_id = (select auth.uid()))
+  public.is_conversation_member(conversation_id, (select auth.uid()))
 );
 
-drop policy if exists "Users join conversations as themselves" on public.conversation_participants;
-create policy "Users join conversations as themselves" on public.conversation_participants
-for insert to authenticated with check (user_id = (select auth.uid()));
+drop policy if exists "Conversation creator adds participants" on public.conversation_participants;
+create policy "Conversation creator adds participants" on public.conversation_participants
+for insert to authenticated with check (
+  exists (select 1 from public.conversations c
+    where c.id = conversation_id and c.created_by = (select auth.uid()))
+);
 
 drop policy if exists "Participants read messages" on public.messages;
 create policy "Participants read messages" on public.messages
 for select to authenticated using (
-  exists (select 1 from public.conversation_participants cp
-    where cp.conversation_id = conversation_id and cp.user_id = (select auth.uid()))
+  public.is_conversation_member(conversation_id, (select auth.uid()))
 );
 
 drop policy if exists "Participants send messages as themselves" on public.messages;
 create policy "Participants send messages as themselves" on public.messages
 for insert to authenticated with check (
   sender_id = (select auth.uid())
-  and exists (select 1 from public.conversation_participants cp
-    where cp.conversation_id = conversation_id and cp.user_id = (select auth.uid()))
+  and public.is_conversation_member(conversation_id, (select auth.uid()))
 );
 
 drop policy if exists "Users read own reports" on public.reports;
