@@ -411,6 +411,84 @@ body{min-height:100vh;min-height:100dvh;padding-bottom:calc(88px + env(safe-area
 input,textarea,select{font-size:16px;}
 button,.btn,.nav button,.cat{-webkit-tap-highlight-color:transparent;touch-action:manipulation;}
 @media(max-width:560px){body{padding-bottom:calc(76px + env(safe-area-inset-bottom));}}
+
+
+/* NEXAP — direção visual moderna 2026 */
+:root{
+ --bg:#f4f7f5;--surface:#ffffff;--surface-2:#f8faf8;--surface-3:#eaf3ec;
+ --line:#e3ebe5;--text:#172b22;--muted:#718078;
+ --brand:#16734a;--brand-strong:#105c3a;--brand-soft:#e8f4ec;
+ --accent:#c7ef83;--radius:20px;
+ --shadow-soft:0 4px 16px rgba(20,48,34,.045);
+ --shadow-card:0 12px 30px rgba(20,48,34,.075);
+}
+html,body{background:var(--bg);color:var(--text)}
+body{background:linear-gradient(180deg,#f8faf8 0,#f3f7f4 520px);letter-spacing:-.01em}
+.top{background:rgba(255,255,255,.9);border-color:var(--line);box-shadow:0 2px 16px rgba(20,48,34,.035)}
+.logo{background:linear-gradient(145deg,#178451,#105c3a);box-shadow:0 6px 16px rgba(22,115,74,.2)}
+.brand strong{color:#183629;font-weight:850;letter-spacing:.8px}
+.city{background:#f1f7f2;border-color:#e0ebe2;color:#286344}
+.more-menu-trigger{background:#f7faf7;border-color:#e2ebe4;color:#176c46}
+.wrap{max-width:1100px}
+#home .hero{border-color:#dce9df;background:radial-gradient(ellipse at 90% 8%,rgba(199,239,131,.42),transparent 34%),linear-gradient(125deg,#edf7ef 0%,#e7f2e9 57%,#f7faf7 100%);box-shadow:0 14px 36px rgba(22,80,48,.06)}
+#home .hero .eyebrow{background:rgba(255,255,255,.8);color:#176c46}
+#home .hero h1 span,.hero h1 span{color:#16734a}
+#home .hero p{color:#60766a}
+.search{border-color:#dce7df;box-shadow:0 6px 20px rgba(20,48,34,.055)}
+.search:focus-within{border-color:#69ad83;box-shadow:0 0 0 4px rgba(22,115,74,.1)}
+.btn{background:#16734a;box-shadow:0 4px 10px rgba(22,115,74,.13)}
+.btn:hover{background:#105c3a}
+.btn.secondary{background:#eaf4ec;border-color:#dcebe0;color:#176641}
+.btn.secondary:hover{background:#deeee2}
+.section h2{color:#203c2d}
+.cat{border-color:#e2ebe4;box-shadow:0 3px 13px rgba(20,48,34,.03)}
+.cat .ico{background:#edf5ef;color:#16734a}
+.cat b{color:#294536}
+.cat:hover,.cat.active{border-color:#9ac9a8;background:#fbfefb;box-shadow:0 9px 22px rgba(22,115,74,.08)}
+.chip.active{background:#e8f4ec;border-color:#c8e2cf;color:#176641}
+.listing{border-color:#e2eae4;box-shadow:0 4px 16px rgba(20,48,34,.045)}
+.listing:hover{border-color:#cfe1d3;box-shadow:0 13px 28px rgba(20,48,34,.09)}
+.listing .tag,.tag{background:#eaf4ec;color:#176c46}
+.listing .meta b,.stat b{color:#16734a}
+.listing-detail-price{color:#16734a!important}
+.panel,.listing-detail-content{border-color:#e2ebe4;box-shadow:var(--shadow-soft)}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:#70b58a;box-shadow:0 0 0 3px rgba(22,115,74,.11)}
+.bottom{background:rgba(255,255,255,.94);border-color:#e2ebe4;box-shadow:0 -6px 24px rgba(20,48,34,.045)}
+.nav button.active{background:#eaf4ec;color:#176c46}
+.more-menu-card,.dialog,.profile-setup-dialog{border-color:#e1ebe3;box-shadow:0 24px 70px rgba(17,45,29,.2)}
+.more-menu-item>span:first-child,.account-menu-icon,.account-avatar{background:#eaf4ec;color:#176c46}
+.toast{background:#145d3d}
+button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline-color:rgba(22,115,74,.55)}
+@media(min-width:700px){.grid{gap:17px}.listing{border-radius:20px}.listing-body{padding:18px}}
+@media(max-width:560px){#home .hero{border-radius:22px}.listing{border-radius:18px}.bottom{backdrop-filter:blur(20px)}}
+html[data-theme="dark"]{
+ --bg:#101915;--surface:#18241d;--surface-2:#1d2b22;--surface-3:#26392c;
+ --line:#2c4032;--text:#e6efe8;--muted:#a1b2a6;
+ --brand:#82d6a0;--brand-strong:#a1e5b6;--brand-soft:#263b2d;
+ --shadow-soft:0 4px 16px rgba(0,0,0,.16);--shadow-card:0 12px 30px rgba(0,0,0,.24);
+ color-scheme:dark;
+}
+html[data-theme="dark"] body{background:linear-gradient(180deg,#142019 0,#101915 520px);color:var(--text)}
+html[data-theme="dark"] .top{background:rgba(20,32,24,.94);border-color:var(--line)}
+html[data-theme="dark"] .brand strong,html[data-theme="dark"] .hero h1,html[data-theme="dark"] .section h2,html[data-theme="dark"] .panel h2,html[data-theme="dark"] .panel h3,html[data-theme="dark"] .listing h3,html[data-theme="dark"] .listing-detail-content h1{color:#e6efe8}
+html[data-theme="dark"] .brand small,html[data-theme="dark"] .hero p,html[data-theme="dark"] .listing p,html[data-theme="dark"] .sub{color:#a1b2a6}
+html[data-theme="dark"] .city,html[data-theme="dark"] .more-menu-trigger,html[data-theme="dark"] .search,html[data-theme="dark"] .cat,html[data-theme="dark"] .listing,html[data-theme="dark"] .empty,html[data-theme="dark"] .panel,html[data-theme="dark"] .stat,html[data-theme="dark"] .dialog,html[data-theme="dark"] .profile-setup-dialog,html[data-theme="dark"] .more-menu-card,html[data-theme="dark"] .listing-detail-content,html[data-theme="dark"] .field input,html[data-theme="dark"] .field textarea,html[data-theme="dark"] .field select{background:var(--surface);border-color:var(--line);color:var(--text)}
+html[data-theme="dark"] #home .hero{background:radial-gradient(ellipse at 90% 8%,rgba(130,214,160,.12),transparent 34%),linear-gradient(125deg,#1c3023,#19291f 58%,#1b2c21);border-color:#35513d}
+html[data-theme="dark"] #home .hero .eyebrow,html[data-theme="dark"] .cat .ico,html[data-theme="dark"] .more-menu-item>span:first-child,html[data-theme="dark"] .account-menu-icon,html[data-theme="dark"] .account-avatar{background:#263d2d;color:#9ce2b1}
+html[data-theme="dark"] .cat b,html[data-theme="dark"] .account-menu-item,html[data-theme="dark"] .more-menu-item,html[data-theme="dark"] .more-menu-item strong{color:#e0ebe3}
+html[data-theme="dark"] .cat small,html[data-theme="dark"] .listing .meta,html[data-theme="dark"] .listing-submeta{color:#a1b2a6}
+html[data-theme="dark"] .btn.secondary,html[data-theme="dark"] .btn.ghost,html[data-theme="dark"] .chip,html[data-theme="dark"] .listing-detail-info>div,html[data-theme="dark"] .notice,html[data-theme="dark"] .account-bio,html[data-theme="dark"] .dialog .panel{background:var(--surface-2);color:#dce9df;border-color:var(--line)}
+html[data-theme="dark"] .bottom{background:rgba(20,32,24,.95);border-color:var(--line)}
+html[data-theme="dark"] .nav button{color:#a1b2a6}
+html[data-theme="dark"] .nav button.active{background:#263d2d;color:#9ce2b1}
+html[data-theme="dark"] .more-menu-heading,html[data-theme="dark"] .account-menu-item{border-color:var(--line)}
+html[data-theme="dark"] .more-menu-heading button,html[data-theme="dark"] .close{background:#2a3b30;color:#e0ebe3}
+html[data-theme="dark"] .listing .tag,html[data-theme="dark"] .tag{background:#263d2d;color:#a4e5b6;border-color:#365640}
+html[data-theme="dark"] .listing .meta b,html[data-theme="dark"] .listing-detail-price{color:#9ce2b1!important}
+html[data-theme="dark"] .search input{color:var(--text)}
+html[data-theme="dark"] .search input::placeholder,html[data-theme="dark"] .field input::placeholder,html[data-theme="dark"] .field textarea::placeholder{color:#819488}
+html[data-theme="dark"] .modal{background:rgba(3,10,6,.72)}
+
 </style>
 </head>
 <body>
