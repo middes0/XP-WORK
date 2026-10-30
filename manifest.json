@@ -1,12 +1,12 @@
 {
-  "name": "XP WORK — Sua cidade conectada",
+  "name": "XP WORK — Serviços, comércio e oportunidades",
   "short_name": "XP WORK",
-  "description": "Serviços, comércio e oportunidades em Xapuri.",
+  "description": "Plataforma local para conectar pessoas, profissionais, comércios e oportunidades.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#0e0c13",
-  "theme_color": "#100d18",
+  "background_color": "#f4f6f9",
+  "theme_color": "#173b65",
   "lang": "pt-BR",
   "icons": []
 }
