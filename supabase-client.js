@@ -10,15 +10,15 @@
   let profileSetupOpen = false;
 
   async function readProfile(userId, single = false) {
-    let result = await client.from("profiles")
+    const query = () => client.from("profiles")
       .select("id,display_name,account_type,bio,city_id,avatar_url")
       .eq("id", userId);
-    result = single ? await result.single() : await result.maybeSingle();
+    let result = single ? await query().single() : await query().maybeSingle();
     if (result.error && (result.error.code === "42703" || /avatar_url.*does not exist|column.*avatar_url/i.test(result.error.message || ""))) {
-      let fallback = await client.from("profiles")
+      const fallbackQuery = () => client.from("profiles")
         .select("id,display_name,account_type,bio,city_id")
         .eq("id", userId);
-      fallback = single ? await fallback.single() : await fallback.maybeSingle();
+      const fallback = single ? await fallbackQuery().single() : await fallbackQuery().maybeSingle();
       if (fallback.error) throw fallback.error;
       return { ...fallback, data: fallback.data ? { ...fallback.data, avatar_url: null } : null, avatarColumnAvailable: false };
     }
