@@ -776,6 +776,26 @@ window.addEventListener("load",()=>setTimeout(openListingFromUrl,900));
  save.addEventListener("click",()=>{window.__nexapTheme.set(select.value);toast("Aparência atualizada.");});
 })();
 </script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="./supabase-client.js"></script>
+<script>
+(function loadSupabaseClient(){
+ const state=document.getElementById("connectionState");
+ function loadApp(){
+  const app=document.createElement("script");
+  app.src="./supabase-client.js";
+  app.onerror=()=>{if(state)state.textContent="Falha ao carregar o login";};
+  document.body.appendChild(app);
+ }
+ function loadSdk(url,fallback){
+  const sdk=document.createElement("script");
+  sdk.src=url;
+  sdk.onload=loadApp;
+  sdk.onerror=()=>{
+   if(fallback)loadSdk(fallback,null);
+   else if(state)state.textContent="Falha na conexão";
+  };
+  document.head.appendChild(sdk);
+ }
+ loadSdk("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2","https://unpkg.com/@supabase/supabase-js@2");
+})();
+</script>
 </body></html>
