@@ -17,7 +17,7 @@ public class MainActivity extends Activity {
     private WebView webView;
     private ValueCallback<Uri[]> uploadCallback;
     private static final int FILE_CHOOSER_REQUEST = 42;
-    private static final String APP_URL = "https://xp-work.pages.dev/";
+    private static final String APP_URL = "https://xp-work.pages.dev/?app=android";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
