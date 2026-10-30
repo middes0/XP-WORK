@@ -38,7 +38,8 @@
     const summary = el("profileSummary");
     if (!summary) return;
     const types = { person: "Pessoa física", professional: "Profissional", business: "Comércio / empresa" };
-    summary.textContent = profile.display_name + " • " + (types[profile.account_type] || "Pessoa física") + (profile.bio ? "\n" + profile.bio : "");
+    summary.textContent = profile.display_name + " • " + (types[profile.account_type] || "Pessoa física") + (profile.bio ? "
+" + profile.bio : "");
     summary.style.whiteSpace = "pre-line";
     const avatar = el("accountAvatar");
     const preview = el("profilePhotoPreview");
@@ -103,13 +104,25 @@
         toast("Informe seu nome e uma descrição com pelo menos 10 caracteres.");
         return;
       }
-      if (selectedProfilePhoto) {\n        const extension = selectedProfilePhoto.type === "image/png" ? "png" : selectedProfilePhoto.type === "image/webp" ? "webp" : "jpg";\n        const path = user.id + "/avatar." + extension;\n        const { error: uploadError } = await client.storage.from("profile-avatars").upload(path, selectedProfilePhoto, { upsert: true, contentType: selectedProfilePhoto.type, cacheControl: "3600" });\n        if (uploadError) throw uploadError;\n        const { data: publicUrl } = client.storage.from("profile-avatars").getPublicUrl(path);\n        profile.avatar_url = publicUrl.publicUrl + "?v=" + Date.now();\n      } else if (el("removeProfilePhoto").dataset.remove === "true") {\n        profile.avatar_url = null;\n      }\n      const { error } = await client.from("profiles").update(profile).eq("id", user.id);
+      if (selectedProfilePhoto) {
+        const extension = selectedProfilePhoto.type === "image/png" ? "png" : selectedProfilePhoto.type === "image/webp" ? "webp" : "jpg";
+        const path = user.id + "/avatar." + extension;
+        const { error: uploadError } = await client.storage.from("profile-avatars").upload(path, selectedProfilePhoto, { upsert: true, contentType: selectedProfilePhoto.type, cacheControl: "3600" });
+        if (uploadError) throw uploadError;
+        const { data: publicUrl } = client.storage.from("profile-avatars").getPublicUrl(path);
+        profile.avatar_url = publicUrl.publicUrl + "?v=" + Date.now();
+      } else if (el("removeProfilePhoto").dataset.remove === "true") {
+        profile.avatar_url = null;
+      }
+      const { error } = await client.from("profiles").update(profile).eq("id", user.id);
       if (error) throw error;
       window.XP_REMOTE.profile = { ...window.XP_REMOTE.profile, ...profile };
       updateProfileSummary(window.XP_REMOTE.profile);
       el("profileSetupModal").classList.remove("open");
       profileSetupOpen = false;
-      selectedProfilePhoto = null;\n      updateProfileSummary(window.XP_REMOTE.profile);\n      toast("Informações do perfil salvas.");
+      selectedProfilePhoto = null;
+      updateProfileSummary(window.XP_REMOTE.profile);
+      toast("Informações do perfil salvas.");
     } catch (error) {
       showError(error);
     } finally {
