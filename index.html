@@ -546,6 +546,40 @@ html[data-theme="dark"] .modal{background:rgba(3,10,6,.72)}
 @media(min-width:700px){.grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}.listing-body{padding:12px}}
 @media(max-width:360px){.grid{gap:7px}.listing-body{padding:8px}.listing .meta{font-size:8px}.listing .meta b{font-size:10px}}
 
+
+/* NEXAP — página de anúncio organizada */
+#listingDetail{max-width:900px;margin:0 auto}
+#listingDetail .detail-page-top{padding:8px 0 16px}
+#listingDetail .listing-detail-content{max-width:100%;padding:0 0 24px;overflow:hidden;border-radius:20px}
+#listingDetail .listing-detail-content>.tag{margin:22px 24px 0}
+#listingDetail .listing-detail-content>h1{margin:12px 24px 8px;font-size:clamp(24px,5vw,34px);line-height:1.18;letter-spacing:-.8px}
+#listingDetail .listing-gallery{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin:0 0 20px;padding:0;background:var(--surface-2)}
+#listingDetail .listing-gallery img{width:100%;height:100%;min-height:0;aspect-ratio:1/1;object-fit:cover;border:0;border-radius:0}
+#listingDetail .listing-gallery img:first-child{grid-column:1/-1;aspect-ratio:16/9;max-height:390px}
+#listingDetail .listing-detail-description{margin:0 24px;padding:16px 0 20px;border-top:1px solid var(--line);font-size:14px;line-height:1.7}
+#listingDetail .listing-detail-info{margin:0 24px 20px;gap:9px}
+#listingDetail .listing-detail-info>div{padding:13px 14px;border-radius:12px}
+#listingDetail .listing-detail-info small{margin-bottom:5px;font-size:10px}
+#listingDetail .listing-detail-info strong{font-size:13px}
+#listingDetail .listing-detail-price{font-size:21px!important}
+#listingDetail .listing-detail-actions{margin:0 24px;gap:9px;padding-top:17px;border-top:1px solid var(--line)}
+#listingDetail .listing-detail-actions .btn{min-height:44px}
+@media(max-width:520px){
+ #listingDetail{width:100%}
+ #listingDetail .listing-detail-content{border-radius:17px}
+ #listingDetail .listing-gallery{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;margin-bottom:17px}
+ #listingDetail .listing-gallery img:first-child{aspect-ratio:4/3;max-height:300px}
+ #listingDetail .listing-detail-content>.tag{margin:18px 17px 0}
+ #listingDetail .listing-detail-content>h1{margin:10px 17px 8px;font-size:25px}
+ #listingDetail .listing-detail-description{margin:0 17px;padding:14px 0 17px;font-size:13px}
+ #listingDetail .listing-detail-info{margin:0 17px 17px;grid-template-columns:repeat(2,minmax(0,1fr))}
+ #listingDetail .listing-detail-info>div{padding:11px}
+ #listingDetail .listing-detail-info strong{font-size:12px}
+ #listingDetail .listing-detail-actions{margin:0 17px;padding-top:14px}
+}
+@media(max-width:350px){#listingDetail .listing-detail-info{grid-template-columns:1fr}}
+html[data-theme="dark"] #listingDetail .listing-gallery{background:#18231b}
+
 </style>
 </head>
 <body>
