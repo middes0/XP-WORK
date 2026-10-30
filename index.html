@@ -341,6 +341,12 @@ if('serviceWorker' in navigator && location.protocol.startsWith('http'))window.a
 })();
 
 
+render();
+["homeSort","exploreSort"].forEach(id=>document.getElementById(id)?.addEventListener("change",event=>{sortOrder=event.target.value;render();}));
+function openListingFromUrl(){const id=new URL(location.href).searchParams.get("anuncio");if(id){const item=listings.find(a=>String(a.id)===String(id));if(item)openDetail(item.id);}}
+window.addEventListener("load",()=>setTimeout(openListingFromUrl,900));
+</script>
+<script>
 // Configurações de aparência: preferência local, independente do login.
 (function setupAppearanceSettings(){
  const select=document.getElementById("appearanceSelect"),description=document.getElementById("appearanceDescription"),save=document.getElementById("saveAppearance");
@@ -351,11 +357,6 @@ if('serviceWorker' in navigator && location.protocol.startsWith('http'))window.a
  select.addEventListener("change",()=>description.textContent=descriptions[select.value]);
  save.addEventListener("click",()=>{window.__nexapTheme.set(select.value);toast("Aparência atualizada.");});
 })();
-
-render();
-["homeSort","exploreSort"].forEach(id=>document.getElementById(id)?.addEventListener("change",event=>{sortOrder=event.target.value;render();}));
-function openListingFromUrl(){const id=new URL(location.href).searchParams.get("anuncio");if(id){const item=listings.find(a=>String(a.id)===String(id));if(item)openDetail(item.id);}}
-window.addEventListener("load",()=>setTimeout(openListingFromUrl,900));
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="./supabase-client.js"></script>
