@@ -85,6 +85,33 @@
     }
   });
 
+  // Fechamento confiável do painel de opções e das janelas de conta.
+  document.addEventListener("click", event => {
+    const closeButton = event.target.closest("#closeModal");
+    if (closeButton) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      el("detailModal").classList.remove("open");
+      el("detailContent").innerHTML = "";
+      return;
+    }
+  }, true);
+  document.addEventListener("keydown", event => {
+    if (event.key === "Escape") {
+      el("detailModal")?.classList.remove("open");
+      el("moreMenu")?.classList.remove("open");
+      el("moreMenu")?.setAttribute("aria-hidden", "true");
+      el("moreMenuTrigger")?.setAttribute("aria-expanded", "false");
+      el("profileSetupModal")?.classList.remove("open");
+      profileSetupOpen = false;
+    }
+  });
+  document.addEventListener("click", event => {
+    if (event.target.id === "detailModal") {
+      el("detailModal").classList.remove("open");
+      el("detailContent").innerHTML = "";
+    }
+  });
   let favoriteIds = new Set();
   const actionModal = () => el("detailModal");
   function showAccountAction(title, body) {
@@ -123,8 +150,8 @@
     if (action === "personal") {
       if (window.XP_REMOTE.profile) openProfileSetup(window.XP_REMOTE.profile, true);
     } else if (action === "ads") {
-      page("profile");
-      setTimeout(() => el("myAdsSection").scrollIntoView({behavior:"smooth",block:"start"}), 80);
+      page("activity");
+      setTimeout(() => el("activityMyGrid")?.scrollIntoView({behavior:"smooth",block:"start"}), 80);
     } else if (action === "security") {
       const email = window.XP_REMOTE.user?.email || "";
       showAccountAction("Segurança e acesso", '<p class="sub">Conta vinculada a <strong>'+esc(email)+'</strong></p><form id="securityForm"><div class="field"><label for="newAccountPassword">Nova senha</label><input id="newAccountPassword" type="password" minlength="8" required autocomplete="new-password" placeholder="Mínimo de 8 caracteres"></div><div class="field"><label for="confirmAccountPassword">Confirme a nova senha</label><input id="confirmAccountPassword" type="password" minlength="8" required autocomplete="new-password" placeholder="Repita a nova senha"></div><button class="btn" type="submit" style="width:100%">Alterar senha</button></form><button class="btn ghost" id="sendPasswordReset" style="width:100%;margin-top:10px">Enviar link de recuperação por e-mail</button>');
@@ -547,6 +574,7 @@
     const mine = listings.filter(a => a.owner === "local" || (a.owner === "remote" && a.ownerId === window.XP_REMOTE.user?.id));
     el("myCount").textContent = mine.length;
     renderInto("myGrid", mine);
+    if (el("activityMyGrid")) renderInto("activityMyGrid", mine);
   };
 
   const originalOpenDetail = openDetail;
