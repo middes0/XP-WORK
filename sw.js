@@ -40,7 +40,8 @@ self.addEventListener("fetch", event => {
   if (request.method !== "GET") return;
 
   const url = new URL(request.url);
-  if (url.origin !== self.location.origin) return;
+  const isSupabaseImage = url.origin === "https://balojriovbjzywjrvpyw.supabase.co" && request.destination === "image";
+  if (url.origin !== self.location.origin && !isSupabaseImage) return;
 
   // Never cache API/data requests or navigations as generic assets.
   if (request.mode === "navigate") {
