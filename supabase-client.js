@@ -26,26 +26,42 @@
     return { ...result, avatarColumnAvailable: true };
   }
 
+  // Evita duas inicializações simultâneas quando a sessão é restaurada
+  // e o evento de autenticação dispara quase ao mesmo tempo.
+  const profileLoads = new Map();
   async function ensureProfile(user) {
-    const { data: existing, error: readError } = await readProfile(user.id);
-    if (readError) throw readError;
-    if (!existing) {
-      const displayName = (user.user_metadata?.display_name || user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split("@")[0] || "Usuário").slice(0, 60);
-      const { error: insertError } = await client.from("profiles").insert({
-        id: user.id, display_name: displayName, city_id: window.XP_REMOTE.cityId
-      });
-      if (insertError) throw insertError;
-    } else if (!existing.city_id && window.XP_REMOTE.cityId) {
-      const { error: cityError } = await client.from("profiles")
-        .update({ city_id: window.XP_REMOTE.cityId }).eq("id", user.id);
-      if (cityError) throw cityError;
+    if (profileLoads.has(user.id)) return profileLoads.get(user.id);
+    const task = (async () => {
+      const { data: existing } = await readProfile(user.id);
+      if (!existing) {
+        const displayName = (user.user_metadata?.display_name || user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split("@")[0] || "Usuário").slice(0, 60);
+        // Upsert torna a criação segura caso outra atualização da sessão
+        // tente criar o mesmo perfil ao mesmo tempo.
+        const { error: upsertError } = await client.from("profiles").upsert({
+          id: user.id,
+          display_name: displayName,
+          city_id: window.XP_REMOTE.cityId
+        }, { onConflict: "id", ignoreDuplicates: true });
+        if (upsertError) throw upsertError;
+      } else if (!existing.city_id && window.XP_REMOTE.cityId) {
+        const { error: cityError } = await client.from("profiles")
+          .update({ city_id: window.XP_REMOTE.cityId }).eq("id", user.id);
+        if (cityError) throw cityError;
+      }
+      const { data, avatarColumnAvailable } = await readProfile(user.id, true);
+      if (!data) throw new Error("O perfil não foi encontrado após a inicialização. Verifique as permissões da tabela profiles no Supabase.");
+      window.XP_REMOTE.profile = data;
+      window.XP_REMOTE.avatarColumnAvailable = avatarColumnAvailable;
+      if (!data.bio?.trim()) openProfileSetup(data, false);
+      else updateProfileSummary(data);
+      return data;
+    })();
+    profileLoads.set(user.id, task);
+    try {
+      return await task;
+    } finally {
+      profileLoads.delete(user.id);
     }
-    const { data, error, avatarColumnAvailable } = await readProfile(user.id, true);
-    if (error) throw error;
-    window.XP_REMOTE.profile = data;
-    window.XP_REMOTE.avatarColumnAvailable = avatarColumnAvailable;
-    if (!data.bio?.trim()) openProfileSetup(data, false);
-    else updateProfileSummary(data);
   }
 
   function updateProfileSummary(profile) {
