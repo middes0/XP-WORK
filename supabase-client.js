@@ -490,6 +490,10 @@
   async function refreshAccount(session) {
     const user = session?.user || null;
     window.XP_REMOTE.user = user;
+    if (new URLSearchParams(window.location.search).get("app") === "android") {
+      document.documentElement.classList.toggle("nexap-authenticated", !!user);
+      if (typeof window.page === "function") window.page(user ? "home" : "profile");
+    }
     el("signedOut").hidden = !!user;
     el("signedIn").hidden = !user;
     el("memberAccountContent").hidden = true;
@@ -610,7 +614,8 @@
       const { error } = await client.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: window.location.origin + window.location.pathname
+          redirectTo: window.location.origin + window.location.pathname +
+            (new URLSearchParams(window.location.search).get("app") === "android" ? "?app=android" : "")
         }
       });
       if (error) throw error;
