@@ -74,6 +74,111 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 @media(min-width:440px) and (max-width:699px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.listing-body{padding:13px}.listing h3{font-size:13px}}
 @media(prefers-reduced-motion:reduce){.listing,.cat,.btn{transition:none!important}}
 
+
+/* ETAPA 1 — acabamento, consistência e acessibilidade */
+:root{--ink:#18321d;--muted:#6b7c6d;--border:#e3ece3;--green:#2e7d32;--green-soft:#edf7ee;--focus:rgba(76,217,100,.22);--elevation:0 8px 26px rgba(25,55,30,.065)}
+body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;text-rendering:optimizeLegibility}
+::selection{background:#ccefd0;color:#18321d}
+.top{box-shadow:0 2px 14px rgba(27,58,32,.025)}
+.brand{min-width:0}.brand>div:last-child{min-width:0}
+.logo svg{width:100%;height:100%}
+.city{white-space:nowrap}
+.btn{min-height:42px;display:inline-flex;align-items:center;justify-content:center;gap:8px;letter-spacing:.05px}
+.btn:disabled{opacity:.58;cursor:wait;transform:none;box-shadow:none}
+.btn.secondary{background:#f0f8f1;border-color:#dceedd;color:#286d30}
+.btn.ghost:hover{background:#f5faf5;border-color:#cfe3d1}
+.search{transition:border-color .18s,box-shadow .18s}
+.search input{font-size:14px}
+.search input:focus-visible{outline:0}
+.section-head{min-height:28px}
+.section h2{letter-spacing:-.45px}
+.cat{position:relative;overflow:hidden;min-width:0}
+.cat:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.cat .ico{transition:transform .2s}
+.cat:hover .ico{transform:translateY(-2px)}
+.toolbar{scrollbar-width:none;overscroll-behavior-x:contain}
+.chip{transition:background .16s,border-color .16s,color .16s}
+.chip:hover{border-color:#b9dabc;color:#286d30}
+.listing{display:flex;flex-direction:column}
+.listing-cover{object-fit:cover;transition:transform .35s}
+.listing:hover .listing-cover{transform:scale(1.015)}
+.listing-body{display:flex;flex:1;flex-direction:column;align-items:stretch}
+.listing .meta{margin-top:auto;padding-top:5px;align-items:center}
+.listing .detail{margin-top:14px!important}
+.listing:not(:has(.listing-cover)) .listing-body:before{content:"";display:block;height:8px;width:38px;border-radius:9px;background:#d9eddb;margin:0 0 13px}
+.listing-gallery img,.image-preview img{display:block;object-fit:cover}
+.image-preview{position:relative;overflow:hidden;border-radius:11px;background:#f0f5f0}
+.image-preview img{display:block;width:100%;height:100%;min-height:70px;object-fit:cover}
+.listing-gallery img{border:1px solid #e6eee6}
+.empty{border-color:#d7e5d8;color:#718074}
+.empty strong{color:#29442d}
+.page{animation:page-in .22s ease both}
+@keyframes page-in{from{opacity:.72;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+.bottom{padding-top:9px}
+.nav button{min-height:51px;transition:color .16s,background .16s,transform .16s}
+.nav button:active{transform:scale(.97)}
+.nav button.active{background:#edf7ee;color:#287332}
+.nav button.active span svg{stroke-width:2.1}
+.panel{box-shadow:0 4px 18px rgba(25,55,30,.035)}
+.field label{color:#36543b}
+.field input,.field textarea,.field select{min-height:45px;transition:border-color .16s,box-shadow .16s,background .16s}
+.field textarea{min-height:110px;line-height:1.55}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:#76bd7e;box-shadow:0 0 0 3px var(--focus);background:#fff}
+.field input[type=file]{padding:10px;background:#f8fbf8}
+.notice{background:#f2f8f2;border-color:#e1eee2;color:#526b55}
+.stat{box-shadow:0 3px 12px rgba(25,55,30,.025)}
+.stat b{color:#2e7d32}
+.account-identity{border-bottom:1px solid #edf2ed;margin-bottom:12px}
+.account-avatar{background:linear-gradient(145deg,#eaf8ec,#d9f0dc);color:#2e7d32}
+.account-menu-item{transition:background .15s,border-color .15s}
+.account-menu-item:hover{background:#f8fcf8}
+.more-menu-card{animation:menu-in .18s ease-out both}
+@keyframes menu-in{from{opacity:0;transform:translateY(-6px) scale(.99)}to{opacity:1;transform:translateY(0) scale(1)}}
+.modal.open{animation:fade-in .16s ease both}
+.dialog,.profile-setup-dialog{border-color:#e1ece2}
+.dialog-head{margin-bottom:14px}
+.close:hover,.more-menu-heading button:hover{background:#e6f2e7;color:#286d30}
+.toast{max-width:min(420px,calc(100vw - 32px));line-height:1.45;box-shadow:0 9px 28px rgba(16,44,20,.2);padding:12px 17px}
+.listing-detail-content{box-shadow:0 8px 28px rgba(25,55,30,.05)}
+.listing-detail-content .listing-gallery{margin-top:20px}
+.listing-detail-info strong{overflow-wrap:anywhere}
+.listing-detail-actions .btn{font-size:13px}
+button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid rgba(76,217,100,.58);outline-offset:2px}
+@keyframes fade-in{from{opacity:0}to{opacity:1}}
+/* Componentes de carregamento reutilizáveis para futuras consultas assíncronas */
+.skeleton{position:relative;overflow:hidden;background:#edf3ed;border-radius:10px;color:transparent!important}
+.skeleton:after{content:"";position:absolute;inset:0;transform:translateX(-100%);background:linear-gradient(90deg,transparent,rgba(255,255,255,.72),transparent);animation:skeleton-shimmer 1.35s infinite}
+@keyframes skeleton-shimmer{100%{transform:translateX(100%)}}
+@media(min-width:700px){
+ .listing{border-radius:19px}
+ .listing-cover{aspect-ratio:16/10}
+ .listing-body{padding:17px}
+ .section{margin-top:36px}
+}
+@media(max-width:560px){
+ body{padding-bottom:calc(76px + env(safe-area-inset-bottom))}
+ .top{padding:10px 15px;gap:8px}
+ .brand{gap:9px}
+ .logo{width:41px;height:41px}
+ .city{font-size:10px;padding:7px 9px}
+ .wrap{padding-top:12px}
+ .hero h1{letter-spacing:-1.5px}
+ .search{gap:4px}
+ .search input{padding:9px 7px;font-size:12px}
+ .search .btn{min-height:40px}
+ .listing{border-radius:16px}
+ .listing-body{padding:14px}
+ .listing h3{font-size:14px}
+ .listing p{font-size:11px}
+ .bottom{padding-bottom:calc(7px + env(safe-area-inset-bottom))}
+ .nav button{min-height:48px;font-size:9px}
+ .profile-setup-dialog{padding:19px}
+}
+@media(prefers-reduced-motion:reduce){
+ .page,.more-menu-card,.modal.open,.skeleton:after{animation:none!important}
+ .listing:hover .listing-cover,.cat:hover .ico{transform:none}
+}
+
 </style>
 </head>
 <body>
