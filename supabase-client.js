@@ -448,6 +448,7 @@
 
     if (!user) {
       window.XP_REMOTE.profile = null;
+      await refreshAdminAccess(null);
       el("connectionState").textContent = "Entre ou cadastre-se";
       try { await loadRemote(); } catch (error) { showError(error); }
       return;
@@ -485,6 +486,8 @@
     }
 
     try {
+      await refreshAdminAccess(user);
+
       const { data: savedFavorites, error: favoritesError } = await client
         .from("favorites").select("listing_id").eq("user_id", user.id);
       if (favoritesError) throw favoritesError;
@@ -492,6 +495,56 @@
     } catch (error) {
       console.error("XP WORK: falha ao carregar favoritos", error);
     }
+  }
+
+  window.XP_REMOTE.isAdmin = false;
+  window.XP_REMOTE.adminRole = null;
+  window.XP_REMOTE.adminUsers = [];
+  function renderAdminUsers(rows) {
+    const target=el("adminUsersList"), count=el("adminUserCount");
+    if(!target||!count)return;
+    count.textContent=rows.length+" conta(s)";
+    if(!rows.length){target.innerHTML='<div class="empty">Nenhum usuário encontrado.</div>';return;}
+    const owner=window.XP_REMOTE.adminRole==="owner";
+    const date=v=>v?new Date(v).toLocaleDateString("pt-BR"):"—";
+    target.innerHTML=rows.map(row=>{
+      const role=row.admin_role||"user", label=role==="owner"?"Administrador principal":role==="admin"?"Administrador":"Usuário";
+      const action=owner&&role!=="owner"&&row.user_id!==window.XP_REMOTE.user?.id?'<button class="btn '+(role==="admin"?"ghost":"secondary")+'" data-admin-role="'+(role==="admin"?"remove":"add")+'" data-user-id="'+esc(row.user_id)+'" type="button">'+(role==="admin"?"Remover administrador":"Tornar administrador")+'</button>':"";
+      return '<article class="admin-user"><div class="admin-user-head"><div><strong>'+esc(row.display_name||"Sem nome")+'</strong><small>'+esc(row.email||"E-mail indisponível")+'</small></div><span class="admin-role">'+label+'</span></div><div class="admin-user-meta"><span>Conta: '+esc(row.account_type||"—")+'</span><span>Anúncios: '+Number(row.listings_count||0)+'</span><span>Cadastro: '+date(row.created_at)+'</span><span>Último acesso: '+date(row.last_sign_in_at)+'</span></div>'+(row.bio?'<small>'+esc(row.bio)+'</small>':"")+(action?'<div class="admin-user-actions">'+action+'</div>':"")+'</article>';
+    }).join("");
+  }
+  async function loadAdminUsers(){
+    if(!window.XP_REMOTE.isAdmin)return;
+    const target=el("adminUsersList");if(target)target.innerHTML='<div class="empty">Atualizando usuários...</div>';
+    const {data,error}=await client.rpc("nexap_admin_list_users");
+    if(error){if(target)target.innerHTML='<div class="empty">Falha ao carregar: '+esc(error.message)+'</div>';return;}
+    window.XP_REMOTE.adminUsers=Array.isArray(data)?data:[];
+    renderAdminUsers(window.XP_REMOTE.adminUsers);
+  }
+  window.NEXAP_ADMIN={open:loadAdminUsers};
+  el("adminReload")?.addEventListener("click",loadAdminUsers);
+  el("adminUsersList")?.addEventListener("click",async event=>{
+    const button=event.target.closest("[data-admin-role]");
+    if(!button||window.XP_REMOTE.adminRole!=="owner")return;
+    const makeAdmin=button.dataset.adminRole==="add";
+    if(!confirm((makeAdmin?"Promover":"Remover")+" este usuário "+(makeAdmin?"a administrador":"de administrador")+"?"))return;
+    button.disabled=true;
+    const {error}=await client.rpc("nexap_admin_set_role",{p_user_id:button.dataset.userId,p_make_admin:makeAdmin});
+    if(error){toast(error.message||"Não foi possível alterar a permissão.");button.disabled=false;return;}
+    toast(makeAdmin?"Usuário promovido a administrador.":"Permissão removida.");
+    await loadAdminUsers();
+  });
+  async function refreshAdminAccess(user){
+    window.XP_REMOTE.isAdmin=false;window.XP_REMOTE.adminRole=null;window.XP_REMOTE.adminUsers=[];
+    if(el("adminMenuItem"))el("adminMenuItem").hidden=true;
+    if(!user)return;
+    const {data,error}=await client.rpc("nexap_admin_list_users");
+    if(error||!Array.isArray(data))return;
+    window.XP_REMOTE.adminUsers=data;
+    const me=data.find(row=>row.user_id===user.id);
+    window.XP_REMOTE.adminRole=me?.admin_role||null;
+    window.XP_REMOTE.isAdmin=!!me?.admin_role;
+    if(el("adminMenuItem"))el("adminMenuItem").hidden=!window.XP_REMOTE.isAdmin;
   }
 
   function showError(error) {
