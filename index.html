@@ -282,6 +282,121 @@ html[data-theme="dark"] .listing:focus-within{
   outline-offset:2px;
 }
 
+
+
+/* ETAPA 1 — sistema visual global NEXAP */
+:root{
+  --bg:#f5f8f5;
+  --surface:#ffffff;
+  --surface-2:#f8fbf8;
+  --surface-3:#edf7ee;
+  --line:#e2ebe2;
+  --text:#203523;
+  --muted:#718074;
+  --brand:#2e7d32;
+  --brand-strong:#25672a;
+  --brand-soft:#edf7ee;
+  --focus-ring:rgba(76,217,100,.24);
+  --shadow-soft:0 3px 14px rgba(25,55,30,.045);
+  --shadow-card:0 8px 26px rgba(25,55,30,.065);
+  --radius:18px;
+  color-scheme:light;
+}
+html[data-theme="dark"]{
+  --bg:#101713;
+  --surface:#18231b;
+  --surface-2:#1d2a20;
+  --surface-3:#263b29;
+  --line:#304233;
+  --text:#e4eee5;
+  --muted:#a0b0a2;
+  --brand:#8de39a;
+  --brand-strong:#a0ecaa;
+  --brand-soft:#263b29;
+  --focus-ring:rgba(120,220,135,.28);
+  --shadow-soft:0 3px 14px rgba(0,0,0,.16);
+  --shadow-card:0 10px 30px rgba(0,0,0,.22);
+  color-scheme:dark;
+}
+html,body{background:var(--bg);color:var(--text)}
+body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.top{background:var(--surface);border-color:var(--line);box-shadow:var(--shadow-soft)}
+.brand strong,.hero h1,.section h2,.panel h2,.panel h3,.listing-detail-content h1{color:var(--text)}
+.brand small,.hero p,.sub,.footer-note{color:var(--muted)}
+.city,.more-menu-trigger{background:var(--surface-2);border-color:var(--line);color:var(--text)}
+.more-menu-trigger{color:var(--brand)}
+.search{background:var(--surface);border-color:var(--line);box-shadow:var(--shadow-soft)}
+.search input{color:var(--text)}
+.search input::placeholder,.field input::placeholder,.field textarea::placeholder{color:var(--muted)}
+.btn{background:#2e7d32;color:#fff}
+.btn:hover{background:#25672a}
+.btn.secondary{background:var(--brand-soft);border-color:var(--line);color:var(--brand-strong);box-shadow:none}
+.btn.secondary:hover{background:var(--surface-3);border-color:var(--brand)}
+.btn.ghost{background:var(--surface);border-color:var(--line);color:var(--text);box-shadow:none}
+.btn.ghost:hover{background:var(--surface-2);border-color:var(--brand)}
+.categories .cat{background:var(--surface);border-color:var(--line);color:var(--text);box-shadow:var(--shadow-soft)}
+.cat b{color:var(--text)}
+.cat small{color:var(--muted)}
+.cat .ico{background:var(--surface-3);color:var(--brand)}
+.cat:hover,.cat.active{background:var(--surface-2);border-color:var(--brand);box-shadow:var(--shadow-card)}
+.chip{background:var(--surface);border-color:var(--line);color:var(--muted)}
+.chip.active{background:var(--brand-soft);border-color:var(--brand);color:var(--brand-strong)}
+.listing-controls select{background:var(--surface);border-color:var(--line);color:var(--text)}
+.empty{background:var(--surface-2);border-color:var(--line);color:var(--muted)}
+.empty strong{color:var(--text)}
+.bottom{background:var(--surface);border-color:var(--line);box-shadow:0 -5px 22px rgba(25,55,30,.045)}
+.nav button{color:var(--muted)}
+.nav button.active{background:var(--brand-soft);color:var(--brand-strong)}
+.panel,.stat,.listing-detail-content{background:var(--surface);border-color:var(--line);box-shadow:var(--shadow-soft)}
+.panel p,.stat small{color:var(--muted)}
+.notice{background:var(--surface-2);border-color:var(--line);color:var(--muted)}
+.field label{color:var(--text)}
+.field input,.field textarea,.field select{background:var(--surface-2);border-color:var(--line);color:var(--text)}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--brand);box-shadow:0 0 0 3px var(--focus-ring);background:var(--surface)}
+.stat b{color:var(--brand)}
+.more-menu{background:rgba(13,30,16,.42)}
+.more-menu-card{background:var(--surface);border-color:var(--line);box-shadow:var(--shadow-card)}
+.more-menu-heading{border-color:var(--line)}
+.more-menu-heading strong,.more-menu-item,.more-menu-item strong{color:var(--text)}
+.more-menu-heading button,.close{background:var(--surface-3);color:var(--text)}
+.more-menu-item{border-color:var(--line)}
+.more-menu-item>span:first-child,.account-menu-icon{background:var(--brand-soft);color:var(--brand)}
+.more-menu-item small,.account-menu-item small{color:var(--muted)}
+.more-menu-item:hover,.more-menu-item:active,.account-menu-item:hover{background:var(--surface-2)}
+.account-identity{border-color:var(--line)}
+.account-identity-copy strong{color:var(--text)}
+.account-identity-copy span{color:var(--muted)}
+.account-avatar{background:var(--brand-soft);color:var(--brand)}
+.account-bio{background:var(--surface-2);border:1px solid var(--line);color:var(--muted)}
+.account-menu-item{color:var(--text);border-color:var(--line)}
+.listing-detail-content .tag{background:var(--brand-soft);color:var(--brand-strong)}
+.listing-detail-description{color:var(--muted)}
+.listing-detail-info>div{background:var(--surface-2);border-color:var(--line)}
+.listing-detail-info small{color:var(--muted)}
+.listing-detail-info strong{color:var(--text)}
+.listing-detail-price{color:var(--brand-strong)!important}
+.listing-gallery img,.image-preview img{border-color:var(--line)}
+.dialog,.profile-setup-dialog{background:var(--surface);border-color:var(--line);color:var(--text);box-shadow:var(--shadow-card)}
+.dialog .panel{background:var(--surface-2)}
+.dialog-head{border-color:var(--line)}
+.toast{box-shadow:var(--shadow-card)}
+.public-profile h3{color:var(--text)}
+.public-profile>span,.public-profile>p{color:var(--muted)}
+.profile-ad{border-color:var(--line)}
+.profile-ad strong{color:var(--text)}
+.profile-ad span{color:var(--muted)}
+button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,.cat:focus-visible{
+  outline:3px solid var(--focus-ring);
+  outline-offset:2px;
+}
+@media(hover:none){
+  .cat:hover,.btn:hover,.more-menu-item:hover,.account-menu-item:hover{transform:none}
+}
+@media(prefers-reduced-motion:reduce){
+  .page,.more-menu-card,.modal.open{animation:none!important}
+  .cat,.btn,.chip,.nav button,.listing{transition:none!important}
+}
+
 </style>
 </head>
 <body>
