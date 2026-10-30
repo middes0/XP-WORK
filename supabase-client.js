@@ -88,6 +88,24 @@
   el("editProfileBtn").addEventListener("click", () => {
     if (window.XP_REMOTE.profile) openProfileSetup(window.XP_REMOTE.profile, true);
   });
+  document.addEventListener("click", event => {
+    const item = event.target.closest("[data-account-action]");
+    if (!item) return;
+    const action = item.dataset.accountAction;
+    if (action === "personal") {
+      if (window.XP_REMOTE.profile) openProfileSetup(window.XP_REMOTE.profile, true);
+    } else if (action === "ads") {
+      el("myAdsSection").scrollIntoView({ behavior: "smooth", block: "start" });
+    } else if (action === "security") {
+      toast("Para encerrar o acesso neste dispositivo, use Sair da conta.");
+    } else if (action === "notifications") {
+      toast("As preferências de notificações estarão disponíveis em uma próxima atualização.");
+    } else if (action === "favorites") {
+      toast("A área de favoritos será ativada em uma próxima atualização.");
+    } else if (action === "help") {
+      toast("XP WORK • Serviços, comércio e oportunidades de Xapuri.");
+    }
+  });
 
   async function loadRemote() {
     const [cityResult, categoryResult] = await Promise.all([
@@ -118,14 +136,20 @@
     window.XP_REMOTE.user = user;
     el("signedOut").hidden = !!user;
     el("signedIn").hidden = !user;
+    el("memberAccountContent").hidden = !user;
+    el("accountHero").hidden = !!user;
+    el("accountPanelTitle").textContent = user ? "Minha conta" : "Acesse sua conta";
     if (user) {
-      el("accountLabel").textContent = "Conectado como " + user.email;
       await loadRemote();
       await ensureProfile(user);
+      el("accountLabel").textContent = user.email || "";
+      const profile = window.XP_REMOTE.profile || {};
+      el("accountDisplayName").textContent = profile.display_name || user.user_metadata?.full_name || user.email?.split("@")[0] || "Usuário XP WORK";
+      el("accountAvatar").textContent = (el("accountDisplayName").textContent.trim()[0] || "U").toUpperCase();
       el("connectionState").textContent = "Conta conectada";
     } else {
       window.XP_REMOTE.profile = null;
-      el("connectionState").textContent = "Conectado • entre na sua conta";
+      el("connectionState").textContent = "Entre ou cadastre-se";
       await loadRemote();
     }
   }
