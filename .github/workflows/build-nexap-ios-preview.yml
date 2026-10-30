@@ -1,0 +1,53 @@
+name: Build NEXAP iOS preview IPA
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "ios-preview/**"
+      - ".github/workflows/build-nexap-ios-preview.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate Xcode project
+        working-directory: ios-preview
+        run: xcodegen generate
+
+      - name: Build unsigned iOS app
+        working-directory: ios-preview
+        run: |
+          xcodebuild \
+            -project NEXAP.xcodeproj \
+            -scheme NEXAP \
+            -configuration Release \
+            -sdk iphoneos \
+            -derivedDataPath build/DerivedData \
+            CODE_SIGNING_ALLOWED=NO \
+            build
+
+      - name: Package unsigned IPA
+        run: |
+          mkdir -p ios-preview/Payload
+          cp -R ios-preview/build/DerivedData/Build/Products/Release-iphoneos/NEXAP.app ios-preview/Payload/
+          cd ios-preview
+          /usr/bin/zip -qry ../NEXAP-iOS-unsigned.ipa Payload
+
+      - name: Upload unsigned IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: NEXAP-iOS-unsigned-IPA
+          path: NEXAP-iOS-unsigned.ipa
+          if-no-files-found: error
+          retention-days: 7
