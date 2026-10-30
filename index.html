@@ -580,6 +580,18 @@ html[data-theme="dark"] .modal{background:rgba(3,10,6,.72)}
 @media(max-width:350px){#listingDetail .listing-detail-info{grid-template-columns:1fr}}
 html[data-theme="dark"] #listingDetail .listing-gallery{background:#18231b}
 
+
+/* Galeria de fotos em carrossel: deslize no celular ou arraste com o mouse */
+#listingDetail .listing-gallery{position:relative;display:block!important;overflow:hidden;background:var(--surface-2);margin:0 0 20px;padding:0}
+#listingDetail .gallery-track{display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scroll-behavior:smooth;overscroll-behavior-x:contain;scrollbar-width:none;touch-action:pan-x;cursor:grab}
+#listingDetail .gallery-track::-webkit-scrollbar{display:none}
+#listingDetail .gallery-track.dragging{cursor:grabbing;scroll-behavior:auto;user-select:none}
+#listingDetail .gallery-slide{flex:0 0 100%;width:100%;scroll-snap-align:start;scroll-snap-stop:always;aspect-ratio:16/9;background:#101713}
+#listingDetail .gallery-slide img{display:block;width:100%;height:100%;object-fit:contain;border:0!important;border-radius:0!important;pointer-events:none;-webkit-user-drag:none}
+#listingDetail .gallery-controls{position:absolute;left:12px;right:12px;bottom:12px;display:flex;align-items:center;justify-content:space-between;pointer-events:none}
+#listingDetail .gallery-arrow{pointer-events:auto;width:36px;height:36px;border:1px solid #ffffff55;border-radius:50%;background:#101713bb;color:white;font-size:25px;line-height:1;display:grid;place-items:center}
+#listingDetail .gallery-counter{padding:6px 11px;border-radius:20px;background:#101713bb;color:white;font-size:12px;font-weight:650}
+@media(max-width:520px){#listingDetail .gallery-slide{aspect-ratio:4/3}}
 </style>
 </head>
 <body>
@@ -627,7 +639,7 @@ function openDetail(id){
  const valid=phone.length>=10&&phone.length<=13;
  document.getElementById('listingPageContent').innerHTML=
   '<span class="tag">'+esc(a.category)+'</span>'+
-  (a.images?.length?'<div class="listing-gallery">'+a.images.map(img=>'<img src="'+esc(img.url)+'" alt="'+esc(img.alt||a.title)+'" loading="lazy" decoding="async">').join('')+'</div>':'')+
+  (a.images?.length?'<div class="listing-gallery"><div class="gallery-track" id="galleryTrack">'+a.images.map((img,i)=>'<div class="gallery-slide"><img src="'+esc(img.url)+'" alt="'+esc(img.alt||a.title)+'" loading="lazy" decoding="async"></div>').join('')+'</div>'+(a.images.length>1?'<div class="gallery-controls"><button type="button" class="gallery-arrow" id="galleryPrev" aria-label="Foto anterior">‹</button><span class="gallery-counter" id="galleryCounter">1 / '+a.images.length+'</span><button type="button" class="gallery-arrow" id="galleryNext" aria-label="Próxima foto">›</button></div>':'')+'</div>':'')+
   '<h1>'+esc(a.title)+'</h1>'+
   '<div class="listing-detail-description">'+esc(a.description)+'</div>'+
   '<div class="listing-detail-info">'+
@@ -642,6 +654,20 @@ function openDetail(id){
    (a.owner==='local'?'<button class="btn ghost" id="deleteAd" data-id="'+esc(a.id)+'" type="button">Excluir meu anúncio</button>':'')+
   '</div>';
  page('listingDetail');
+ const track=document.getElementById('galleryTrack');
+ if(track){
+  const slides=[...track.children],counter=document.getElementById('galleryCounter');
+  const updateGallery=()=>{const index=Math.round(track.scrollLeft/track.clientWidth);if(counter)counter.textContent=(index+1)+' / '+slides.length;};
+  track.addEventListener('scroll',updateGallery,{passive:true});
+  document.getElementById('galleryPrev')?.addEventListener('click',()=>track.scrollBy({left:-track.clientWidth,behavior:'smooth'}));
+  document.getElementById('galleryNext')?.addEventListener('click',()=>track.scrollBy({left:track.clientWidth,behavior:'smooth'}));
+  let down=false,startX=0,startScroll=0;
+  track.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'){down=true;startX=e.clientX;startScroll=track.scrollLeft;track.classList.add('dragging');}});
+  window.addEventListener('pointerup',()=>{down=false;track.classList.remove('dragging');});
+  track.addEventListener('pointermove',e=>{if(!down)return;track.scrollLeft=startScroll-(e.clientX-startX);});
+  track.addEventListener('pointercancel',()=>{down=false;track.classList.remove('dragging');});
+  updateGallery();
+ }
 }
 document.getElementById("backFromListing").addEventListener("click",closeListingPage);
 document.addEventListener("click",async event=>{const button=event.target.closest("#shareListing");if(!button)return;const item=listings.find(x=>String(x.id)===String(button.dataset.id));if(!item)return;const url=new URL(location.href);url.searchParams.set("anuncio",item.id);const shareData={title:item.title,text:"Confira este anúncio no NEXAP: "+item.title,url:url.toString()};try{if(navigator.share)await navigator.share(shareData);else if(navigator.clipboard?.writeText){await navigator.clipboard.writeText(url.toString());toast("Link do anúncio copiado.");}else toast("Seu navegador não permite compartilhar por aqui.");}catch(error){if(error?.name!=="AbortError")toast("Não foi possível compartilhar o anúncio.");}});
