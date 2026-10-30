@@ -88,7 +88,7 @@
   let favoriteIds = new Set();
   const actionModal = () => el("detailModal");
   function showAccountAction(title, body) {
-    el("listingPageContent").innerHTML = '<h2 style="font-size:20px;margin:12px 0">' + title + '</h2>' + body;
+    el("detailContent").innerHTML = '<h2 style="font-size:20px;margin:12px 0">' + title + '</h2>' + body;
     actionModal().classList.add("open");
   }
   async function openFavorites() {
