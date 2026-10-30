@@ -132,7 +132,7 @@ language sql
 stable
 security definer
 set search_path = public
-as $
+as $$
   select exists (
     select 1 from public.conversation_participants cp
     where cp.conversation_id = p_conversation_id
@@ -149,7 +149,7 @@ returns trigger
 language plpgsql
 security definer
 set search_path = public
-as $
+as $$
 begin
   insert into public.conversation_participants (conversation_id, user_id)
   values (new.id, new.created_by)
@@ -168,7 +168,7 @@ returns void
 language plpgsql
 security definer
 set search_path = public
-as $
+as $$
 begin
   if auth.uid() is null or not public.is_conversation_member(p_conversation_id, auth.uid()) then
     raise exception 'Not allowed to add participants to this conversation';
