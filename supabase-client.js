@@ -9,7 +9,7 @@
   window.XP_REMOTE = { client, user: null, cityId: null, categories: {} };
 
   async function ensureProfile(user) {
-    const displayName = (user.user_metadata?.display_name || user.email.split("@")[0]).slice(0, 60);
+    const displayName = (user.user_metadata?.display_name || user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split("@")[0] || "Usuário").slice(0, 60);
     const { error } = await client.from("profiles").upsert({
       id: user.id, display_name: displayName, city_id: window.XP_REMOTE.cityId
     }, { onConflict: "id" });
@@ -59,6 +59,18 @@
     console.error("XP WORK Supabase:", error);
     toast(error?.message || "Não foi possível concluir. Tente novamente.");
   }
+
+  el("googleSignInBtn").addEventListener("click", async () => {
+    try {
+      const { error } = await client.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: window.location.origin + window.location.pathname
+        }
+      });
+      if (error) throw error;
+    } catch (error) { showError(error); }
+  });
 
   el("signUpBtn").addEventListener("click", async () => {
     const name = el("authName").value.trim();
