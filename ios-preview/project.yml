@@ -1,0 +1,22 @@
+name: NEXAP
+options:
+  bundleIdPrefix: br.com.nexap
+  deploymentTarget:
+    iOS: "16.0"
+targets:
+  NEXAP:
+    type: application
+    platform: iOS
+    sources:
+      - path: Sources
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: br.com.nexap.preview
+        PRODUCT_NAME: NEXAP
+        INFOPLIST_KEY_CFBundleDisplayName: NEXAP Preview
+        INFOPLIST_KEY_NSAppTransportSecurity_NSAllowsArbitraryLoads: NO
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        SWIFT_VERSION: "5.0"
+        TARGETED_DEVICE_FAMILY: "1"
+        IPHONEOS_DEPLOYMENT_TARGET: "16.0"
+        CODE_SIGNING_ALLOWED: NO
