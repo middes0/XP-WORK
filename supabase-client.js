@@ -306,6 +306,56 @@
     }
   });
 
+
+  let profileSearchMatches = [];
+  async function searchExploreProfiles() {
+    const term = el("exploreProfileSearch").value.trim();
+    const result = el("exploreProfileMatches");
+    if (!window.XP_REMOTE.user) { toast("Entre na sua conta para pesquisar perfis."); return; }
+    if (term.length < 2) { result.innerHTML = '<div class="sub">Digite pelo menos 2 letras.</div>'; return; }
+    result.innerHTML = '<div class="sub">Pesquisando perfis...</div>';
+    try {
+      const { data, error } = await client.from("profiles").select("id,display_name,account_type").ilike("display_name", "%"+term.replace(/[%_]/g,"")+"%").order("display_name").limit(12);
+      if (error) throw error;
+      profileSearchMatches = data || [];
+      result.innerHTML = profileSearchMatches.length ? '<div class="profile-match-list">'+profileSearchMatches.map(p=>'<button type="button" class="profile-match" data-explore-profile="'+esc(p.id)+'"><span><strong>'+esc(p.display_name)+'</strong><small>'+esc(({person:"Pessoa física",professional:"Profissional",business:"Comércio / empresa"})[p.account_type]||"Conta NEXAP")+'</small></span><b>Ver anúncios ›</b></button>').join("")+'</div>' : '<div class="empty">Nenhum perfil encontrado com esse nome.</div>';
+    } catch(error) { showError(error); result.innerHTML = '<div class="sub">Não foi possível pesquisar perfis.</div>'; }
+  }
+  el("exploreProfileSearchBtn").addEventListener("click", searchExploreProfiles);
+  el("exploreProfileSearch").addEventListener("keydown", event=>{if(event.key==="Enter")searchExploreProfiles();});
+  document.addEventListener("click", async event=>{
+    const match=event.target.closest("[data-explore-profile]");
+    if(match){
+      const userId=match.dataset.exploreProfile;
+      const profile=profileSearchMatches.find(p=>p.id===userId);
+      if(!profile)return;
+      try{
+        match.disabled=true;match.querySelector("b").textContent="Carregando...";
+        const {data,error}=await client.from("listings").select("id,owner_id,title,description,price,price_label,contact_phone,status,created_at,categories(name),cities(name)").eq("owner_id",userId).eq("status","published").order("created_at",{ascending:false}).limit(100);
+        if(error)throw error;
+        const ids=(data||[]).map(a=>a.id);let imgs=[];
+        if(ids.length){const response=await client.from("listing_images").select("id,listing_id,storage_path,alt_text,sort_order").in("listing_id",ids).order("sort_order");if(response.error)throw response.error;imgs=response.data||[];}
+        const grouped=new Map();
+        imgs.forEach(img=>{if(!grouped.has(img.listing_id))grouped.set(img.listing_id,[]);grouped.get(img.listing_id).push({id:img.id,alt:img.alt_text,url:client.storage.from("listing-images").getPublicUrl(img.storage_path).data.publicUrl});});
+        const selected=(data||[]).map(a=>({id:a.id,title:a.title,description:a.description,category:a.categories?.name||"Classificados",price:a.price_label||(a.price!=null?"R$ "+Number(a.price).toLocaleString("pt-BR",{minimumFractionDigits:2}):""),contact:a.contact_phone||"",author:profile.display_name,city:a.cities?.name||"Xapuri",createdAt:new Date(a.created_at).getTime(),owner:"remote",ownerId:userId,images:grouped.get(a.id)||[]}));
+        listings=listings.filter(a=>a.ownerId!==userId).concat(selected);
+        window.NEXAP_EXPLORE_OWNER=userId;activeFilter="Todos";query="";
+        document.getElementById("exploreProfileActiveName").textContent="Anúncios de "+profile.display_name;
+        document.getElementById("exploreProfileActive").hidden=false;
+        document.getElementById("exploreProfileMatches").innerHTML="";
+        render();
+        if(!selected.length)toast("Essa conta ainda não tem anúncios publicados.");
+      }catch(error){showError(error);match.disabled=false;match.querySelector("b").textContent="Ver anúncios ›";}
+    }
+    if(event.target.closest("#clearExploreProfile")){
+      window.NEXAP_EXPLORE_OWNER=null;
+      document.getElementById("exploreProfileActive").hidden=true;
+      document.getElementById("exploreProfileSearch").value="";
+      document.getElementById("exploreProfileMatches").innerHTML="";
+      render();
+    }
+  });
+
   async function loadRemote() {
     const [cityResult, categoryResult] = await Promise.all([
       client.from("cities").select("id").eq("slug", "xapuri-ac").maybeSingle(),
