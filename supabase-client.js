@@ -492,8 +492,9 @@
       const profile = window.XP_REMOTE.profile || {};
       el("accountDisplayName").textContent =
         profile.display_name || el("accountDisplayName").textContent;
-      el("accountAvatar").textContent =
-        (el("accountDisplayName").textContent.trim()[0] || "U").toUpperCase();
+      // Mantém a foto persistida no avatar; não substitui a imagem por iniciais
+      // depois que ensureProfile já carregou o registro salvo no Supabase.
+      updateProfileSummary(profile);
       el("publishIdentity").textContent =
         "Anúncio identificado como: " + (profile.display_name || "Seu perfil");
     } catch (error) {
