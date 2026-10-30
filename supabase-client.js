@@ -424,7 +424,7 @@
         .eq("id", item.id).eq("owner_id", window.XP_REMOTE.user?.id);
       if (error) throw error;
       await loadRemote();
-      el("detailModal").classList.remove("open");
+      closeListingPage();
       toast("Anúncio excluído.");
     } catch (error) { showError(error); }
   }, true);
