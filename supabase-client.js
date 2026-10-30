@@ -335,6 +335,81 @@
     } catch (error) { showError(error); }
   }, true);
 
+  // Edição online restrita ao proprietário autenticado.
+  function openEditAd(item) {
+    const categories = ["Serviços","Comércio","Classificados","Entregas","Empregos","Eventos"];
+    const options = categories.map(name => '<option value="'+name+'" '+(item.category===name?'selected':'')+'>'+name+'</option>').join("");
+    el("detailContent").innerHTML =
+      '<h2 style="font-size:20px;margin:8px 0">Editar anúncio</h2>' +
+      '<form id="editAdForm" data-id="'+esc(item.id)+'">' +
+      '<div class="field"><label for="editAdTitle">Título</label><input id="editAdTitle" maxlength="70" required value="'+esc(item.title)+'"></div>' +
+      '<div class="field"><label for="editAdCategory">Categoria</label><select id="editAdCategory" required>'+options+'</select></div>' +
+      '<div class="field"><label for="editAdPrice">Preço</label><input id="editAdPrice" value="'+esc(item.price||'')+'" placeholder="Ex.: A combinar"></div>' +
+      '<div class="field"><label for="editAdDescription">Descrição</label><textarea id="editAdDescription" maxlength="500" required>'+esc(item.description)+'</textarea></div>' +
+      '<div class="field"><label for="editAdContact">WhatsApp ou telefone</label><input id="editAdContact" inputmode="tel" required value="'+esc(item.contact||'')+'"></div>' +
+      '<button class="btn" type="submit" style="width:100%">Salvar alterações</button>' +
+      '<button class="btn ghost" id="cancelEditAd" type="button" style="width:100%;margin-top:8px">Cancelar</button></form>';
+  }
+  document.addEventListener("click", event => {
+    const button = event.target.closest("#editAd");
+    if (!button) return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    const item = listings.find(a => a.id === button.dataset.id);
+    if (!item || item.owner !== "remote" || item.ownerId !== window.XP_REMOTE.user?.id) {
+      toast("Você só pode editar seus próprios anúncios.");
+      return;
+    }
+    openEditAd(item);
+  }, true);
+  document.addEventListener("click", event => {
+    if (event.target.id === "cancelEditAd") {
+      const item = listings.find(a => a.id === el("editAdForm")?.dataset.id);
+      if (item) openDetail(item.id);
+    }
+  });
+  document.addEventListener("submit", async event => {
+    if (event.target.id !== "editAdForm") return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    const user = window.XP_REMOTE.user;
+    const item = listings.find(a => a.id === event.target.dataset.id);
+    if (!user || !item || item.owner !== "remote" || item.ownerId !== user.id) {
+      toast("Você só pode editar seus próprios anúncios.");
+      return;
+    }
+    const category = el("editAdCategory").value;
+    const categoryId = window.XP_REMOTE.categories[category];
+    if (!categoryId) return toast("Não foi possível identificar a categoria.");
+    const rawPrice = el("editAdPrice").value.trim();
+    let price = null, priceLabel = rawPrice || null;
+    if (rawPrice) {
+      const normalized = rawPrice.replace(/[^0-9,.]/g, "").replace(",", ".");
+      if (/^\d+(\.\d{1,2})?$/.test(normalized)) { price = Number(normalized); priceLabel = null; }
+    }
+    const button = event.target.querySelector('button[type="submit"]');
+    button.disabled = true;
+    button.textContent = "Salvando...";
+    try {
+      const { data, error } = await client.from("listings").update({
+        title: el("editAdTitle").value.trim(),
+        category_id: categoryId,
+        price, price_label: priceLabel,
+        description: el("editAdDescription").value.trim(),
+        contact_phone: el("editAdContact").value.trim()
+      }).eq("id", item.id).eq("owner_id", user.id).select("id").maybeSingle();
+      if (error) throw error;
+      if (!data) throw new Error("O anúncio não foi atualizado. Verifique se ele ainda pertence à sua conta.");
+      await loadRemote();
+      openDetail(item.id);
+      toast("Anúncio atualizado.");
+    } catch (error) {
+      showError(error);
+      button.disabled = false;
+      button.textContent = "Salvar alterações";
+    }
+  });
+  
   // Exclusão online apenas para o dono autenticado.
   document.addEventListener("click", async event => {
     const button = event.target.closest("#deleteAd");
@@ -382,7 +457,8 @@
     const item = listings.find(a => a.id === id);
     if (item?.owner === "remote" && item.ownerId === window.XP_REMOTE.user?.id) {
       el("detailContent").insertAdjacentHTML("beforeend",
-        '<button class="btn ghost" id="deleteAd" data-id="' + esc(item.id) + '" style="width:100%;margin-top:10px">Excluir meu anúncio</button>');
+        '<button class="btn secondary" id="editAd" data-id="' + esc(item.id) + '" style="width:100%;margin-top:10px">Editar anúncio</button>' +
+        '<button class="btn ghost" id="deleteAd" data-id="' + esc(item.id) + '" style="width:100%;margin-top:8px">Excluir meu anúncio</button>');
     }
   };
 
