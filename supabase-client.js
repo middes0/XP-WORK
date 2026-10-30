@@ -336,14 +336,15 @@
     if (!user) { toast("Entre na sua conta antes de publicar."); page("profile"); return; }
     const title = publishTitle.value.trim();
     const description = publishDescription.value.trim();
-    const phone = publishContact.value.replace(/\D/g, "");
+    let phone = publishContact.value.replace(/\D/g, "");
+    if (phone.startsWith("55") && (phone.length === 12 || phone.length === 13)) phone = phone.slice(2);
     const category = el("category").value;
     const categoryId = window.XP_REMOTE.categories[category];
     const cityId = window.XP_REMOTE.cityId;
     if (title.length < 4 || title.length > 70) return toast("O título deve ter entre 4 e 70 caracteres.");
     if (!categoryId || !cityId) return toast("Não foi possível carregar cidade e categoria.");
     if (description.length < 10 || description.length > 500) return toast("A descrição deve ter entre 10 e 500 caracteres.");
-    if (phone.length < 10 || phone.length > 13) return toast("Informe um WhatsApp válido com DDD.");
+    if (phone.length !== 10 && phone.length !== 11) return toast("Informe um WhatsApp válido com DDD.");
     const rawPrice = el("price").value.trim();
     let price = null, priceLabel = rawPrice || null;
     if (rawPrice && !/^a combinar$/i.test(rawPrice)) {
