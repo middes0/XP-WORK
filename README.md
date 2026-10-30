@@ -1,31 +1,35 @@
 # XP WORK
 
-Plataforma local para conectar moradores, profissionais, comércios e oportunidades. O primeiro lançamento tem foco em Xapuri, Acre, com estrutura pensada para expansão a outras cidades.
+Plataforma local para conectar moradores, profissionais, comércios e oportunidades. O lançamento inicial tem foco em Xapuri, Acre, com arquitetura preparada para expansão a outras cidades.
 
-## Primeira versão (MVP)
+## Direção do produto
 
-- Interface responsiva mobile-first.
-- Navegação: Início, Explorar, Anunciar, Mensagens e Perfil.
+- Interface mobile-first, clara e acessível.
+- Identidade visual institucional com azul, branco, cinza e verde de confirmação.
+- Navegação principal: Início, Explorar, Anunciar, Mensagens e Perfil.
 - Categorias: Serviços, Comércio, Classificados, Entregas, Empregos e Eventos.
-- Busca e filtros locais.
-- Cadastro e visualização de anúncios.
-- Contato com anunciante via WhatsApp.
-- Gerenciamento e exclusão dos próprios anúncios neste dispositivo.
-- Manifesto PWA e cache offline básico.
+- Busca, filtros e contato direto com anunciantes.
+- Experiência PWA com cache básico para acesso offline.
 
-## Como testar
+## Publicar no Cloudflare Pages
 
-Abra `index.html` em um navegador ou publique o repositório no Cloudflare Pages usando a raiz do projeto como diretório de saída. Para instalar como aplicativo e testar o service worker, use HTTPS.
+- Conecte este repositório ao Cloudflare Pages.
+- Use a branch `main`.
+- Como é um projeto estático, deixe o comando de build vazio.
+- Defina a raiz do projeto como diretório de saída.
 
-## Limitações importantes desta versão
+## Estado atual e limitações
 
-Os anúncios ficam no armazenamento local do navegador. Portanto, ainda não são compartilhados entre dispositivos ou usuários. Login, banco de dados remoto, upload de imagens, chat interno, moderação e pagamentos ainda não estão conectados. Os anúncios de exemplo são demonstrativos e não representam estabelecimentos ou vagas reais.
+Esta versão é um MVP de demonstração. Os anúncios são armazenados no navegador por meio de `localStorage`; não são compartilhados entre pessoas ou dispositivos. Os anúncios de exemplo são dados ilustrativos e não representam empresas, vagas ou ofertas reais.
 
-## Próximas etapas
+Ainda não estão ativos: autenticação, banco de dados remoto, perfis verificados, upload de imagens, chat interno, moderação administrativa e pagamentos. O botão de contato abre o WhatsApp do anunciante quando há um número válido.
 
-1. Configurar Supabase (Auth, PostgreSQL, Storage e políticas RLS).
-2. Migrar anúncios para o banco remoto.
-3. Criar contas e perfis de moradores e empresas.
-4. Implementar upload e moderação de imagens/anúncios.
-5. Implementar chat e painel administrativo.
-6. Validar com moradores e comerciantes de Xapuri.
+## Próximas etapas técnicas
+
+1. Criar projeto Supabase e configurar variáveis públicas de conexão.
+2. Implementar autenticação e perfis com políticas RLS.
+3. Migrar anúncios para PostgreSQL sem apagar dados locais existentes.
+4. Implementar armazenamento e validação de imagens.
+5. Criar denúncias, moderação e controles administrativos.
+6. Implementar conversas internas e notificações.
+7. Testar com usuários e comerciantes locais antes de monetizar.
