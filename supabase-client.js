@@ -149,9 +149,43 @@
           toast("Os dados serão salvos, mas a foto precisa da configuração de armazenamento do Supabase.");
         }
       }
-      const { error } = await client.from("profiles").update(profile).eq("id", user.id);
-      if (error) throw error;
-      window.XP_REMOTE.profile = { ...window.XP_REMOTE.profile, ...profile };
+      // UPDATE sem SELECT pode retornar sucesso mesmo quando nenhuma linha foi alterada.
+      // Confirma a gravação e cria o registro caso ele esteja ausente.
+      let savedResult = await client.from("profiles")
+        .update(profile)
+        .eq("id", user.id)
+        .select("id,display_name,account_type,bio,city_id,avatar_url")
+        .maybeSingle();
+
+      if (savedResult.error && (savedResult.error.code === "42703" || /avatar_url.*does not exist|column.*avatar_url/i.test(savedResult.error.message || ""))) {
+        const fallbackProfile = { ...profile };
+        delete fallbackProfile.avatar_url;
+        savedResult = await client.from("profiles")
+          .update(fallbackProfile)
+          .eq("id", user.id)
+          .select("id,display_name,account_type,bio,city_id")
+          .maybeSingle();
+      }
+      if (savedResult.error) throw savedResult.error;
+
+      if (!savedResult.data) {
+        const rowToSave = { ...profile, id: user.id };
+        let insertResult = await client.from("profiles")
+          .upsert(rowToSave, { onConflict: "id" })
+          .select("id,display_name,account_type,bio,city_id,avatar_url")
+          .single();
+        if (insertResult.error && (insertResult.error.code === "42703" || /avatar_url.*does not exist|column.*avatar_url/i.test(insertResult.error.message || ""))) {
+          delete rowToSave.avatar_url;
+          insertResult = await client.from("profiles")
+            .upsert(rowToSave, { onConflict: "id" })
+            .select("id,display_name,account_type,bio,city_id")
+            .single();
+        }
+        if (insertResult.error) throw insertResult.error;
+        savedResult = insertResult;
+      }
+
+      window.XP_REMOTE.profile = savedResult.data;
       updateProfileSummary(window.XP_REMOTE.profile);
       el("profileSetupModal").classList.remove("open");
       profileSetupOpen = false;
