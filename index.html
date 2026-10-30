@@ -507,6 +507,29 @@ html[data-theme="dark"] .modal{background:rgba(3,10,6,.72)}
 @media(min-width:700px){.categories{grid-template-columns:repeat(3,minmax(0,1fr))}.categories.expanded{grid-template-columns:repeat(6,minmax(0,1fr))}.categories.expanded .cat{height:70px;flex-direction:column;justify-content:center;gap:5px}.categories.expanded .cat .ico{width:30px;height:30px;min-width:30px}.categories.expanded .cat small{display:block;font-size:9px;margin:0}}
 @media(max-width:380px){.categories{gap:6px}.categories .cat{padding:8px 7px;gap:6px}.categories .cat .ico{width:30px;height:30px;min-width:30px}.categories .cat b{font-size:10px}}
 
+
+/* Página inicial — anúncios sem excesso de controles e informação */
+#home .section:has(#listingGrid){margin-top:24px}
+#home .section:has(#listingGrid)>.section-head{margin-bottom:10px}
+#home .section:has(#listingGrid)>.section-head h2{font-size:19px;letter-spacing:-.55px}
+#home .section:has(#listingGrid)>.section-head .btn{border:0;background:transparent;box-shadow:none;padding:7px 2px!important;color:var(--brand-strong);font-size:11px!important}
+#home #filters{display:none}
+#home .listing-controls{margin:4px 0 12px;padding:0;align-items:center}
+#home .listing-controls .sub{font-size:10px;color:var(--muted)}
+#home .listing-controls select{border:0;background:transparent;padding:7px 2px;font-size:10px;color:var(--muted);max-width:145px;text-align:right}
+#home #listingGrid{margin-top:0!important;gap:11px}
+#home .listing{border-radius:15px;border-color:var(--line);box-shadow:0 2px 9px rgba(20,48,34,.035)}
+#home .listing:hover{transform:none;box-shadow:0 4px 13px rgba(20,48,34,.06)}
+#home .listing-body{padding:12px}
+#home .listing .tag{font-size:9px;padding:4px 7px;margin-bottom:7px}
+#home .listing h3{font-size:13px;line-height:1.35;margin-bottom:5px}
+#home .listing p{font-size:10px;line-height:1.5;margin-bottom:9px;-webkit-line-clamp:2}
+#home .listing .meta{display:flex;flex-direction:column;align-items:flex-start;gap:4px;font-size:9px}
+#home .listing .meta b{font-size:12px}
+#home .listing .listing-submeta{display:none}
+#home .listing .detail{margin-top:9px!important;min-height:32px;padding:7px 9px!important;font-size:10px!important;box-shadow:none}
+@media(min-width:700px){#home #listingGrid{gap:14px}#home .listing-body{padding:15px}}
+
 </style>
 </head>
 <body>
