@@ -237,6 +237,7 @@
       favoriteIds = new Set((savedFavorites || []).map(row => row.listing_id));
       el("accountLabel").textContent = user.email || "";
       const profile = window.XP_REMOTE.profile || {};
+      el("publishIdentity").textContent = "Anúncio identificado como: " + (profile.display_name || user.user_metadata?.full_name || "Seu perfil");
       el("accountDisplayName").textContent = profile.display_name || user.user_metadata?.full_name || user.email?.split("@")[0] || "Usuário XP WORK";
       el("accountAvatar").textContent = (el("accountDisplayName").textContent.trim()[0] || "U").toUpperCase();
       el("connectionState").textContent = "Conta conectada";
@@ -323,7 +324,7 @@
   publishTitle.addEventListener("input", updatePublishCounters);
   publishDescription.addEventListener("input", updatePublishCounters);
   publishContact.addEventListener("input", () => {
-    const digits = publishContact.value.replace(/\\D/g, "").slice(0, 13);
+    const digits = publishContact.value.replace(/\D/g, "").slice(0, 13);
     if (digits.length <= 2) publishContact.value = digits;
     else if (digits.length <= 7) publishContact.value = "(" + digits.slice(0,2) + ") " + digits.slice(2);
     else publishContact.value = "(" + digits.slice(0,2) + ") " + digits.slice(2, digits.length > 10 ? 7 : 6) + "-" + digits.slice(digits.length > 10 ? 7 : 6);
@@ -335,7 +336,7 @@
     if (!user) { toast("Entre na sua conta antes de publicar."); page("profile"); return; }
     const title = publishTitle.value.trim();
     const description = publishDescription.value.trim();
-    const phone = publishContact.value.replace(/\\D/g, "");
+    const phone = publishContact.value.replace(/\D/g, "");
     const category = el("category").value;
     const categoryId = window.XP_REMOTE.categories[category];
     const cityId = window.XP_REMOTE.cityId;
@@ -346,8 +347,8 @@
     const rawPrice = el("price").value.trim();
     let price = null, priceLabel = rawPrice || null;
     if (rawPrice && !/^a combinar$/i.test(rawPrice)) {
-      const normalized = rawPrice.replace(/R\\$\\s?/gi, "").replace(/\\./g, "").replace(",", ".").replace(/\\s/g, "");
-      if (!/^\\d+(\\.\\d{1,2})?$/.test(normalized) || Number(normalized) < 0) return toast("Informe um preço válido, como 50,00, ou escreva A combinar.");
+      const normalized = rawPrice.replace(/R\$\s?/gi, "").replace(/\./g, "").replace(",", ".").replace(/\s/g, "");
+      if (!/^\d+(\.\d{1,2})?$/.test(normalized) || Number(normalized) < 0) return toast("Informe um preço válido, como 50,00, ou escreva A combinar.");
       price = Number(normalized);
       priceLabel = null;
     }
