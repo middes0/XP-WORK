@@ -489,6 +489,24 @@ html[data-theme="dark"] .search input{color:var(--text)}
 html[data-theme="dark"] .search input::placeholder,html[data-theme="dark"] .field input::placeholder,html[data-theme="dark"] .field textarea::placeholder{color:#819488}
 html[data-theme="dark"] .modal{background:rgba(3,10,6,.72)}
 
+
+/* Categorias compactas: prioriza os anúncios na primeira dobra */
+.category-section{margin-top:8px;margin-bottom:26px}
+.category-section .section-head{margin-bottom:11px;align-items:center}
+.category-section .section-head>div{display:grid;gap:4px}
+.category-toggle{border:1px solid var(--line);background:var(--surface);color:var(--brand-strong);border-radius:11px;padding:9px 12px;font-size:11px;font-weight:750;white-space:nowrap}
+.category-toggle span{margin-left:4px;font-size:13px}
+.categories{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.categories.collapsed .cat:nth-child(n+4){display:none}
+.categories .cat{min-height:0;height:58px;padding:9px 10px;display:flex;flex-direction:row;align-items:center;gap:8px;border-radius:13px;box-shadow:none}
+.categories .cat .ico{width:34px;height:34px;min-width:34px;margin:0;border-radius:10px}
+.categories .cat .ico svg{width:18px;height:18px}
+.categories .cat b{font-size:11px;line-height:1.2}
+.categories .cat small{display:none}
+.categories.expanded .cat{height:62px}
+@media(min-width:700px){.categories{grid-template-columns:repeat(3,minmax(0,1fr))}.categories.expanded{grid-template-columns:repeat(6,minmax(0,1fr))}.categories.expanded .cat{height:70px;flex-direction:column;justify-content:center;gap:5px}.categories.expanded .cat .ico{width:30px;height:30px;min-width:30px}.categories.expanded .cat small{display:block;font-size:9px;margin:0}}
+@media(max-width:380px){.categories{gap:6px}.categories .cat{padding:8px 7px;gap:6px}.categories .cat .ico{width:30px;height:30px;min-width:30px}.categories .cat b{font-size:10px}}
+
 </style>
 </head>
 <body>
@@ -496,7 +514,7 @@ html[data-theme="dark"] .modal{background:rgba(3,10,6,.72)}
 <main class="wrap">
 <section id="home" class="page active">
 <div class="hero"><div class="eyebrow">O que você precisa hoje?</div><h1>Encontre tudo<br> <span>perto de você.</span></h1><p>Serviços, lojas, oportunidades e anúncios de Xapuri em um só lugar.</p><div class="search"><input id="searchInput" placeholder="Buscar serviços, produtos, vagas..." aria-label="Buscar anúncios"><button class="btn" id="searchBtn">Buscar</button></div></div>
-<div class="section"><div class="section-head"><h2>Explore por categoria</h2><span class="sub">Xapuri • Acre</span></div><div class="categories" id="categories">
+<div class="section category-section"><div class="section-head"><div><h2>Explore por categoria</h2><span class="sub">Encontre o que precisa em Xapuri</span></div><button class="category-toggle" id="toggleCategories" type="button" aria-expanded="false">Ver todas <span aria-hidden="true">⌄</span></button></div><div class="categories collapsed" id="categories">
 <button class="cat" data-cat="Serviços"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 20 4 16l11-11a3 3 0 0 1 4 4L8 20ZM14 6l4 4"/></svg></span><b>Serviços</b><small>Profissionais locais</small></button><button class="cat" data-cat="Comércio"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10h18l-2-6H5l-2 6ZM5 10v10h14V10M9 20v-6h6v6M3 10a3 3 0 0 0 6 0 3 3 0 0 0 6 0 3 3 0 0 0 6 0"/></svg></span><b>Comércio</b><small>Lojas e negócios</small></button><button class="cat" data-cat="Classificados"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16l-1 13H5L4 7ZM9 9V6a3 3 0 0 1 6 0v3"/></svg></span><b>Classificados</b><small>Produtos e usados</small></button><button class="cat" data-cat="Entregas"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h11v10H3zM14 10h4l3 3v4h-7M7 18h.01M18 18h.01"/></svg></span><b>Entregas</b><small>Comodidade perto</small></button><button class="cat" data-cat="Empregos"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8h18v12H3zM8 8V5h8v3M3 13h18M10 13v2h4v-2"/></svg></span><b>Empregos</b><small>Vagas e trabalho</small></button><button class="cat" data-cat="Eventos"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18v16H3zM8 3v4M16 3v4M3 10h18M8 14h3M8 17h6"/></svg></span><b>Eventos</b><small>Agenda da cidade</small></button></div></div>
 <div class="section"><div class="section-head"><h2>Anúncios recentes</h2><button class="btn ghost" id="clearFilter" style="padding:7px 10px;font-size:10px">Ver todos</button></div><div class="toolbar" id="filters"><button class="chip active" data-filter="Todos">Todos</button><button class="chip" data-filter="Serviços">Serviços</button><button class="chip" data-filter="Comércio">Comércio</button><button class="chip" data-filter="Classificados">Classificados</button><button class="chip" data-filter="Empregos">Empregos</button><button class="chip" data-filter="Entregas">Entregas</button><button class="chip" data-filter="Eventos">Eventos</button></div><div class="listing-controls"><span class="sub" id="homeResultsCount">Anúncios disponíveis</span><select id="homeSort" aria-label="Ordenar anúncios"><option value="newest">Mais recentes</option><option value="oldest">Mais antigos</option><option value="priceAsc">Menor preço</option><option value="priceDesc">Maior preço</option></select></div><div class="grid" id="listingGrid" style="margin-top:12px"></div></div>
 <div class="footer-note">NEXAP • Conectando pessoas e oportunidades em Xapuri</div>
@@ -557,6 +575,7 @@ document.addEventListener("click",async event=>{const button=event.target.closes
 document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>page(b.dataset.page)));
 const moreMenu=document.getElementById('moreMenu'),moreMenuTrigger=document.getElementById('moreMenuTrigger');function closeMoreMenu(){moreMenu.classList.remove('open');moreMenu.setAttribute('aria-hidden','true');moreMenuTrigger.setAttribute('aria-expanded','false')}moreMenuTrigger.addEventListener('click',()=>{const open=moreMenu.classList.toggle('open');moreMenu.setAttribute('aria-hidden',String(!open));moreMenuTrigger.setAttribute('aria-expanded',String(open))});document.getElementById('closeMoreMenu').addEventListener('click',closeMoreMenu);moreMenu.addEventListener('click',e=>{if(e.target===moreMenu)closeMoreMenu();const item=e.target.closest('[data-menu-page]');if(item){page(item.dataset.menuPage);closeMoreMenu()}else if(e.target.closest('[data-account-action]'))closeMoreMenu()});
 document.getElementById('categories').addEventListener('click',e=>{const b=e.target.closest('[data-cat]');if(!b)return;activeFilter=b.dataset.cat;query='';render();page('explore')});
+document.getElementById("toggleCategories").addEventListener("click",()=>{const list=document.getElementById("categories"),button=document.getElementById("toggleCategories"),expanded=list.classList.toggle("expanded");list.classList.toggle("collapsed",!expanded);button.setAttribute("aria-expanded",String(expanded));button.innerHTML=expanded?'Mostrar menos <span aria-hidden="true">⌃</span>':'Ver todas <span aria-hidden="true">⌄</span>';});
 document.querySelectorAll('#filters,#exploreFilters').forEach(el=>el.addEventListener('click',e=>{const b=e.target.closest('[data-filter]');if(!b)return;activeFilter=b.dataset.filter;render()}));
 document.getElementById('clearFilter').onclick=()=>{activeFilter='Todos';query='';document.getElementById('searchInput').value='';render()};
 function searchFrom(id){query=document.getElementById(id).value.trim();activeFilter='Todos';render();page('explore')}
