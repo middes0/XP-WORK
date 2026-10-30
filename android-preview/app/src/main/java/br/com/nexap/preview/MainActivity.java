@@ -18,6 +18,7 @@ public class MainActivity extends Activity {
     private ValueCallback<Uri[]> uploadCallback;
     private static final int FILE_CHOOSER_REQUEST = 42;
     private static final String APP_URL = "https://xp-work.pages.dev/?app=android";
+    private static final String OAUTH_CALLBACK = "nexap://auth/callback";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,8 +73,26 @@ public class MainActivity extends Activity {
             }
         });
         setContentView(webView);
-        if (savedInstanceState == null) webView.loadUrl(APP_URL);
-        else webView.restoreState(savedInstanceState);
+        if (savedInstanceState == null) {
+            Uri callback = getIntent() == null ? null : getIntent().getData();
+            if (isOAuthCallback(callback)) webView.loadUrl(callback.toString());
+            else webView.loadUrl(APP_URL);
+        } else webView.restoreState(savedInstanceState);
+    }
+
+    private boolean isOAuthCallback(Uri uri) {
+        return uri != null && "nexap".equals(uri.getScheme())
+                && "auth".equals(uri.getHost()) && "/callback".equals(uri.getPath());
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        Uri callback = intent == null ? null : intent.getData();
+        if (webView != null && isOAuthCallback(callback)) {
+            webView.post(() -> webView.loadUrl(callback.toString()));
+        }
     }
 
     @Override
