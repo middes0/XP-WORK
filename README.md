@@ -20,20 +20,18 @@ Plataforma local para conectar moradores, profissionais, comércios e oportunida
 
 ## Estado atual e limitações
 
-Esta versão é um MVP de demonstração. Os anúncios são armazenados no navegador por meio de `localStorage`; não são compartilhados entre pessoas ou dispositivos. Os anúncios de exemplo são dados ilustrativos e não representam empresas, vagas ou ofertas reais.
+O frontend possui integração inicial com Supabase: cadastro/login por e-mail, perfil básico e leitura/publicação/exclusão de anúncios compartilhados. A conexão usa somente URL e chave publishable no navegador; nenhuma chave secreta é necessária no frontend.
 
-Ainda não estão ativos: autenticação, banco de dados remoto, perfis verificados, upload de imagens, chat interno, moderação administrativa e pagamentos. O botão de contato abre o WhatsApp do anunciante quando há um número válido.
+Os anúncios antigos salvos em `localStorage` são preservados neste aparelho, mas não são enviados automaticamente para o banco. Os anúncios de demonstração são ilustrativos. Upload de imagens, chat interno, moderação administrativa e pagamentos ainda não estão ativos. A integração precisa ser testada no projeto Supabase real antes de ser considerada pronta para produção.
 
-## Base de dados preparada
+## Base de dados
 
-O arquivo `supabase/schema.sql` contém a estrutura inicial para cidades, categorias, perfis, anúncios, imagens, favoritos, conversas, mensagens e denúncias, com políticas Row Level Security (RLS). O SQL ainda precisa ser executado e testado em um projeto Supabase; a presença do arquivo não significa que o backend esteja conectado.
+O arquivo `supabase/schema.sql` define cidades, categorias, perfis, anúncios, imagens, favoritos, conversas, mensagens e denúncias, com políticas Row Level Security (RLS). O schema foi executado pelo proprietário do projeto, conforme confirmação na conversa. A revisão de segurança e os testes de permissões ainda são necessários.
 
-## Próximas etapas técnicas
+## Próximas etapas
 
-1. Criar projeto Supabase e executar/revisar o schema.
-2. Configurar autenticação e variáveis públicas de conexão.
-3. Integrar o frontend sem apagar os anúncios locais existentes.
-4. Implementar armazenamento e validação de imagens.
-5. Criar moderação e controles administrativos.
-6. Testar fluxos de conta, anúncio e conversa com usuários reais.
-7. Validar com moradores e comerciantes antes de monetizar.
+1. Testar cadastro, confirmação de e-mail e login.
+2. Testar anúncios entre duas contas e dispositivos.
+3. Revisar políticas RLS e configurar Storage com políticas seguras.
+4. Implementar imagens, chat interno e moderação.
+5. Validar com moradores e comerciantes antes de monetizar.
