@@ -40,6 +40,10 @@ public class MainActivity extends Activity {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                 Uri uri = request.getUrl();
+                if (isOAuthCallback(uri)) {
+                    openOAuthCallback(uri);
+                    return true;
+                }
                 String host = uri.getHost() == null ? "" : uri.getHost();
                 if (host.equals("xp-work.pages.dev") ||
                     host.equals("balojriovbjzywjrvpyw.supabase.co") ||
@@ -75,7 +79,7 @@ public class MainActivity extends Activity {
         setContentView(webView);
         if (savedInstanceState == null) {
             Uri callback = getIntent() == null ? null : getIntent().getData();
-            if (isOAuthCallback(callback)) webView.loadUrl(callback.toString());
+            if (isOAuthCallback(callback)) openOAuthCallback(callback);
             else webView.loadUrl(APP_URL);
         } else webView.restoreState(savedInstanceState);
     }
@@ -85,13 +89,23 @@ public class MainActivity extends Activity {
                 && "auth".equals(uri.getHost()) && "/callback".equals(uri.getPath());
     }
 
+    // Supabase JS processes OAuth tokens from the fragment of an HTTPS page.
+    // Never navigate the WebView directly to the custom nexap:// scheme.
+    private void openOAuthCallback(Uri callback) {
+        if (webView == null || !isOAuthCallback(callback)) return;
+        Uri webCallback = Uri.parse(APP_URL).buildUpon()
+                .encodedFragment(callback.getEncodedFragment())
+                .build();
+        webView.post(() -> webView.loadUrl(webCallback.toString()));
+    }
+
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         setIntent(intent);
         Uri callback = intent == null ? null : intent.getData();
         if (webView != null && isOAuthCallback(callback)) {
-            webView.post(() -> webView.loadUrl(callback.toString()));
+            openOAuthCallback(callback);
         }
     }
 
