@@ -5,6 +5,11 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#2E7D32">
 <meta name="description" content="NEXAP — Xapuri conectada. Serviços, comércio e oportunidades.">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="NEXAP">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="apple-touch-icon" href="./nexap-icon.svg">
 <link rel="manifest" href="./manifest.json">
 <title>NEXAP — Xapuri conectada</title>
 <script>
@@ -397,6 +402,15 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
   .cat,.btn,.chip,.nav button,.listing{transition:none!important}
 }
 
+/* Compatibilidade iPhone: safe areas, viewport dinâmico e toque */
+html{min-height:100%;-webkit-text-size-adjust:100%;}
+body{min-height:100vh;min-height:100dvh;padding-bottom:calc(88px + env(safe-area-inset-bottom));}
+.top{padding-top:max(12px,env(safe-area-inset-top));}
+.bottom{padding-bottom:calc(8px + env(safe-area-inset-bottom));}
+.modal,.more-menu{padding-top:max(12px,env(safe-area-inset-top));padding-bottom:max(12px,env(safe-area-inset-bottom));}
+input,textarea,select{font-size:16px;}
+button,.btn,.nav button,.cat{-webkit-tap-highlight-color:transparent;touch-action:manipulation;}
+@media(max-width:560px){body{padding-bottom:calc(76px + env(safe-area-inset-bottom));}}
 </style>
 </head>
 <body>
