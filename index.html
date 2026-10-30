@@ -234,6 +234,54 @@ html[data-theme="dark"] .modal{background:#050a067d}
 #appearanceModal .dialog{max-width:430px}
 #appearanceModal .field{margin-top:18px}
 
+
+/* Refinamento dos cartões de anúncios no tema escuro */
+html[data-theme="dark"] .listing{
+  background:linear-gradient(155deg,#1c2a20 0%,#17231b 58%,#152019 100%);
+  border:1px solid #344b38;
+  border-radius:17px;
+  box-shadow:0 5px 16px rgba(0,0,0,.16),inset 0 1px 0 rgba(220,255,225,.035);
+  transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease;
+}
+html[data-theme="dark"] .listing:hover{
+  transform:translateY(-2px);
+  border-color:#496b4e;
+  box-shadow:0 10px 24px rgba(0,0,0,.24),0 0 0 1px rgba(105,190,116,.07);
+}
+html[data-theme="dark"] .listing:active{transform:scale(.988);box-shadow:0 2px 8px rgba(0,0,0,.2)}
+html[data-theme="dark"] .listing-cover{background:#202e24}
+html[data-theme="dark"] .listing .tag{
+  background:#263d2b;
+  color:#9be5a4;
+  border:1px solid #35553b;
+  letter-spacing:.015em;
+}
+html[data-theme="dark"] .listing h3{color:#f0f7f0}
+html[data-theme="dark"] .listing p{color:#b0c0b2}
+html[data-theme="dark"] .listing .meta{color:#a2b2a4}
+html[data-theme="dark"] .listing .meta b{
+  color:#91e69b;
+  font-size:12px;
+  font-weight:800;
+}
+html[data-theme="dark"] .listing-submeta{
+  border-top-color:#304336;
+  color:#91a493;
+}
+html[data-theme="dark"] .listing .btn.secondary{
+  background:#263a2a;
+  border:1px solid #3b5940;
+  color:#c9edce;
+}
+html[data-theme="dark"] .listing .btn.secondary:hover{
+  background:#2d4732;
+  border-color:#56815d;
+}
+html[data-theme="dark"] .listing:focus-within{
+  outline:2px solid #69c879;
+  outline-offset:2px;
+}
+
 </style>
 </head>
 <body>
