@@ -203,6 +203,19 @@
       .select("id,owner_id,title,description,price,price_label,contact_phone,status,created_at,categories(name),cities(name)")
       .eq("status", "published").order("created_at", { ascending: false }).limit(100);
     if (error) throw error;
+    const listingIds = (data || []).map(a => a.id);
+    let imageRows = [];
+    if (listingIds.length) {
+      const { data: images, error: imageError } = await client.from("listing_images").select("id,listing_id,storage_path,alt_text,sort_order").in("listing_id", listingIds).order("sort_order");
+      if (imageError) throw imageError;
+      imageRows = images || [];
+    }
+    const imageMap = new Map();
+    imageRows.forEach(image => {
+      const url = client.storage.from("listing-images").getPublicUrl(image.storage_path).data.publicUrl;
+      if (!imageMap.has(image.listing_id)) imageMap.set(image.listing_id, []);
+      imageMap.get(image.listing_id).push({ id:image.id, storage_path:image.storage_path, alt:image.alt_text, url });
+    });
     const ownerIds = [...new Set((data || []).map(a => a.owner_id).filter(Boolean))];
     let names = {};
     if (window.XP_REMOTE.user && ownerIds.length) {
@@ -215,7 +228,7 @@
       description: a.description, price: a.price_label || (a.price != null ? "R$ " + Number(a.price).toLocaleString("pt-BR", {minimumFractionDigits: 2}) : ""),
       contact: a.contact_phone || "", author: names[a.owner_id] || "Anunciante XP WORK",
       city: a.cities?.name || "Xapuri", createdAt: new Date(a.created_at).getTime(),
-      owner: "remote", ownerId: a.owner_id
+      owner: "remote", ownerId: a.owner_id, images: imageMap.get(a.id) || []
     }));
     listings = listings.filter(a => a.owner !== "remote").concat(remote);
     render();
@@ -317,6 +330,30 @@
   const publishTitle = el("title");
   const publishDescription = el("description");
   const publishContact = el("contact");
+  const publishImages = el("listingImages");
+  const imagePreview = el("publishImagePreview");
+  let selectedPublishImages = [];
+  const MAX_LISTING_IMAGES = 5;
+  const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
+  const allowedImageTypes = ["image/jpeg", "image/png", "image/webp"];
+  publishImages.addEventListener("change", () => {
+    const files = Array.from(publishImages.files || []);
+    if (files.length > MAX_LISTING_IMAGES) { publishImages.value = ""; selectedPublishImages = []; imagePreview.innerHTML = ""; return toast("Escolha no máximo 5 fotos."); }
+    if (files.some(file => !allowedImageTypes.includes(file.type) || file.size > MAX_IMAGE_BYTES)) { publishImages.value = ""; selectedPublishImages = []; imagePreview.innerHTML = ""; return toast("Use JPG, PNG ou WebP de até 5 MB por foto."); }
+    selectedPublishImages = files;
+    imagePreview.innerHTML = files.map((file, index) => '<div class="image-preview"><img src="' + URL.createObjectURL(file) + '" alt="Prévia da foto ' + (index + 1) + '"></div>').join("");
+  });
+  async function uploadListingImages(listingId, files) {
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      const extension = file.type === "image/png" ? "png" : file.type === "image/webp" ? "webp" : "jpg";
+      const path = window.XP_REMOTE.user.id + "/" + listingId + "/" + crypto.randomUUID() + "." + extension;
+      const { error: uploadError } = await client.storage.from("listing-images").upload(path, file, { contentType: file.type, upsert: false });
+      if (uploadError) throw uploadError;
+      const { error: rowError } = await client.from("listing_images").insert({ listing_id: listingId, storage_path: path, alt_text: file.name.slice(0, 120), sort_order: i });
+      if (rowError) throw rowError;
+    }
+  }
   const updatePublishCounters = () => {
     el("titleCount").textContent = publishTitle.value.length + "/70 caracteres";
     el("descriptionCount").textContent = publishDescription.value.length + "/500 caracteres (mínimo 10)";
@@ -363,7 +400,10 @@
         contact_phone: phone, status: "published"
       }).select("id").single();
       if (error) throw error;
+      if (selectedPublishImages.length) await uploadListingImages(data.id, selectedPublishImages);
       publishForm.reset();
+      selectedPublishImages = [];
+      imagePreview.innerHTML = "";
       updatePublishCounters();
       await loadRemote();
       toast("Anúncio publicado para todos.");
