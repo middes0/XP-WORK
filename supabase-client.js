@@ -574,6 +574,17 @@
     }
   };
 
+  // Garante a abertura dos detalhes dos anúncios em qualquer grade/lista.
+  // O listener em captura evita que outros handlers de interface bloqueiem o toque.
+  document.addEventListener("click", event => {
+    const button = event.target.closest("button.detail, .detail[data-id]");
+    if (!button) return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    const id = button.dataset.id;
+    if (id) openDetail(id);
+  }, true);
+
   (async () => {
     try {
       const { data, error } = await client.auth.getSession();
