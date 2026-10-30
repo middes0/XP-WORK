@@ -85,25 +85,108 @@
     }
   });
 
-  el("editProfileBtn").addEventListener("click", () => {
-    if (window.XP_REMOTE.profile) openProfileSetup(window.XP_REMOTE.profile, true);
-  });
-  document.addEventListener("click", event => {
+  let favoriteIds = new Set();
+  const actionModal = () => el("detailModal");
+  function showAccountAction(title, body) {
+    el("detailContent").innerHTML = '<h2 style="font-size:20px;margin:12px 0">' + title + '</h2>' + body;
+    actionModal().classList.add("open");
+  }
+  async function openFavorites() {
+    const user = window.XP_REMOTE.user;
+    if (!user) return toast("Entre na sua conta para ver seus favoritos.");
+    try {
+      const { data, error } = await client.from("favorites").select("listing_id").eq("user_id", user.id);
+      if (error) throw error;
+      favoriteIds = new Set((data || []).map(row => row.listing_id));
+      if (!favoriteIds.size) {
+        showAccountAction("Meus favoritos", '<div class="empty">Você ainda não salvou anúncios.<br>Abra um anúncio e toque em “Salvar nos favoritos”.</div>');
+        return;
+      }
+      const { data: rows, error: listingError } = await client.from("listings")
+        .select("id,title,description,price,price_label,contact_phone,status,created_at,categories(name),cities(name)")
+        .in("id", [...favoriteIds]).eq("status", "published");
+      if (listingError) throw listingError;
+      const items = (rows || []).map(a => ({
+        id:a.id,title:a.title,description:a.description,category:a.categories?.name || "Classificados",
+        price:a.price_label || (a.price != null ? "R$ " + Number(a.price).toLocaleString("pt-BR",{minimumFractionDigits:2}) : ""),
+        contact:a.contact_phone || "",author:"Usuário XP WORK",city:a.cities?.name || "Xapuri",
+        createdAt:new Date(a.created_at).getTime(),owner:"remote"
+      }));
+      const content = items.length ? items.map(a => '<div class="panel" style="margin:10px 0"><strong>'+esc(a.title)+'</strong><p class="sub">'+esc(a.category)+' • '+money(a.price)+'</p><button class="btn secondary detail" data-id="'+esc(a.id)+'">Ver anúncio</button></div>').join("") : '<div class="empty">Os anúncios salvos não estão mais disponíveis.</div>';
+      showAccountAction("Meus favoritos", content);
+    } catch (error) { showError(error); }
+  }
+  document.addEventListener("click", async event => {
     const item = event.target.closest("[data-account-action]");
     if (!item) return;
     const action = item.dataset.accountAction;
     if (action === "personal") {
       if (window.XP_REMOTE.profile) openProfileSetup(window.XP_REMOTE.profile, true);
     } else if (action === "ads") {
-      el("myAdsSection").scrollIntoView({ behavior: "smooth", block: "start" });
+      page("profile");
+      setTimeout(() => el("myAdsSection").scrollIntoView({behavior:"smooth",block:"start"}), 80);
     } else if (action === "security") {
-      toast("Para encerrar o acesso neste dispositivo, use Sair da conta.");
+      const email = window.XP_REMOTE.user?.email || "";
+      showAccountAction("Segurança e acesso", '<p class="sub">Conta vinculada a <strong>'+esc(email)+'</strong></p><form id="securityForm"><div class="field"><label for="newAccountPassword">Nova senha</label><input id="newAccountPassword" type="password" minlength="8" required autocomplete="new-password" placeholder="Mínimo de 8 caracteres"></div><div class="field"><label for="confirmAccountPassword">Confirme a nova senha</label><input id="confirmAccountPassword" type="password" minlength="8" required autocomplete="new-password" placeholder="Repita a nova senha"></div><button class="btn" type="submit" style="width:100%">Alterar senha</button></form><button class="btn ghost" id="sendPasswordReset" style="width:100%;margin-top:10px">Enviar link de recuperação por e-mail</button>');
     } else if (action === "notifications") {
-      toast("As preferências de notificações estarão disponíveis em uma próxima atualização.");
+      const prefs = JSON.parse(localStorage.getItem("xpwork_notification_preferences") || '{"messages":true,"updates":true}');
+      showAccountAction("Preferências de avisos", '<p class="sub">Estas opções registram suas preferências neste aparelho. Notificações push ainda não estão disponíveis.</p><form id="notificationForm"><label style="display:flex;gap:10px;padding:12px 0"><input type="checkbox" name="messages" '+(prefs.messages?'checked':'')+'> Avisos sobre mensagens</label><label style="display:flex;gap:10px;padding:12px 0"><input type="checkbox" name="updates" '+(prefs.updates?'checked':'')+'> Novidades do XP WORK</label><button class="btn" type="submit" style="width:100%">Salvar preferências</button></form>');
     } else if (action === "favorites") {
-      toast("A área de favoritos será ativada em uma próxima atualização.");
+      await openFavorites();
     } else if (action === "help") {
-      toast("XP WORK • Serviços, comércio e oportunidades de Xapuri.");
+      showAccountAction("Ajuda e suporte", '<div class="panel"><strong>Como publicar um anúncio?</strong><p class="sub">Acesse Anunciar, preencha os dados e publique usando sua conta.</p><strong>Como editar meus dados?</strong><p class="sub">Entre em Dados pessoais para alterar nome, tipo de conta e descrição.</p><strong>Como excluir um anúncio?</strong><p class="sub">Abra Meus anúncios, selecione o anúncio e use a opção de exclusão.</p><strong>Precisa de ajuda?</strong><p class="sub">O canal de atendimento direto ainda não foi configurado no XP WORK.</p></div>');
+    }
+  });
+  document.addEventListener("submit", async event => {
+    if (event.target.id === "securityForm") {
+      event.preventDefault();
+      const password = el("newAccountPassword").value;
+      if (password !== el("confirmAccountPassword").value) return toast("As senhas não coincidem.");
+      try {
+        const { error } = await client.auth.updateUser({password});
+        if (error) throw error;
+        actionModal().classList.remove("open");
+        toast("Senha alterada com sucesso.");
+      } catch (error) { showError(error); }
+    }
+    if (event.target.id === "notificationForm") {
+      event.preventDefault();
+      const data = new FormData(event.target);
+      localStorage.setItem("xpwork_notification_preferences", JSON.stringify({
+        messages:data.get("messages") === "on", updates:data.get("updates") === "on"
+      }));
+      actionModal().classList.remove("open");
+      toast("Preferências salvas neste aparelho.");
+    }
+  });
+  document.addEventListener("click", async event => {
+    if (event.target.id === "sendPasswordReset") {
+      const email = window.XP_REMOTE.user?.email;
+      if (!email) return toast("Não foi possível identificar seu e-mail.");
+      try {
+        const { error } = await client.auth.resetPasswordForEmail(email, {redirectTo:window.location.origin + window.location.pathname});
+        if (error) throw error;
+        toast("Link de recuperação enviado para seu e-mail.");
+      } catch (error) { showError(error); }
+    }
+    if (event.target.id === "toggleFavorite") {
+      const user = window.XP_REMOTE.user;
+      const listingId = event.target.dataset.id;
+      if (!user) return toast("Entre na sua conta para salvar favoritos.");
+      try {
+        if (favoriteIds.has(listingId)) {
+          const {error} = await client.from("favorites").delete().eq("user_id",user.id).eq("listing_id",listingId);
+          if (error) throw error;
+          favoriteIds.delete(listingId);
+          event.target.textContent = "♡ Salvar nos favoritos";
+        } else {
+          const {error} = await client.from("favorites").insert({user_id:user.id,listing_id:listingId});
+          if (error) throw error;
+          favoriteIds.add(listingId);
+          event.target.textContent = "♥ Remover dos favoritos";
+        }
+        toast("Favoritos atualizados.");
+      } catch (error) { showError(error); }
     }
   });
 
@@ -276,6 +359,20 @@
     renderInto("myGrid", mine);
   };
 
+  const originalOpenDetail = openDetail;
+  openDetail = function(id) {
+    originalOpenDetail(id);
+    const item = listings.find(a => a.id === id);
+    if (item?.owner === "remote" && item.ownerId !== window.XP_REMOTE.user?.id) {
+      const button = document.createElement("button");
+      button.className = "btn secondary";
+      button.id = "toggleFavorite";
+      button.dataset.id = item.id;
+      button.style.cssText = "width:100%;margin-top:10px";
+      button.textContent = favoriteIds.has(item.id) ? "♥ Remover dos favoritos" : "♡ Salvar nos favoritos";
+      el("detailContent").appendChild(button);
+    }
+  };
   const baseOpenDetail = openDetail;
   openDetail = function(id) {
     baseOpenDetail(id);
