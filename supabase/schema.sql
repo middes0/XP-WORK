@@ -143,6 +143,45 @@ $;
 revoke all on function public.is_conversation_member(uuid, uuid) from public;
 grant execute on function public.is_conversation_member(uuid, uuid) to authenticated;
 
+-- Ao criar uma conversa, o criador entra automaticamente como participante.
+create or replace function public.add_conversation_creator()
+returns trigger
+language plpgsql
+security definer
+set search_path = public
+as $
+begin
+  insert into public.conversation_participants (conversation_id, user_id)
+  values (new.id, new.created_by)
+  on conflict do nothing;
+  return new;
+end;
+$;
+
+drop trigger if exists conversations_add_creator on public.conversations;
+create trigger conversations_add_creator after insert on public.conversations
+for each row execute function public.add_conversation_creator();
+
+-- Participantes existentes podem adicionar outro usuário pela função RPC.
+create or replace function public.add_conversation_participant(p_conversation_id uuid, p_user_id uuid)
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $
+begin
+  if auth.uid() is null or not public.is_conversation_member(p_conversation_id, auth.uid()) then
+    raise exception 'Not allowed to add participants to this conversation';
+  end if;
+  insert into public.conversation_participants (conversation_id, user_id)
+  values (p_conversation_id, p_user_id)
+  on conflict do nothing;
+end;
+$;
+
+revoke all on function public.add_conversation_participant(uuid, uuid) from public;
+grant execute on function public.add_conversation_participant(uuid, uuid) to authenticated;
+
 -- Atualiza updated_at automaticamente nas tabelas editáveis.
 create or replace function public.set_updated_at()
 returns trigger
@@ -266,11 +305,6 @@ for select to authenticated using (
 );
 
 drop policy if exists "Conversation creator adds participants" on public.conversation_participants;
-create policy "Conversation creator adds participants" on public.conversation_participants
-for insert to authenticated with check (
-  exists (select 1 from public.conversations c
-    where c.id = conversation_id and c.created_by = (select auth.uid()))
-);
 
 drop policy if exists "Participants read messages" on public.messages;
 create policy "Participants read messages" on public.messages
