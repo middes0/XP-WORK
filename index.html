@@ -10,10 +10,10 @@
 <script>
 (function(){
  try{
-  const saved=localStorage.getItem("nexap_theme")||"system";
+  let saved=localStorage.getItem("nexap_theme")||"system";
   const media=window.matchMedia("(prefers-color-scheme: dark)");
   const apply=()=>{const dark=saved==="dark"||(saved==="system"&&media.matches);document.documentElement.dataset.theme=dark?"dark":"light";const meta=document.querySelector('meta[name="theme-color"]');if(meta)meta.content=dark?"#111813":"#2E7D32";};
-  window.__nexapTheme={get:()=>localStorage.getItem("nexap_theme")||"system",set:value=>{localStorage.setItem("nexap_theme",value);apply();},apply};
+  window.__nexapTheme={get:()=>localStorage.getItem("nexap_theme")||"system",set:value=>{saved=value;localStorage.setItem("nexap_theme",value);apply();},apply};
   apply();
   media.addEventListener?.("change",()=>{if(window.__nexapTheme?.get()==="system")apply();});
  }catch(e){document.documentElement.dataset.theme="light";}
