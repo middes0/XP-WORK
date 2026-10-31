@@ -705,6 +705,7 @@ let detailOrigin='explore';
 function closeListingPage(){page(detailOrigin||'explore')}
 function openDetail(id){
  const a=listings.find(x=>x.id===id);if(!a)return;
+ window.NEXAP_LISTING_CONTEXT={id:a.id,title:a.title,category:a.category,ownerId:a.ownerId||null,vacanciesTotal:a.vacanciesTotal??null,vacanciesFilled:a.vacanciesFilled||0,applicationDeadline:a.applicationDeadline||null};
  const active=document.querySelector('.page.active')?.id;
  detailOrigin=active&&active!=='listingDetail'?active:'explore';
  const phone=(a.contact||'').replace(/\\D/g,'');
@@ -810,6 +811,7 @@ window.addEventListener("load",()=>setTimeout(openListingFromUrl,900));
   const app=document.createElement("script");
   app.src="./supabase-client.js?v=20261030-5";
   app.onerror=()=>{if(state)state.textContent="Falha ao carregar o login";};
+  app.onload=()=>{const feature=document.createElement("script");feature.src="./recruitment.js?v=20261030-1";feature.onerror=()=>console.error("NEXAP: falha ao carregar módulo de empregos");document.body.appendChild(feature);};
   document.body.appendChild(app);
  }
  function loadSdk(url,fallback){
