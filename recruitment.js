@@ -47,6 +47,8 @@
     if (!context || !host || !host.querySelector(".listing-detail-actions")) return;
     if (!categoryIsJobs(context.category)) return;
     const actions = host.querySelector(".listing-detail-actions");
+    if (actions.dataset.recruitmentEnhanced === "true") return;
+    actions.dataset.recruitmentEnhanced = "true";
     const left = context.vacanciesTotal == null ? null : Math.max(0, context.vacanciesTotal - (context.vacanciesFilled || 0));
     if (left !== null) {
       const availability = document.createElement("div");
