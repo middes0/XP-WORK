@@ -452,7 +452,7 @@
     window.XP_REMOTE.cityId = cityResult.data?.id || null;
     window.XP_REMOTE.categories = Object.fromEntries((categoryResult.data || []).map(c => [c.name, c.id]));
     const { data, error } = await client.from("listings")
-      .select("id,owner_id,title,description,price,price_label,contact_phone,status,created_at,categories(name),cities(name)")
+      .select("id,owner_id,title,description,price,price_label,contact_phone,status,created_at,job_vacancies_total,job_vacancies_filled,job_application_deadline,categories(name),cities(name)")
       .eq("status", "published").order("created_at", { ascending: false }).limit(100);
     if (error) throw error;
     const listingIds = (data || []).map(a => a.id);
@@ -480,7 +480,7 @@
       description: a.description, price: a.price_label || (a.price != null ? "R$ " + Number(a.price).toLocaleString("pt-BR", {minimumFractionDigits: 2}) : ""),
       contact: a.contact_phone || "", author: names[a.owner_id] || "Anunciante XP WORK",
       city: a.cities?.name || "Xapuri", createdAt: new Date(a.created_at).getTime(),
-      owner: "remote", ownerId: a.owner_id, images: imageMap.get(a.id) || []
+      owner: "remote", ownerId: a.owner_id, vacanciesTotal:a.job_vacancies_total, vacanciesFilled:a.job_vacancies_filled||0, applicationDeadline:a.job_application_deadline, images: imageMap.get(a.id) || []
     }));
     listings = listings.filter(a => a.owner !== "remote").concat(remote);
     render();
@@ -742,7 +742,10 @@
       const { data, error } = await client.from("listings").insert({
         owner_id: user.id, city_id: cityId, category_id: categoryId,
         title, description, price, price_label: priceLabel,
-        contact_phone: phone, status: "published"
+        contact_phone: phone, status: "published",
+        job_vacancies_total: category === "Empregos" ? Number(el("jobVacancies")?.value) : null,
+        job_vacancies_filled: 0,
+        job_application_deadline: category === "Empregos" ? (el("jobDeadline")?.value || null) : null
       }).select("id").single();
       if (error) throw error;
       if (selectedPublishImages.length) await uploadListingImages(data.id, selectedPublishImages);
