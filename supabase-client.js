@@ -521,8 +521,9 @@
     try {
       await loadRemote();
     } catch (error) {
-      console.error("XP WORK: falha ao carregar anúncios", error);
-      toast("Conta conectada, mas não foi possível atualizar os anúncios.");
+      // Falha de carregamento fica registrada no console, sem exibir aviso técnico
+      // durante a apresentação inicial do site.
+      console.error("NEXAP: falha ao carregar anúncios", error);
     }
 
     try {
