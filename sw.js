@@ -1,11 +1,12 @@
-const CACHE = "nexap-v34";
+const CACHE = "nexap-v35";
 const CORE = [
   "./",
   "./index.html",
   "./manifest.json",
   "./nexap-icon.svg",
   "./offline.html",
-  "./supabase-client.js"
+  "./supabase-client.js",
+  "./recruitment.js"
 ];
 const IMAGE_CACHE = "nexap-images-v1";
 const MAX_CACHED_IMAGES = 60;
