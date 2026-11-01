@@ -590,78 +590,8 @@
     window.XP_REMOTE.adminUsers=Array.isArray(data)?data:[];
     renderAdminUsers(window.XP_REMOTE.adminUsers);
   }
-
-  let adminReports=[];
-  let adminReportFilter="pending";
-  function renderAdminReports(){
-    const target=el("adminReportsList");
-    if(!target)return;
-    const pending=adminReports.filter(row=>row.status==="pending").length;
-    const reviewing=adminReports.filter(row=>row.status==="reviewing").length;
-    const closed=adminReports.filter(row=>row.status==="resolved"||row.status==="dismissed").length;
-    if(el("adminPendingReports"))el("adminPendingReports").textContent=String(pending);
-    if(el("adminReportsPendingCount"))el("adminReportsPendingCount").textContent=String(pending);
-    if(el("adminReportsReviewingCount"))el("adminReportsReviewingCount").textContent=String(reviewing);
-    if(el("adminReportsClosedCount"))el("adminReportsClosedCount").textContent=String(closed);
-    const visible=adminReportFilter==="all"?adminReports:adminReports.filter(row=>row.status===adminReportFilter);
-    if(!visible.length){
-      target.innerHTML='<div class="empty"><strong>Nenhuma denúncia nesta fila.</strong>Quando alguém denunciar um anúncio, o registro aparecerá aqui.</div>';
-      return;
-    }
-    const labels={pending:"Pendente",reviewing:"Em análise",resolved:"Resolvida",dismissed:"Descartada"};
-    const date=value=>value?new Date(value).toLocaleString("pt-BR",{dateStyle:"short",timeStyle:"short"}):"—";
-    target.innerHTML=visible.map(row=>{
-      const title=row.listing_title||"Anúncio indisponível";
-      const actions=[];
-      if(row.status==="pending")actions.push('<button class="btn secondary" data-report-action="reviewing" data-report-id="'+esc(row.report_id)+'" type="button">Iniciar análise</button>');
-      if(row.status==="pending"||row.status==="reviewing"){
-        actions.push('<button class="btn secondary" data-report-action="resolved" data-report-id="'+esc(row.report_id)+'" type="button">Marcar resolvida</button>');
-        actions.push('<button class="btn ghost" data-report-action="dismissed" data-report-id="'+esc(row.report_id)+'" type="button">Descartar</button>');
-        if(row.listing_id&&row.listing_status!=="removed")actions.push('<button class="btn danger" data-report-action="remove" data-report-id="'+esc(row.report_id)+'" type="button">Remover anúncio</button>');
-      }
-      return '<article class="admin-report"><div class="admin-report-top"><div class="admin-report-title"><strong>'+esc(title)+'</strong><small>Motivo: '+esc(row.reason||"Não informado")+'</small></div><span class="admin-report-status">'+(labels[row.status]||esc(row.status))+'</span></div><div class="admin-report-meta">Denunciante: '+esc(row.reporter_name||"Usuário NEXAP")+' · '+esc(row.reporter_email||"E-mail indisponível")+'<br>Recebida em: '+date(row.created_at)+(row.listing_status?' · Anúncio: '+esc(row.listing_status):"")+'</div>'+(row.details?'<div class="admin-report-details">'+esc(row.details)+'</div>':"")+(actions.length?'<div class="admin-report-actions">'+actions.join("")+'</div>':"")+'</article>';
-    }).join("");
-  }
-  async function loadAdminReports(){
-    if(!window.XP_REMOTE.isAdmin)return;
-    const target=el("adminReportsList");
-    if(target)target.innerHTML='<div class="empty">Atualizando denúncias...</div>';
-    const {data,error}=await client.rpc("nexap_admin_list_reports");
-    if(error){
-      if(target)target.innerHTML='<div class="empty"><strong>Não foi possível carregar as denúncias.</strong>'+esc(error.message)+'</div>';
-      return;
-    }
-    adminReports=Array.isArray(data)?data:[];
-    renderAdminReports();
-  }
-  async function openAdminPanel(){
-    await Promise.all([loadAdminUsers(),loadAdminReports()]);
-  }
-  window.NEXAP_ADMIN={open:openAdminPanel};
-  el("adminReload")?.addEventListener("click",openAdminPanel);
-  el("adminReportFilter")?.addEventListener("change",event=>{
-    adminReportFilter=event.target.value||"pending";
-    renderAdminReports();
-  });
-  el("adminReportsList")?.addEventListener("click",async event=>{
-    const button=event.target.closest("[data-report-action]");
-    if(!button||window.XP_REMOTE.adminRole==null)return;
-    const action=button.dataset.reportAction;
-    const removeListing=action==="remove";
-    const status=removeListing?"resolved":action;
-    const prompt=removeListing?"Remover este anúncio da área pública? Ele será marcado como removido, sem apagar o registro.":status==="reviewing"?"Mover esta denúncia para análise?":status==="resolved"?"Marcar esta denúncia como resolvida?":"Descartar esta denúncia?";
-    if(!confirm(prompt))return;
-    button.disabled=true;
-    const {error}=await client.rpc("nexap_admin_update_report",{
-      p_report_id:button.dataset.reportId,
-      p_status:status,
-      p_remove_listing:removeListing
-    });
-    if(error){toast(error.message||"Não foi possível atualizar a denúncia.");button.disabled=false;return;}
-    toast(removeListing?"Anúncio removido da área pública.":"Denúncia atualizada.");
-    await loadAdminReports();
-  });
-
+  window.NEXAP_ADMIN={open:loadAdminUsers};
+  el("adminReload")?.addEventListener("click",loadAdminUsers);
   el("adminUserSearch")?.addEventListener("input",event=>{
     adminSearchTerm=event.target.value||"";
     renderAdminUsers(window.XP_REMOTE.adminUsers);
