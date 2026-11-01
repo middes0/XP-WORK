@@ -711,6 +711,32 @@ html[data-theme="dark"] .admin-overview-primary{background:linear-gradient(145de
 /* Gestão de usuários — pesquisa e filtros */
 .admin-user-tools{display:grid;grid-template-columns:minmax(0,1fr) minmax(190px,.42fr);gap:10px;padding:15px 18px 0}.admin-search-wrap{display:flex;align-items:center;gap:9px;min-width:0;padding:0 12px;border:1px solid var(--line);border-radius:12px;background:var(--bg);color:var(--muted)}.admin-search-wrap>span{font-size:20px}.admin-search-wrap input{width:100%;min-width:0;height:42px;border:0;outline:0;background:transparent;color:var(--text);font:inherit;font-size:12px}.admin-filter-wrap{display:flex;flex-direction:column;gap:4px}.admin-filter-label{color:var(--muted);font-size:9px;font-weight:800;letter-spacing:.8px}.admin-filter-wrap select{width:100%;min-width:0;height:42px;padding:0 10px;border:1px solid var(--line);border-radius:12px;background:var(--bg);color:var(--text);font:inherit;font-size:11px}.admin-results-count{grid-column:1/-1;padding-bottom:1px;color:var(--muted);font-size:10px}.admin-role{display:inline-flex;align-items:center;gap:5px}.admin-role[data-role="owner"]{background:#eaf2ff;color:#315d9b}.admin-role[data-role="admin"]{background:#eaf8ec;color:#26743a}.admin-role[data-role="user"]{background:var(--bg);color:var(--muted);border:1px solid var(--line)}.admin-user-actions button:disabled{opacity:.55;cursor:wait}html[data-theme="dark"] .admin-role[data-role="owner"]{background:#24354c;color:#b6d0ff}html[data-theme="dark"] .admin-role[data-role="admin"]{background:#263d2d;color:#9ce2b1}
 @media(max-width:560px){.admin-user-tools{grid-template-columns:1fr;padding:13px 12px 0}.admin-results-count{grid-column:auto}.admin-users-panel .admin-users-list{padding:12px}}
+
+/* PAINEL ADMIN — etapa 3: central de moderação */
+.admin-moderation{margin-top:30px}
+.admin-moderation-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:13px 0}
+.admin-moderation-stat{padding:12px;border:1px solid var(--line);border-radius:13px;background:var(--surface)}
+.admin-moderation-stat strong{display:block;color:var(--text);font-size:20px;font-weight:800}
+.admin-moderation-stat span{display:block;margin-top:3px;color:var(--muted);font-size:10px}
+.admin-reports-panel{padding:0;overflow:hidden}
+.admin-reports-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:17px 18px;border-bottom:1px solid var(--line)}
+.admin-reports-head h3{margin:4px 0;color:var(--text);font-size:15px}
+.admin-reports-head p{margin:0;color:var(--muted);font-size:11px;line-height:1.5}
+.admin-report-filter{min-width:125px;max-width:170px;height:39px;padding:0 10px;border:1px solid var(--line);border-radius:10px;background:var(--surface-2);color:var(--text);font:inherit;font-size:11px}
+.admin-reports-list{display:grid;gap:10px;padding:14px 17px}
+.admin-report{min-width:0;padding:14px;border:1px solid var(--line);border-radius:13px;background:var(--surface)}
+.admin-report-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.admin-report-title{min-width:0}
+.admin-report-title strong{display:block;color:var(--text);font-size:13px;overflow-wrap:anywhere}
+.admin-report-title small,.admin-report-meta{display:block;margin-top:5px;color:var(--muted);font-size:10px;line-height:1.5;overflow-wrap:anywhere}
+.admin-report-status{flex:none;padding:5px 8px;border-radius:20px;background:var(--surface-3);color:var(--brand-strong);font-size:9px;font-weight:800}
+.admin-report-details{margin:10px 0 0;padding:10px 11px;border-radius:10px;background:var(--surface-2);color:var(--muted);font-size:11px;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere}
+.admin-report-actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
+.admin-report-actions button{min-height:34px;padding:7px 10px;font-size:10px}
+.admin-report-actions .danger{background:#fff1f0;border:1px solid #f3d1cd;color:#a43c32;box-shadow:none}
+html[data-theme="dark"] .admin-report-actions .danger{background:#3a2422;border-color:#633b36;color:#ffb5a9}
+@media(max-width:560px){.admin-moderation-summary{gap:7px}.admin-moderation-stat{padding:10px}.admin-moderation-stat strong{font-size:18px}.admin-reports-head{align-items:flex-start;flex-direction:column}.admin-report-filter{width:100%;max-width:none}.admin-reports-list{padding:11px}.admin-report{padding:12px}}
+
 </style>
 </head>
 <body>
@@ -757,10 +783,23 @@ html[data-theme="dark"] .admin-overview-primary{background:linear-gradient(145de
  <div class="admin-overview-grid">
   <article class="admin-overview-card admin-overview-primary"><div class="admin-overview-top"><span class="admin-overview-icon">♙</span><span class="admin-overview-label">BASE DE CONTAS</span></div><strong id="adminUserCount">Carregando...</strong><p>Usuários cadastrados</p><span class="admin-overview-foot"><i></i> Informação atualizada pelo sistema</span></article>
   <article class="admin-overview-card"><div class="admin-overview-top"><span class="admin-overview-icon">⌘</span><span class="admin-overview-label">ACESSO</span></div><strong>Protegido</strong><p>Área exclusiva para administradores</p><span class="admin-overview-foot">Controle de permissões</span></article>
-  <article class="admin-overview-card"><div class="admin-overview-top"><span class="admin-overview-icon">◷</span><span class="admin-overview-label">PRÓXIMAS ETAPAS</span></div><strong>Em evolução</strong><p>Novos recursos administrativos</p><span class="admin-overview-foot">Moderação e relatórios serão adicionados</span></article>
+  <article class="admin-overview-card"><div class="admin-overview-top"><span class="admin-overview-icon">⚑</span><span class="admin-overview-label">MODERAÇÃO</span></div><strong id="adminPendingReports">Carregando...</strong><p>Denúncias aguardando análise</p><span class="admin-overview-foot">Central de confiança e segurança</span></article>
  </div>
  <div class="admin-section-heading"><div><span class="admin-section-kicker">GESTÃO DA PLATAFORMA</span><h2>Administração de usuários</h2><p>Consulte as contas e gerencie quem pode atuar como administrador.</p></div><button class="btn secondary admin-refresh" id="adminReload" type="button"><span aria-hidden="true">↻</span> Atualizar lista</button></div>
  <div class="panel admin-users-panel"><div class="admin-users-panel-head"><div><span class="admin-panel-label">CONTAS NEXAP</span><h3>Usuários cadastrados</h3><p>Pesquise contas e filtre por nível de acesso.</p></div><span class="admin-panel-symbol">♙</span></div><div class="admin-user-tools"><label class="admin-search-wrap"><span aria-hidden="true">⌕</span><input id="adminUserSearch" type="search" placeholder="Buscar por nome ou e-mail" autocomplete="off" aria-label="Buscar usuários por nome ou e-mail"></label><label class="admin-filter-wrap"><span class="admin-filter-label">Acesso</span><select id="adminRoleFilter" aria-label="Filtrar usuários por nível de acesso"><option value="all">Todos os usuários</option><option value="owner">Administrador principal</option><option value="admin">Administradores</option><option value="user">Usuários comuns</option></select></label><span id="adminResultsCount" class="admin-results-count">Carregando contas...</span></div><div id="adminUsersList" class="admin-users-list"><div class="empty">Carregando usuários...</div></div></div>
+
+ <section class="admin-moderation" aria-labelledby="adminModerationTitle">
+  <div class="admin-section-heading"><div><span class="admin-section-kicker">CONFIANÇA E SEGURANÇA</span><h2 id="adminModerationTitle">Central de moderação</h2><p>Analise denúncias recebidas e tome providências sobre anúncios.</p></div></div>
+  <div class="admin-moderation-summary">
+   <div class="admin-moderation-stat"><strong id="adminReportsPendingCount">—</strong><span>Pendentes</span></div>
+   <div class="admin-moderation-stat"><strong id="adminReportsReviewingCount">—</strong><span>Em análise</span></div>
+   <div class="admin-moderation-stat"><strong id="adminReportsClosedCount">—</strong><span>Finalizadas</span></div>
+  </div>
+  <div class="panel admin-reports-panel">
+   <div class="admin-reports-head"><div><span class="admin-panel-label">DENÚNCIAS RECEBIDAS</span><h3>Fila de análise</h3><p>As alterações são registradas no banco de dados.</p></div><select class="admin-report-filter" id="adminReportFilter" aria-label="Filtrar denúncias"><option value="pending">Pendentes</option><option value="reviewing">Em análise</option><option value="resolved">Resolvidas</option><option value="dismissed">Descartadas</option><option value="all">Todas</option></select></div>
+   <div class="admin-reports-list" id="adminReportsList"><div class="empty">Carregando denúncias...</div></div>
+  </div>
+ </section>
  <div class="admin-security-note"><span>盾</span><div><strong>Área administrativa</strong><p>As opções disponíveis dependem das permissões configuradas para sua conta. Recursos de moderação e bloqueio serão implementados nas próximas etapas.</p></div></div>
 </section>
 <section id="settings" class="page"><div class="hero"><div class="eyebrow">Preferências</div><h1>Configurações<span>.</span></h1><p>Gerencie a aparência, as notificações, a segurança e o suporte do NEXAP.</p></div><div class="panel"><div class="section-head"><h2>Aparência</h2><span class="sub">Personalização visual</span></div><p class="sub">Escolha como o NEXAP deve aparecer. No modo automático, o site acompanha o tema do celular.</p><div class="field"><label for="appearanceSelect">Tema do aplicativo</label><select id="appearanceSelect"><option value="system">Automático — acompanhar o celular</option><option value="light">Claro</option><option value="dark">Escuro</option></select></div><p class="sub" id="appearanceDescription">O NEXAP acompanha automaticamente o tema definido no sistema do aparelho.</p><button class="btn" id="saveAppearance" type="button">Aplicar aparência</button></div><div class="panel" style="margin-top:14px"><div class="section-head"><h2>Conta e preferências</h2><span class="sub">Gerencie seus recursos</span></div><button class="account-menu-item" data-account-action="notifications" type="button"><span class="account-menu-icon">♧</span><span><strong>Notificações</strong><small>Preferências de avisos</small></span><b>›</b></button><button class="account-menu-item" data-account-action="security" type="button"><span class="account-menu-icon">⌑</span><span><strong>Segurança</strong><small>Senha e acesso à conta</small></span><b>›</b></button><button class="account-menu-item" data-account-action="help" type="button"><span class="account-menu-icon">?</span><span><strong>Ajuda e suporte</strong><small>Dúvidas e informações sobre a plataforma</small></span><b>›</b></button></div></section></main>
