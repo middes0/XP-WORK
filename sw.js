@@ -1,98 +1,37 @@
-const CACHE = "nexap-v39";
-const CORE = [
-  "./",
-  "./index.html",
-  "./manifest.json",
-  "./nexap-icon.svg",
-  "./offline.html",
-  "./supabase-client.js",
-  "./recruitment.js"
-];
-const IMAGE_CACHE = "nexap-images-v1";
-const MAX_CACHED_IMAGES = 60;
+# XP WORK
 
-self.addEventListener("install", event => {
-  event.waitUntil(
-    caches.open(CACHE)
-      .then(cache => cache.addAll(CORE))
-      .then(() => self.skipWaiting())
-  );
-});
+Plataforma local para conectar moradores, profissionais, comércios e oportunidades. O lançamento inicial tem foco em Xapuri, Acre, com arquitetura preparada para expansão a outras cidades.
 
-self.addEventListener("activate", event => {
-  event.waitUntil(
-    caches.keys()
-      .then(keys => Promise.all(keys
-        .filter(key => key.startsWith("nexap-v") && key !== CACHE)
-        .map(key => caches.delete(key))))
-      .then(() => self.clients.claim())
-  );
-});
+## Direção do produto
 
-async function trimImageCache(cache) {
-  const keys = await cache.keys();
-  if (keys.length > MAX_CACHED_IMAGES) {
-    await Promise.all(keys.slice(0, keys.length - MAX_CACHED_IMAGES).map(key => cache.delete(key)));
-  }
-}
+- Interface mobile-first, clara e acessível.
+- Identidade visual institucional com azul, branco, cinza e verde de confirmação.
+- Navegação principal: Início, Explorar, Anunciar, Mensagens e Perfil.
+- Categorias: Serviços, Comércio, Classificados, Entregas, Empregos e Eventos.
+- Busca, filtros e contato direto com anunciantes.
+- Experiência PWA com cache básico para acesso offline.
 
-self.addEventListener("fetch", event => {
-  const request = event.request;
-  if (request.method !== "GET") return;
+## Publicar no Cloudflare Pages
 
-  const url = new URL(request.url);
-  const isSupabaseImage = url.origin === "https://balojriovbjzywjrvpyw.supabase.co" && request.destination === "image";
-  if (url.origin !== self.location.origin && !isSupabaseImage) return;
+- Conecte este repositório ao Cloudflare Pages.
+- Use a branch `main`.
+- Como é um projeto estático, deixe o comando de build vazio.
+- Defina a raiz do projeto como diretório de saída.
 
-  // Never cache API/data requests or navigations as generic assets.
-  if (request.mode === "navigate") {
-    event.respondWith((async () => {
-      try {
-        const response = await fetch(request);
-        if (response.ok) {
-          const cache = await caches.open(CACHE);
-          cache.put("./index.html", response.clone());
-        }
-        return response;
-      } catch {
-        return (await caches.match("./offline.html")) ||
-          (await caches.match("./index.html")) ||
-          new Response("Você está sem conexão.", { status: 503, headers: { "Content-Type": "text/plain; charset=utf-8" } });
-      }
-    })());
-    return;
-  }
+## Estado atual e limitações
 
-  if (request.destination === "image") {
-    event.respondWith((async () => {
-      const cache = await caches.open(IMAGE_CACHE);
-      const cached = await cache.match(request);
-      if (cached) return cached;
-      try {
-        const response = await fetch(request);
-        if (response.ok) {
-          await cache.put(request, response.clone());
-          await trimImageCache(cache);
-        }
-        return response;
-      } catch {
-        return new Response("", { status: 504, statusText: "Image unavailable offline" });
-      }
-    })());
-    return;
-  }
+O frontend possui integração inicial com Supabase: cadastro/login por e-mail, perfil básico e leitura/publicação/exclusão de anúncios compartilhados. A conexão usa somente URL e chave publishable no navegador; nenhuma chave secreta é necessária no frontend.
 
-  const isAppAsset = /\.(?:css|js|svg|png|webp|ico|woff2?)$/i.test(url.pathname) ||
-    url.pathname.endsWith("/manifest.json");
-  if (!isAppAsset) return;
+Os anúncios antigos salvos em `localStorage` são preservados neste aparelho, mas não são enviados automaticamente para o banco. Os anúncios de demonstração são ilustrativos. Upload de imagens, chat interno, moderação administrativa e pagamentos ainda não estão ativos. A integração precisa ser testada no projeto Supabase real antes de ser considerada pronta para produção.
 
-  event.respondWith((async () => {
-    const cache = await caches.open(CACHE);
-    const cached = await cache.match(request);
-    const network = fetch(request).then(response => {
-      if (response.ok) cache.put(request, response.clone());
-      return response;
-    }).catch(() => null);
-    return cached || await network || new Response("", { status: 504 });
-  })());
-});
+## Base de dados
+
+O arquivo `supabase/schema.sql` define cidades, categorias, perfis, anúncios, imagens, favoritos, conversas, mensagens e denúncias, com políticas Row Level Security (RLS). O schema foi executado pelo proprietário do projeto, conforme confirmação na conversa. A revisão de segurança e os testes de permissões ainda são necessários.
+
+## Próximas etapas
+
+1. Testar cadastro, confirmação de e-mail e login.
+2. Testar anúncios entre duas contas e dispositivos.
+3. Revisar políticas RLS e configurar Storage com políticas seguras.
+4. Implementar imagens, chat interno e moderação.
+5. Validar com moradores e comerciantes antes de monetizar.
