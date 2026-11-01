@@ -558,17 +558,28 @@
   window.XP_REMOTE.isAdmin = false;
   window.XP_REMOTE.adminRole = null;
   window.XP_REMOTE.adminUsers = [];
+  let adminSearchTerm = "";
+  let adminRoleFilter = "all";
   function renderAdminUsers(rows) {
-    const target=el("adminUsersList"), count=el("adminUserCount");
+    const target=el("adminUsersList"), count=el("adminUserCount"), results=el("adminResultsCount");
     if(!target||!count)return;
-    count.textContent=rows.length+" conta(s)";
-    if(!rows.length){target.innerHTML='<div class="empty">Nenhum usuário encontrado.</div>';return;}
+    const allRows=Array.isArray(rows)?rows:[];
+    count.textContent=allRows.length+" conta(s)";
+    const term=adminSearchTerm.trim().toLocaleLowerCase("pt-BR");
+    const visible=allRows.filter(row=>{
+      const role=row.admin_role||"user";
+      const matchesRole=adminRoleFilter==="all"||role===adminRoleFilter;
+      const matchesTerm=!term||[row.display_name,row.email,row.account_type].some(value=>String(value||"").toLocaleLowerCase("pt-BR").includes(term));
+      return matchesRole&&matchesTerm;
+    });
+    if(results)results.textContent="Exibindo "+visible.length+" de "+allRows.length+" conta(s)";
+    if(!visible.length){target.innerHTML='<div class="empty"><strong>Nenhuma conta encontrada.</strong>Tente mudar a pesquisa ou o filtro de acesso.</div>';return;}
     const owner=window.XP_REMOTE.adminRole==="owner";
     const date=v=>v?new Date(v).toLocaleDateString("pt-BR"):"—";
-    target.innerHTML=rows.map(row=>{
+    target.innerHTML=visible.map(row=>{
       const role=row.admin_role||"user", label=role==="owner"?"Administrador principal":role==="admin"?"Administrador":"Usuário";
       const action=owner&&role!=="owner"&&row.user_id!==window.XP_REMOTE.user?.id?'<button class="btn '+(role==="admin"?"ghost":"secondary")+'" data-admin-role="'+(role==="admin"?"remove":"add")+'" data-user-id="'+esc(row.user_id)+'" type="button">'+(role==="admin"?"Remover administrador":"Tornar administrador")+'</button>':"";
-      return '<article class="admin-user"><div class="admin-user-head"><div><strong>'+esc(row.display_name||"Sem nome")+'</strong><small>'+esc(row.email||"E-mail indisponível")+'</small></div><span class="admin-role">'+label+'</span></div><div class="admin-user-meta"><span>Conta: '+esc(row.account_type||"—")+'</span><span>Anúncios: '+Number(row.listings_count||0)+'</span><span>Cadastro: '+date(row.created_at)+'</span><span>Último acesso: '+date(row.last_sign_in_at)+'</span></div>'+(row.bio?'<small>'+esc(row.bio)+'</small>':"")+(action?'<div class="admin-user-actions">'+action+'</div>':"")+'</article>';
+      return '<article class="admin-user"><div class="admin-user-head"><div><strong>'+esc(row.display_name||"Sem nome")+'</strong><small>'+esc(row.email||"E-mail indisponível")+'</small></div><span class="admin-role" data-role="'+role+'">'+label+'</span></div><div class="admin-user-meta"><span>Conta: '+esc(row.account_type||"—")+'</span><span>Anúncios: '+Number(row.listings_count||0)+'</span><span>Cadastro: '+date(row.created_at)+'</span><span>Último acesso: '+date(row.last_sign_in_at)+'</span></div>'+(row.bio?'<small>'+esc(row.bio)+'</small>':"")+(action?'<div class="admin-user-actions">'+action+'</div>':"")+'</article>';
     }).join("");
   }
   async function loadAdminUsers(){
@@ -581,6 +592,14 @@
   }
   window.NEXAP_ADMIN={open:loadAdminUsers};
   el("adminReload")?.addEventListener("click",loadAdminUsers);
+  el("adminUserSearch")?.addEventListener("input",event=>{
+    adminSearchTerm=event.target.value||"";
+    renderAdminUsers(window.XP_REMOTE.adminUsers);
+  });
+  el("adminRoleFilter")?.addEventListener("change",event=>{
+    adminRoleFilter=event.target.value||"all";
+    renderAdminUsers(window.XP_REMOTE.adminUsers);
+  });
   el("adminUsersList")?.addEventListener("click",async event=>{
     const button=event.target.closest("[data-admin-role]");
     if(!button||window.XP_REMOTE.adminRole!=="owner")return;
