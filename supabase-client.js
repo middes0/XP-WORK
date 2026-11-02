@@ -527,7 +527,7 @@
     render();
     if (typeof window.openListingFromUrl === "function") window.openListingFromUrl();
   }
-  window.NEXAP_RETRY_LISTINGS=async()=>{try{await loadRemote();}catch(error){console.error("NEXAP: falha ao carregar anúncios",error);setListingsState("error");}};
+  window.NEXAP_RETRY_LISTINGS=async()=>{try{await loadRemote();}catch(error){console.error("NEXAP: falha ao carregar anúncios",error);const detail=[error?.code,error?.message,error?.details,error?.hint].filter(Boolean).join(" — ").slice(0,500);setListingsState("error",detail||"Erro sem detalhes. Abra o console do navegador para diagnóstico.");}};
   document.addEventListener("click",event=>{if(!event.target.closest("#retryListings"))return;window.NEXAP_RETRY_LISTINGS();});
 
   async function refreshAccount(session) {
@@ -547,7 +547,7 @@
       window.XP_REMOTE.profile = null;
       await refreshAdminAccess(null);
       el("connectionState").textContent = "Entre ou cadastre-se";
-      try { await loadRemote(); } catch (error) { console.error("NEXAP: falha ao carregar anúncios",error); setListingsState("error"); }
+      try { await loadRemote(); } catch (error) { console.error("NEXAP: falha ao carregar anúncios",error); const detail=[error?.code,error?.message,error?.details,error?.hint].filter(Boolean).join(" — ").slice(0,500); setListingsState("error",detail||"Erro sem detalhes. Abra o console do navegador para diagnóstico."); }
       return;
     }
 
@@ -567,7 +567,8 @@
       // Falha de carregamento fica registrada no console, sem exibir aviso técnico
       // durante a apresentação inicial do site.
       console.error("NEXAP: falha ao carregar anúncios", error);
-      setListingsState("error");
+      const detail = [error?.code,error?.message,error?.details,error?.hint].filter(Boolean).join(" — ").slice(0,500);
+      setListingsState("error", detail || "Erro sem detalhes. Abra o console do navegador para diagnóstico.");
     }
 
     try {
