@@ -708,6 +708,40 @@ html[data-theme="dark"] .admin-overview-primary{background:linear-gradient(145de
 @media(max-width:640px){.admin-welcome{min-height:0;padding:23px 20px;border-radius:20px}.admin-welcome-mark{flex-basis:72px;width:72px;height:72px;border-radius:21px}.admin-welcome-mark span{font-size:28px}.admin-welcome-mark small{font-size:7px}.admin-overview-grid{grid-template-columns:1fr 1fr;gap:9px;margin-bottom:25px}.admin-overview-card{padding:13px}.admin-overview-card:last-child{grid-column:1/-1}.admin-overview-card>strong{margin-top:12px}.admin-section-heading{align-items:flex-start;flex-direction:column}.admin-refresh{width:100%}.admin-users-panel-head{padding:16px}.admin-users-panel .admin-users-list{padding:12px}}
 @media(max-width:380px){.admin-welcome-mark{display:none}.admin-overview-grid{grid-template-columns:1fr}.admin-overview-card:last-child{grid-column:auto}}
 
+
+/* Etapa 3 — moderação de anúncios e denúncias */
+.admin-moderation-section{margin-top:30px}
+.admin-moderation-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px}
+.admin-moderation-tabs button{border:1px solid var(--line);border-radius:11px;background:var(--panel);color:var(--muted);padding:10px 14px;font-size:11px;font-weight:750}
+.admin-moderation-tabs button.active{background:#eaf8ec;border-color:#b8e5bf;color:#26743a}
+.admin-moderation-panel{padding:0;overflow:hidden}
+.admin-moderation-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:17px 19px;border-bottom:1px solid var(--line)}
+.admin-moderation-head h3{margin:4px 0;color:var(--text);font-size:16px}
+.admin-moderation-head p{margin:0;color:var(--muted);font-size:11px;line-height:1.5}
+.admin-moderation-tools{display:flex;align-items:center;gap:9px;padding:13px 18px 0}
+.admin-moderation-tools select{min-width:0;max-width:240px;height:39px;padding:0 10px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--text);font:inherit;font-size:11px}
+.admin-moderation-list{display:grid;gap:10px;padding:15px 18px 18px}
+.admin-moderation-item{min-width:0;padding:15px;border:1px solid var(--line);border-radius:14px;background:var(--panel)}
+.admin-moderation-item-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.admin-moderation-item h4{margin:0;color:var(--text);font-size:13px;line-height:1.45;overflow-wrap:anywhere}
+.admin-moderation-item p{margin:8px 0;color:var(--muted);font-size:11px;line-height:1.6;white-space:pre-line;overflow-wrap:anywhere}
+.admin-moderation-meta{display:flex;gap:7px 13px;flex-wrap:wrap;margin:9px 0;color:var(--muted);font-size:10px}
+.admin-moderation-status{flex:none;display:inline-flex;padding:5px 8px;border-radius:20px;background:var(--bg);color:var(--muted);font-size:9px;font-weight:800}
+.admin-moderation-status[data-status="pending"],.admin-moderation-status[data-status="published"]{background:#fff5df;color:#93631b}
+.admin-moderation-status[data-status="reviewing"],.admin-moderation-status[data-status="paused"]{background:#edf2ff;color:#45639a}
+.admin-moderation-status[data-status="resolved"],.admin-moderation-status[data-status="dismissed"]{background:#eaf8ec;color:#26743a}
+.admin-moderation-status[data-status="removed"]{background:#fff0ef;color:#a53b35}
+.admin-moderation-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}
+.admin-moderation-actions .btn{padding:8px 10px;font-size:10px;box-shadow:none}
+.admin-moderation-actions button:disabled{opacity:.55;cursor:wait}
+.admin-moderation-empty{padding:25px 15px;text-align:center;color:var(--muted);font-size:12px}
+html[data-theme="dark"] .admin-moderation-tabs button.active{background:#263d2d;border-color:#376b40;color:#9ce2b1}
+html[data-theme="dark"] .admin-moderation-status[data-status="pending"],html[data-theme="dark"] .admin-moderation-status[data-status="published"]{background:#443822;color:#f2d08a}
+html[data-theme="dark"] .admin-moderation-status[data-status="reviewing"],html[data-theme="dark"] .admin-moderation-status[data-status="paused"]{background:#27354b;color:#b6d0ff}
+html[data-theme="dark"] .admin-moderation-status[data-status="resolved"],html[data-theme="dark"] .admin-moderation-status[data-status="dismissed"]{background:#263d2d;color:#9ce2b1}
+html[data-theme="dark"] .admin-moderation-status[data-status="removed"]{background:#482c2a;color:#ffb6af}
+@media(max-width:560px){.admin-moderation-head{align-items:flex-start;padding:15px 13px}.admin-moderation-tools{padding:12px 13px 0}.admin-moderation-list{padding:12px}.admin-moderation-item{padding:12px}.admin-moderation-item-top{align-items:flex-start}}
+
 /* Gestão de usuários — pesquisa e filtros */
 .admin-user-tools{display:grid;grid-template-columns:minmax(0,1fr) minmax(190px,.42fr);gap:10px;padding:15px 18px 0}.admin-search-wrap{display:flex;align-items:center;gap:9px;min-width:0;padding:0 12px;border:1px solid var(--line);border-radius:12px;background:var(--bg);color:var(--muted)}.admin-search-wrap>span{font-size:20px}.admin-search-wrap input{width:100%;min-width:0;height:42px;border:0;outline:0;background:transparent;color:var(--text);font:inherit;font-size:12px}.admin-filter-wrap{display:flex;flex-direction:column;gap:4px}.admin-filter-label{color:var(--muted);font-size:9px;font-weight:800;letter-spacing:.8px}.admin-filter-wrap select{width:100%;min-width:0;height:42px;padding:0 10px;border:1px solid var(--line);border-radius:12px;background:var(--bg);color:var(--text);font:inherit;font-size:11px}.admin-results-count{grid-column:1/-1;padding-bottom:1px;color:var(--muted);font-size:10px}.admin-role{display:inline-flex;align-items:center;gap:5px}.admin-role[data-role="owner"]{background:#eaf2ff;color:#315d9b}.admin-role[data-role="admin"]{background:#eaf8ec;color:#26743a}.admin-role[data-role="user"]{background:var(--bg);color:var(--muted);border:1px solid var(--line)}.admin-user-actions button:disabled{opacity:.55;cursor:wait}html[data-theme="dark"] .admin-role[data-role="owner"]{background:#24354c;color:#b6d0ff}html[data-theme="dark"] .admin-role[data-role="admin"]{background:#263d2d;color:#9ce2b1}
 @media(max-width:560px){.admin-user-tools{grid-template-columns:1fr;padding:13px 12px 0}.admin-results-count{grid-column:auto}.admin-users-panel .admin-users-list{padding:12px}}
@@ -761,6 +795,24 @@ html[data-theme="dark"] .admin-overview-primary{background:linear-gradient(145de
  </div>
  <div class="admin-section-heading"><div><span class="admin-section-kicker">GESTÃO DA PLATAFORMA</span><h2>Administração de usuários</h2><p>Consulte as contas e gerencie quem pode atuar como administrador.</p></div><button class="btn secondary admin-refresh" id="adminReload" type="button"><span aria-hidden="true">↻</span> Atualizar lista</button></div>
  <div class="panel admin-users-panel"><div class="admin-users-panel-head"><div><span class="admin-panel-label">CONTAS NEXAP</span><h3>Usuários cadastrados</h3><p>Pesquise contas e filtre por nível de acesso.</p></div><span class="admin-panel-symbol">♙</span></div><div class="admin-user-tools"><label class="admin-search-wrap"><span aria-hidden="true">⌕</span><input id="adminUserSearch" type="search" placeholder="Buscar por nome ou e-mail" autocomplete="off" aria-label="Buscar usuários por nome ou e-mail"></label><label class="admin-filter-wrap"><span class="admin-filter-label">Acesso</span><select id="adminRoleFilter" aria-label="Filtrar usuários por nível de acesso"><option value="all">Todos os usuários</option><option value="owner">Administrador principal</option><option value="admin">Administradores</option><option value="user">Usuários comuns</option></select></label><span id="adminResultsCount" class="admin-results-count">Carregando contas...</span></div><div id="adminUsersList" class="admin-users-list"><div class="empty">Carregando usuários...</div></div></div>
+
+ <section class="admin-moderation-section">
+  <div class="admin-section-heading"><div><span class="admin-section-kicker">SEGURANÇA E CONFIANÇA</span><h2>Moderação</h2><p>Analise denúncias e controle a visibilidade dos anúncios.</p></div></div>
+  <div class="admin-moderation-tabs" role="tablist" aria-label="Áreas de moderação">
+   <button type="button" class="active" data-admin-tab="reports" aria-selected="true">Denúncias</button>
+   <button type="button" data-admin-tab="listings" aria-selected="false">Anúncios</button>
+  </div>
+  <div class="panel admin-moderation-panel" id="adminReportsPanel">
+   <div class="admin-moderation-head"><div><span class="admin-panel-label">FILA DE ANÁLISE</span><h3>Denúncias recebidas</h3><p>Consulte o motivo e decida o encaminhamento de cada denúncia.</p></div><button class="btn secondary" id="adminReportsReload" type="button">↻ Atualizar</button></div>
+   <div class="admin-moderation-tools"><select id="adminReportFilter" aria-label="Filtrar denúncias"><option value="all">Todas as situações</option><option value="pending">Pendentes</option><option value="reviewing">Em análise</option><option value="resolved">Resolvidas</option><option value="dismissed">Arquivadas</option></select></div>
+   <div class="admin-moderation-list" id="adminReportsList"><div class="admin-moderation-empty">Carregando denúncias...</div></div>
+  </div>
+  <div class="panel admin-moderation-panel" id="adminListingsPanel" hidden>
+   <div class="admin-moderation-head"><div><span class="admin-panel-label">PUBLICAÇÕES DA PLATAFORMA</span><h3>Gerenciar anúncios</h3><p>Pause, reative ou remova anúncios sem apagar seus registros.</p></div><button class="btn secondary" id="adminListingsReload" type="button">↻ Atualizar</button></div>
+   <div class="admin-moderation-tools"><select id="adminListingFilter" aria-label="Filtrar anúncios"><option value="all">Todos os anúncios</option><option value="published">Publicados</option><option value="paused">Pausados</option><option value="removed">Removidos</option></select></div>
+   <div class="admin-moderation-list" id="adminListingsList"><div class="admin-moderation-empty">Carregando anúncios...</div></div>
+  </div>
+ </section>
  <div class="admin-security-note"><span>盾</span><div><strong>Área administrativa</strong><p>As opções disponíveis dependem das permissões configuradas para sua conta. Recursos de moderação e bloqueio serão implementados nas próximas etapas.</p></div></div>
 </section>
 <section id="settings" class="page"><div class="hero"><div class="eyebrow">Preferências</div><h1>Configurações<span>.</span></h1><p>Gerencie a aparência, as notificações, a segurança e o suporte do NEXAP.</p></div><div class="panel"><div class="section-head"><h2>Aparência</h2><span class="sub">Personalização visual</span></div><p class="sub">Escolha como o NEXAP deve aparecer. No modo automático, o site acompanha o tema do celular.</p><div class="field"><label for="appearanceSelect">Tema do aplicativo</label><select id="appearanceSelect"><option value="system">Automático — acompanhar o celular</option><option value="light">Claro</option><option value="dark">Escuro</option></select></div><p class="sub" id="appearanceDescription">O NEXAP acompanha automaticamente o tema definido no sistema do aparelho.</p><button class="btn" id="saveAppearance" type="button">Aplicar aparência</button></div><div class="panel" style="margin-top:14px"><div class="section-head"><h2>Conta e preferências</h2><span class="sub">Gerencie seus recursos</span></div><button class="account-menu-item" data-account-action="notifications" type="button"><span class="account-menu-icon">♧</span><span><strong>Notificações</strong><small>Preferências de avisos</small></span><b>›</b></button><button class="account-menu-item" data-account-action="security" type="button"><span class="account-menu-icon">⌑</span><span><strong>Segurança</strong><small>Senha e acesso à conta</small></span><b>›</b></button><button class="account-menu-item" data-account-action="help" type="button"><span class="account-menu-icon">?</span><span><strong>Ajuda e suporte</strong><small>Dúvidas e informações sobre a plataforma</small></span><b>›</b></button></div></section></main>
@@ -891,7 +943,7 @@ window.addEventListener("load",()=>setTimeout(openListingFromUrl,900));
  const state=document.getElementById("connectionState");
  function loadApp(){
   const app=document.createElement("script");
-  app.src="./supabase-client.js?v=20261030-5";
+  app.src="./supabase-client.js?v=20261101-3";
   app.onerror=()=>{if(state)state.textContent="Falha ao carregar o login";};
   app.onload=()=>{const feature=document.createElement("script");feature.src="./recruitment.js?v=20261030-1";feature.onerror=()=>console.error("NEXAP: falha ao carregar módulo de empregos");document.body.appendChild(feature);};
   document.body.appendChild(app);
