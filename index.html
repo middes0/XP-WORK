@@ -1496,19 +1496,23 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 .more-menu-item small,.account-menu-item small,.listing p,.listing .meta,.listing-submeta,.account-identity-copy span,.profile-setup-dialog p{color:#53645a!important}
 .legal-links{display:flex;flex-wrap:wrap;justify-content:center;gap:7px 10px;line-height:1.8}
 .legal-links a{color:#315e37;text-decoration:underline;text-underline-offset:3px}
-#cookieNotice{position:fixed;z-index:40;left:14px;right:14px;bottom:calc(92px + env(safe-area-inset-bottom));max-width:760px;margin:0 auto;padding:15px 17px;background:#fff;color:#203528;border:1px solid #b8c9bb;border-radius:15px;box-shadow:0 12px 36px #10203324;display:none;gap:14px;align-items:center}
+#cookieNotice{position:fixed;z-index:80;left:16px;right:16px;bottom:calc(18px + env(safe-area-inset-bottom));max-width:760px;margin:0 auto;padding:22px 24px;background:#fff;color:#1d2b20;border:1px solid #d6e2d7;border-radius:22px;box-shadow:0 18px 55px #07150b35;display:none;gap:18px;flex-direction:column}
 #cookieNotice.show{display:flex}
-#cookieNotice p{margin:0;font-size:12px;line-height:1.55;color:#405747;flex:1}
-#cookieNotice a{color:#1f6b2a;text-decoration:underline}
-#cookieNotice button{border:0;border-radius:10px;background:#246b2b;color:#fff;font-weight:750;padding:10px 14px;white-space:nowrap}
+#cookieNotice h2{margin:0;font-size:clamp(19px,3vw,25px);line-height:1.2;font-weight:800}
+#cookieNotice p{margin:0;font-size:14px;line-height:1.6;color:#536257}
+#cookieNotice a{color:#246b2b;text-decoration:underline;text-underline-offset:3px}
+#cookieNotice .cookie-actions{display:flex;gap:12px}
+#cookieNotice button{flex:1;min-height:48px;border:1px solid #246b2b;border-radius:999px;background:#246b2b;color:#fff;font-weight:750;padding:12px 18px}
+#cookieNotice button.secondary{background:#f2f5f2;color:#26352a;border-color:#d5ded6}
+html[data-theme="dark"] #cookieNotice{background:#171f19;color:#f3f8f3;border-color:#405344;box-shadow:0 18px 55px #0009}
+html[data-theme="dark"] #cookieNotice p{color:#c2d0c4}
+html[data-theme="dark"] #cookieNotice a{color:#a8e4ad}
+html[data-theme="dark"] #cookieNotice button.secondary{background:#27332a;color:#f3f8f3;border-color:#526455}
 html[data-theme="dark"] .skip-link{background:#17231a;color:#f2fff3}
 html[data-theme="dark"] .sub,html[data-theme="dark"] .footer-note,html[data-theme="dark"] .listing .meta,html[data-theme="dark"] .listing-submeta,html[data-theme="dark"] .field small{color:#b8c9ba!important}
 html[data-theme="dark"] .legal-links a{color:#a8e4ad}
-html[data-theme="dark"] #cookieNotice{background:#1c2a20;color:#eff8ef;border-color:#49644c}
-html[data-theme="dark"] #cookieNotice p{color:#d0dfd1}
-html[data-theme="dark"] #cookieNotice a{color:#a8e4ad}
 html[data-theme="dark"] button:focus-visible,html[data-theme="dark"] a:focus-visible,html[data-theme="dark"] input:focus-visible,html[data-theme="dark"] textarea:focus-visible,html[data-theme="dark"] select:focus-visible{outline-color:#8ab4ff!important}
-@media(max-width:560px){#cookieNotice{left:10px;right:10px;bottom:calc(84px + env(safe-area-inset-bottom));align-items:stretch;flex-direction:column}#cookieNotice button{width:100%}}
+@media(max-width:560px){#cookieNotice{left:10px;right:10px;bottom:calc(12px + env(safe-area-inset-bottom));padding:19px;border-radius:18px}#cookieNotice .cookie-actions{flex-direction:column}#cookieNotice button{width:100%}}
 
 
 /* NEXAP — refinamento visual consolidado */
@@ -1933,13 +1937,33 @@ window.addEventListener("load",()=>setTimeout(openListingFromUrl,900));
  loadSdk("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2","https://unpkg.com/@supabase/supabase-js@2");
 })();
 </script>
-<aside id="cookieNotice" role="region" aria-label="Aviso sobre cookies e armazenamento"><p>O NEXAP usa armazenamento local necessário para sessão, preferências e funcionamento. No momento, não ativamos rastreadores de publicidade ou analytics. <a href="./cookies.html">Saiba mais</a>.</p><button id="dismissCookieNotice" type="button">Entendi</button></aside>
+<aside id="cookieNotice" role="region" aria-label="Preferências de cookies" aria-live="polite">
+ <h2>Permitir cookies no site</h2>
+ <p>O NEXAP utiliza armazenamento necessário para manter sua sessão e suas preferências. Cookies opcionais de análise e publicidade só serão ativados se você aceitar. No momento, não utilizamos rastreadores de publicidade ou ferramentas de analytics. <a href="./cookies.html">Leia nossa Política de Cookies</a>.</p>
+ <div class="cookie-actions">
+  <button id="acceptCookies" type="button">Aceitar</button>
+  <button id="refuseCookies" class="secondary" type="button">Recusar</button>
+ </div>
+</aside>
 <script>
 (function(){
  const notice=document.getElementById("cookieNotice");
- const button=document.getElementById("dismissCookieNotice");
- try{if(notice&&!localStorage.getItem("nexap_cookie_notice_v1"))notice.classList.add("show");}catch(e){notice?.classList.add("show");}
- button?.addEventListener("click",function(){notice?.classList.remove("show");try{localStorage.setItem("nexap_cookie_notice_v1","seen");}catch(e){}});
+ const accept=document.getElementById("acceptCookies");
+ const refuse=document.getElementById("refuseCookies");
+ const consentKey="nexap_cookie_consent_v2";
+ function saveConsent(optional){
+  const consent={necessary:true,analytics:optional,advertising:optional,choice:optional?"accepted":"refused",updatedAt:new Date().toISOString()};
+  try{localStorage.setItem(consentKey,JSON.stringify(consent));}catch(e){}
+  window.NEXAP_COOKIE_CONSENT=consent;
+  notice?.classList.remove("show");
+ }
+ try{
+  const saved=localStorage.getItem(consentKey);
+  if(saved){window.NEXAP_COOKIE_CONSENT=JSON.parse(saved);}
+  else notice?.classList.add("show");
+ }catch(e){notice?.classList.add("show");}
+ accept?.addEventListener("click",()=>saveConsent(true));
+ refuse?.addEventListener("click",()=>saveConsent(false));
  document.addEventListener("keydown",function(event){
   if(event.key!=="Escape")return;
   const menu=document.getElementById("moreMenu");
