@@ -1226,6 +1226,85 @@ html[data-theme="dark"] .nexap-empty-state .nexap-state-icon{background:#203b25;
 html[data-theme="dark"] .nexap-error-state{background:#2b1d1b;border-color:#57322d;color:#e2aaa2}
 html[data-theme="dark"] .nexap-error-state strong{color:#ffd0c9}
 @media(prefers-reduced-motion:reduce){.nexap-spinner{animation:none;border-top-color:#2e7d32}}
+
+/* NEXAP — experiência mobile refinada */
+@media(max-width:560px){
+  html,body{width:100%;overflow-x:clip}
+  body{padding-bottom:calc(82px + env(safe-area-inset-bottom))}
+  .top{width:100%;min-height:62px;padding-left:14px;padding-right:14px;gap:8px}
+  .brand{min-width:0;gap:8px}
+  .brand>div:last-child{min-width:0}
+  .brand strong{font-size:16px}
+  .brand small{font-size:9px;white-space:nowrap}
+  .logo{width:38px;height:38px;flex:none}
+  .top-actions{gap:6px;flex:none}
+  .city{white-space:nowrap;padding:7px 8px;font-size:9px}
+  .download-top-trigger,.more-menu-trigger{width:40px;height:40px;flex:none}
+  .wrap{width:100%;min-width:0;padding:12px 14px 28px}
+  .hero h1,.page>.hero h1{font-size:clamp(29px,8vw,35px);line-height:1.1;overflow-wrap:anywhere}
+  .hero p,.page>.hero p{font-size:13px;line-height:1.6}
+  .search{width:100%;min-width:0;gap:5px;padding:5px}
+  .search input{width:0;min-width:0;flex:1;font-size:16px;padding:10px 8px}
+  .search .btn{min-width:76px;min-height:44px;padding:10px 12px}
+  .section{min-width:0;margin-top:25px}
+  .section-head{align-items:center;gap:8px}
+  .section-head h2{font-size:16px}
+  .toolbar{max-width:100%;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:none;padding:2px 1px 8px;scroll-snap-type:x proximity}
+  .toolbar::-webkit-scrollbar{display:none}
+  .chip{min-height:38px;scroll-snap-align:start;flex:none;padding:9px 13px}
+  .listing-controls{gap:8px;flex-wrap:wrap}
+  .listing-controls select{min-height:42px;max-width:58%;font-size:12px}
+  .grid{grid-template-columns:minmax(0,1fr);min-width:0;gap:12px}
+  .listing{min-width:0}
+  .listing-cover{aspect-ratio:16/9}
+  .listing-body{padding:14px}
+  .listing h3{font-size:15px;line-height:1.35}
+  .listing p{font-size:12px;line-height:1.55}
+  .listing .detail,.btn{min-height:44px}
+  .cat{min-height:100px}
+  .field input,.field textarea,.field select,input,textarea,select{font-size:16px}
+  .field input,.field select{min-height:46px}
+  .field textarea{min-height:110px}
+  .panel{padding:15px}
+  .bottom{padding:6px 8px calc(6px + env(safe-area-inset-bottom));}
+  .nav{width:100%;max-width:520px;gap:4px}
+  .nav button{min-width:0;min-height:54px;padding:6px 2px;font-size:10px;line-height:1.2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px}
+  .nav button span{width:22px;height:22px;margin:0;display:grid;place-items:center}
+  .nav button span svg{width:21px;height:21px;display:block}
+  .modal{align-items:flex-end;padding:0; padding-bottom:env(safe-area-inset-bottom)}
+  #detailModal .dialog,#profileSetupModal .profile-setup-dialog{width:100%;max-width:none;max-height: min(92dvh,900px);overflow-y:auto;overscroll-behavior:contain;border-radius:22px 22px 0 0;padding:18px 16px calc(20px + env(safe-area-inset-bottom))}
+  .more-menu{padding:calc(10px + env(safe-area-inset-top)) 10px calc(10px + env(safe-area-inset-bottom))}
+  .more-menu-card{width:min(360px,100%);margin-top:52px}
+  .more-menu-item{min-height:52px}
+  .account-shortcut,.more-menu-item,.nav button,.cat,.chip,.btn,button{touch-action:manipulation}
+  #listingDetail .detail-page-top{position:sticky;top:0;z-index:4;padding:8px 0 12px;background:var(--nexap-canvas)}
+  #listingDetail .detail-page-top .btn{min-height:42px}
+  #listingDetail .listing-detail-content{width:100%;min-width:0}
+  #detailContent .dialog-head{gap:10px}
+  #detailContent .dialog-head h2{font-size:18px}
+  #detailContent .job-candidate .btn{min-height:44px}
+  #activity .backup-tools .btn,#publish form>.btn,#profile form>.btn{width:100%;min-height:46px}
+  .toast{bottom:calc(88px + env(safe-area-inset-bottom));width:max-content;max-width:calc(100% - 28px)}
+}
+@media(max-width:380px){
+  .top{padding-left:11px;padding-right:11px}
+  .city{font-size:8px;padding:7px 6px}
+  .brand strong{font-size:15px}
+  .brand small{font-size:8px}
+  .download-top-trigger,.more-menu-trigger{width:38px;height:38px}
+  .wrap{padding-left:12px;padding-right:12px}
+  #home .hero{padding:23px 15px 19px}
+  #home .hero h1{font-size:29px}
+  .search .btn{min-width:68px;padding-left:9px;padding-right:9px;font-size:12px}
+  .nav{gap:2px}
+  .nav button{font-size:9px}
+  .listing-controls select{max-width:62%}
+}
+@media(hover:none){
+  .listing:hover{transform:none;box-shadow:0 2px 8px #17263808}
+  .cat:hover{transform:none}
+}
+
 </style>
 </head>
 <body>
