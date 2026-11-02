@@ -442,7 +442,11 @@
     }
   });
 
+  function setListingsState(kind,message){
+    ["listingGrid","exploreGrid"].forEach(id=>{const target=el(id);if(!target)return;target.dataset.state=kind;if(kind==="loading")target.innerHTML='<div class="nexap-loading-state"><span class="nexap-spinner" aria-hidden="true"></span><span>Carregando anúncios...</span></div>';else if(kind==="error")target.innerHTML='<div class="nexap-error-state"><strong>Não foi possível carregar os anúncios</strong><span>'+esc(message||"Verifique sua conexão e tente novamente.")+'</span><button class="btn secondary" type="button" id="retryListings">Tentar novamente</button></div>';});
+  }
   async function loadRemote() {
+    setListingsState("loading");
     const [cityResult, categoryResult] = await Promise.all([
       client.from("cities").select("id").eq("slug", "xapuri-ac").maybeSingle(),
       client.from("categories").select("id,name")
@@ -486,6 +490,8 @@
     render();
     if (typeof window.openListingFromUrl === "function") window.openListingFromUrl();
   }
+  window.NEXAP_RETRY_LISTINGS=async()=>{try{await loadRemote();}catch(error){console.error("NEXAP: falha ao carregar anúncios",error);setListingsState("error");}};
+  document.addEventListener("click",event=>{if(!event.target.closest("#retryListings"))return;window.NEXAP_RETRY_LISTINGS();});
 
   async function refreshAccount(session) {
     const user = session?.user || null;
@@ -504,7 +510,7 @@
       window.XP_REMOTE.profile = null;
       await refreshAdminAccess(null);
       el("connectionState").textContent = "Entre ou cadastre-se";
-      try { await loadRemote(); } catch (error) { showError(error); }
+      try { await loadRemote(); } catch (error) { console.error("NEXAP: falha ao carregar anúncios",error); setListingsState("error"); }
       return;
     }
 
@@ -524,6 +530,7 @@
       // Falha de carregamento fica registrada no console, sem exibir aviso técnico
       // durante a apresentação inicial do site.
       console.error("NEXAP: falha ao carregar anúncios", error);
+      setListingsState("error");
     }
 
     try {
