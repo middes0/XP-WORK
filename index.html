@@ -967,6 +967,110 @@ html[data-theme="dark"] #activity .backup-tools{background:#18231b;border-color:
 }
 @media(prefers-reduced-motion:reduce){.page{animation:none}}
 
+
+/* NEXAP · refinamento de publicação, detalhes e candidaturas */
+#publish .panel{
+  border:1px solid var(--nexap-line);
+  border-radius:22px;
+  padding:clamp(18px,3vw,30px);
+  box-shadow:0 12px 34px rgba(20,45,30,.055);
+}
+#publish form{display:grid;gap:17px}
+#publish .notice{padding:14px 16px;border-radius:13px;line-height:1.55}
+#publish .field{min-width:0;margin:0}
+#publish .field label,
+#detailContent .field label{display:block;margin-bottom:7px;font-size:12px;font-weight:750;letter-spacing:.01em}
+#publish input:not([type=file]),
+#publish select,
+#publish textarea,
+#detailContent input,
+#detailContent select,
+#detailContent textarea{
+  width:100%;min-height:47px;padding:12px 14px;border:1px solid var(--nexap-line);
+  border-radius:12px;background:var(--nexap-card);color:inherit;font:inherit;font-size:14px;
+  outline:none;transition:border-color .18s,box-shadow .18s,background .18s;
+}
+#publish textarea,#detailContent textarea{min-height:118px;resize:vertical;line-height:1.55}
+#publish input:focus,#publish select:focus,#publish textarea:focus,
+#detailContent input:focus,#detailContent select:focus,#detailContent textarea:focus{
+  border-color:var(--nexap-green);box-shadow:0 0 0 3px rgba(76,217,100,.13)
+}
+#publish input[type=file]{
+  display:block;width:100%;padding:13px;border:1px dashed var(--nexap-line);
+  border-radius:13px;background:var(--nexap-canvas);font-size:12px
+}
+#publish .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+#publish .sub,#detailContent .sub{display:block;margin-top:6px;line-height:1.5}
+#publish #publishSubmit{min-height:49px;border-radius:13px;font-size:14px;font-weight:750}
+#publishImagePreview{display:grid;grid-template-columns:repeat(auto-fill,minmax(86px,1fr));gap:9px;margin-top:10px}
+#listingDetail .detail-page-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+#listingDetail .listing-detail-content{
+  max-width:900px;margin:0 auto;padding:clamp(18px,4vw,34px);
+  border:1px solid var(--nexap-line);border-radius:24px;
+  background:var(--nexap-card);box-shadow:0 16px 44px rgba(20,45,30,.06)
+}
+#listingDetail .listing-detail-content>h1{font-size:clamp(27px,4vw,39px);line-height:1.12;letter-spacing:-.045em;margin:18px 0 12px}
+#listingDetail .listing-detail-description{font-size:15px;line-height:1.8;color:var(--nexap-muted);white-space:pre-wrap}
+#listingDetail .listing-detail-info{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:23px 0;
+}
+#listingDetail .listing-detail-info>div{
+  min-width:0;padding:14px;border:1px solid var(--nexap-line);
+  border-radius:14px;background:var(--nexap-canvas)
+}
+#listingDetail .listing-detail-info small{display:block;color:var(--nexap-muted);font-size:10px;margin-bottom:6px}
+#listingDetail .listing-detail-info strong{display:block;font-size:13px;overflow-wrap:anywhere}
+#listingDetail .listing-detail-price{color:var(--nexap-green);font-size:17px!important}
+#listingDetail .listing-detail-actions{display:grid;gap:10px;margin-top:22px}
+#listingDetail .listing-detail-actions .btn{min-height:46px;border-radius:12px;font-size:13px;font-weight:700}
+#listingDetail .listing-detail-actions .notice{
+  padding:13px 15px;border:1px solid var(--nexap-line);border-radius:13px;
+  background:var(--nexap-canvas);font-size:12px;line-height:1.55
+}
+#listingDetail .listing-gallery{overflow:hidden;border-radius:18px;background:var(--nexap-canvas)}
+#listingDetail .gallery-track{border-radius:18px}
+#listingDetail .gallery-controls{display:flex;align-items:center;justify-content:center;gap:14px;padding:10px}
+#listingDetail .gallery-arrow{width:35px;height:35px;border:1px solid var(--nexap-line);border-radius:50%;background:var(--nexap-card);color:inherit;font-size:21px}
+#detailModal .dialog{
+  width:min(100% - 24px,620px);max-height:min(88dvh,850px);overflow:auto;
+  padding:clamp(18px,3vw,28px);border:1px solid var(--nexap-line);border-radius:22px;
+  background:var(--nexap-card);box-shadow:0 24px 80px rgba(0,0,0,.2)
+}
+#detailContent .dialog-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+#detailContent h2{font-size:22px;letter-spacing:-.035em;margin:8px 0}
+#detailContent h3{font-size:14px;margin:20px 0 8px}
+#detailContent #jobApplicationForm{display:grid;gap:13px}
+#detailContent #jobApplicationForm .field{margin:0}
+#detailContent #jobApplicationForm .notice{font-size:11px;line-height:1.55}
+#detailContent #jobApplicationForm button[type=submit]{min-height:48px;border-radius:12px;font-weight:750}
+#detailContent .job-candidate{
+  padding:17px;margin:14px 0;border:1px solid var(--nexap-line);
+  border-radius:16px;background:var(--nexap-canvas);box-shadow:none
+}
+#detailContent .job-candidate .dialog-head{align-items:center}
+#detailContent .job-candidate p{font-size:12px;line-height:1.65;overflow-wrap:anywhere}
+#detailContent .job-candidate .btn{display:flex;align-items:center;justify-content:center;min-height:43px;border-radius:11px}
+#detailContent .job-candidate .field{margin-top:14px}
+#detailContent .job-candidate select{min-height:43px}
+#detailContent .empty{padding:25px 18px;border:1px dashed var(--nexap-line);border-radius:14px;text-align:center;line-height:1.6}
+#detailContent .tag{font-size:10px}
+@media(max-width:560px){
+  #publish .panel{padding:16px;border-radius:18px}
+  #publish .form-grid{grid-template-columns:1fr;gap:15px}
+  #publish form{gap:14px}
+  #listingDetail .detail-page-top{align-items:center}
+  #listingDetail .listing-detail-content{padding:16px;border-radius:18px}
+  #listingDetail .listing-detail-info{gap:8px}
+  #listingDetail .listing-detail-info>div{padding:11px}
+  #listingDetail .listing-detail-info strong{font-size:12px}
+  #detailModal .dialog{width:calc(100% - 16px);max-height:91dvh;padding:16px;border-radius:18px}
+  #detailContent .job-candidate{padding:13px}
+}
+@media(max-width:360px){
+  #listingDetail .listing-detail-info{grid-template-columns:1fr}
+  #listingDetail .detail-page-top .eyebrow{font-size:9px}
+}
+
 </style>
 </head>
 <body>
