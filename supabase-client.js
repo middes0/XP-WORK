@@ -52,7 +52,7 @@
       if (!data) throw new Error("O perfil não foi encontrado após a inicialização. Verifique as permissões da tabela profiles no Supabase.");
       window.XP_REMOTE.profile = data;
       window.XP_REMOTE.avatarColumnAvailable = avatarColumnAvailable;
-      if (!data.bio?.trim()) openProfileSetup(data, false);
+      if (!data.display_name?.trim()) openProfileSetup(data, false);
       else updateProfileSummary(data);
       return data;
     })();
@@ -129,8 +129,8 @@
         bio: el("profileBio").value.trim(),
         city_id: window.XP_REMOTE.cityId
       };
-      if (profile.display_name.length < 2 || profile.bio.length < 10) {
-        toast("Informe seu nome e uma descrição com pelo menos 10 caracteres.");
+      if (profile.display_name.length < 2) {
+        toast("Informe um nome com pelo menos 2 caracteres.");
         return;
       }
       if (selectedProfilePhoto) {
