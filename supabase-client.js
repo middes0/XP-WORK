@@ -611,6 +611,96 @@
     toast(makeAdmin?"Usuário promovido a administrador.":"Permissão removida.");
     await loadAdminUsers();
   });
+
+  const adminReportRows = [];
+  const adminListingRows = [];
+  const reportStatusLabels = {pending:"Pendente",reviewing:"Em análise",resolved:"Resolvida",dismissed:"Arquivada"};
+  const listingStatusLabels = {published:"Publicado",paused:"Pausado",removed:"Removido"};
+  const adminDate = value => value ? new Date(value).toLocaleString("pt-BR",{dateStyle:"short",timeStyle:"short"}) : "—";
+  function renderAdminReports(){
+    const target=el("adminReportsList");if(!target)return;
+    const filter=el("adminReportFilter")?.value||"all";
+    const rows=adminReportRows.filter(row=>filter==="all"||row.status===filter);
+    if(!rows.length){target.innerHTML='<div class="admin-moderation-empty">Nenhuma denúncia encontrada nesta situação.</div>';return;}
+    target.innerHTML=rows.map(row=>{
+      const status=row.status||"pending";
+      const title=row.listing_title||"Anúncio indisponível";
+      const reportId=esc(row.report_id);
+      const actions=[];
+      if(status==="pending")actions.push('<button class="btn secondary" data-report-action="review" data-report-id="'+reportId+'" type="button">Iniciar análise</button>');
+      if(status==="pending"||status==="reviewing"){
+        actions.push('<button class="btn secondary" data-report-action="resolve" data-report-id="'+reportId+'" type="button">Marcar resolvida</button>');
+        actions.push('<button class="btn ghost" data-report-action="dismiss" data-report-id="'+reportId+'" type="button">Arquivar</button>');
+        if(row.listing_id)actions.push('<button class="btn ghost" data-report-action="remove" data-report-id="'+reportId+'" type="button">Remover anúncio</button>');
+      }
+      return '<article class="admin-moderation-item"><div class="admin-moderation-item-top"><h4>'+esc(title)+'</h4><span class="admin-moderation-status" data-status="'+esc(status)+'">'+esc(reportStatusLabels[status]||status)+'</span></div><div class="admin-moderation-meta"><span>Motivo: <strong>'+esc(row.reason||"Não informado")+'</strong></span><span>Enviada: '+adminDate(row.created_at)+'</span><span>Denunciante: '+esc(row.reporter_name||"Usuário")+'</span><span>'+esc(row.reporter_email||"")+'</span></div>'+(row.details?'<p>'+esc(row.details)+'</p>':'<p>O denunciante não adicionou detalhes.</p>')+'<div class="admin-moderation-actions">'+actions.join("")+'</div></article>';
+    }).join("");
+  }
+  async function loadAdminReports(){
+    if(!window.XP_REMOTE.isAdmin)return;
+    const target=el("adminReportsList");if(target)target.innerHTML='<div class="admin-moderation-empty">Carregando denúncias...</div>';
+    const {data,error}=await client.rpc("nexap_admin_list_reports");
+    if(error){if(target)target.innerHTML='<div class="admin-moderation-empty">Não foi possível carregar as denúncias: '+esc(error.message)+'</div>';return;}
+    adminReportRows.splice(0,adminReportRows.length,...(Array.isArray(data)?data:[]));
+    renderAdminReports();
+  }
+  function renderAdminListings(){
+    const target=el("adminListingsList");if(!target)return;
+    const filter=el("adminListingFilter")?.value||"all";
+    const rows=adminListingRows.filter(row=>filter==="all"||row.status===filter);
+    if(!rows.length){target.innerHTML='<div class="admin-moderation-empty">Nenhum anúncio encontrado nesta situação.</div>';return;}
+    target.innerHTML=rows.map(row=>{
+      const status=row.status||"published";
+      const actions=[];
+      if(status==="published")actions.push('<button class="btn secondary" data-listing-action="paused" data-listing-id="'+esc(row.listing_id)+'" type="button">Pausar anúncio</button>');
+      if(status==="paused")actions.push('<button class="btn secondary" data-listing-action="published" data-listing-id="'+esc(row.listing_id)+'" type="button">Reativar anúncio</button>');
+      if(status!=="removed")actions.push('<button class="btn ghost" data-listing-action="removed" data-listing-id="'+esc(row.listing_id)+'" type="button">Remover anúncio</button>');
+      return '<article class="admin-moderation-item"><div class="admin-moderation-item-top"><h4>'+esc(row.title||"Anúncio sem título")+'</h4><span class="admin-moderation-status" data-status="'+esc(status)+'">'+esc(listingStatusLabels[status]||status)+'</span></div><div class="admin-moderation-meta"><span>Categoria: '+esc(row.category_name||"Classificados")+'</span><span>Anunciante: '+esc(row.owner_name||"Usuário")+'</span><span>'+esc(row.owner_email||"")+'</span><span>Publicado em: '+adminDate(row.created_at)+'</span><span>Denúncias: '+Number(row.reports_count||0)+'</span></div><p>'+esc(row.description||"Sem descrição")+'</p><div class="admin-moderation-actions">'+actions.join("")+'</div></article>';
+    }).join("");
+  }
+  async function loadAdminListings(){
+    if(!window.XP_REMOTE.isAdmin)return;
+    const target=el("adminListingsList");if(target)target.innerHTML='<div class="admin-moderation-empty">Carregando anúncios...</div>';
+    const {data,error}=await client.rpc("nexap_admin_list_listings");
+    if(error){if(target)target.innerHTML='<div class="admin-moderation-empty">Não foi possível carregar os anúncios: '+esc(error.message)+'</div>';return;}
+    adminListingRows.splice(0,adminListingRows.length,...(Array.isArray(data)?data:[]));
+    renderAdminListings();
+  }
+  document.querySelectorAll("[data-admin-tab]").forEach(button=>button.addEventListener("click",()=>{
+    const tab=button.dataset.adminTab;
+    document.querySelectorAll("[data-admin-tab]").forEach(item=>{const active=item===button;item.classList.toggle("active",active);item.setAttribute("aria-selected",String(active));});
+    el("adminReportsPanel").hidden=tab!=="reports";
+    el("adminListingsPanel").hidden=tab!=="listings";
+    if(tab==="reports")loadAdminReports();else loadAdminListings();
+  }));
+  el("adminReportsReload")?.addEventListener("click",loadAdminReports);
+  el("adminListingsReload")?.addEventListener("click",loadAdminListings);
+  el("adminReportFilter")?.addEventListener("change",renderAdminReports);
+  el("adminListingFilter")?.addEventListener("change",renderAdminListings);
+  el("adminReportsList")?.addEventListener("click",async event=>{
+    const button=event.target.closest("[data-report-action]");if(!button)return;
+    const id=button.dataset.reportId,action=button.dataset.reportAction;
+    const labels={review:"iniciar a análise",resolve:"marcar esta denúncia como resolvida",dismiss:"arquivar esta denúncia",remove:"remover o anúncio denunciado"};
+    if(!confirm("Confirma "+labels[action]+"?"))return;
+    button.disabled=true;
+    const status=action==="review"?"reviewing":action==="dismiss"?"dismissed":"resolved";
+    const {error}=await client.rpc("nexap_admin_update_report",{p_report_id:id,p_status:status,p_remove_listing:action==="remove"});
+    if(error){toast(error.message||"Não foi possível atualizar a denúncia.");button.disabled=false;return;}
+    toast(action==="remove"?"Anúncio removido e denúncia resolvida.":"Denúncia atualizada.");
+    await Promise.all([loadAdminReports(),loadAdminListings()]);
+  });
+  el("adminListingsList")?.addEventListener("click",async event=>{
+    const button=event.target.closest("[data-listing-action]");if(!button)return;
+    const id=button.dataset.listingId,status=button.dataset.listingAction;
+    const labels={published:"reativar",paused:"pausar",removed:"remover"};
+    if(!confirm("Confirma "+labels[status]+" este anúncio?"))return;
+    button.disabled=true;
+    const {error}=await client.rpc("nexap_admin_update_listing",{p_listing_id:id,p_status:status});
+    if(error){toast(error.message||"Não foi possível atualizar o anúncio.");button.disabled=false;return;}
+    toast(status==="removed"?"Anúncio removido da área pública.":status==="paused"?"Anúncio pausado.":"Anúncio reativado.");
+    await Promise.all([loadAdminListings(),loadAdminReports()]);
+  });
+
   async function refreshAdminAccess(user){
     window.XP_REMOTE.isAdmin=false;window.XP_REMOTE.adminRole=null;window.XP_REMOTE.adminUsers=[];
     if(el("adminMenuItem"))el("adminMenuItem").hidden=true;
