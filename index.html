@@ -1071,6 +1071,138 @@ html[data-theme="dark"] #activity .backup-tools{background:#18231b;border-color:
   #listingDetail .detail-page-top .eyebrow{font-size:9px}
 }
 
+
+/* NEXAP · acabamento de conta, atividade e configurações */
+#profile #accountPanel,
+#profile #memberAccountContent,
+#activity>.section,
+#settings>.panel{
+  border:1px solid var(--nexap-line);
+  border-radius:21px;
+  background:var(--nexap-card);
+  box-shadow:0 12px 34px rgba(20,45,30,.045);
+}
+#profile #accountPanel{max-width:760px;margin:0 auto;padding:clamp(17px,3vw,28px)}
+#profile #accountPanel>.section-head{align-items:center;gap:12px;padding-bottom:16px;border-bottom:1px solid var(--nexap-line);margin-bottom:18px}
+#profile #accountPanelTitle{font-size:19px;letter-spacing:-.035em}
+#profile #connectionState{font-size:11px;text-align:right}
+#profile #signedOut>.notice{padding:13px 15px;border-radius:13px;line-height:1.55}
+#profile #signedOut .google-login{width:100%;min-height:48px;border:1px solid var(--nexap-line);border-radius:12px;font-size:13px;font-weight:700}
+#profile .auth-divider{display:flex;align-items:center;gap:12px;margin:20px 0;color:var(--nexap-muted);font-size:11px}
+#profile .auth-divider:before,#profile .auth-divider:after{content:"";height:1px;flex:1;background:var(--nexap-line)}
+#profile #signedOut .field{margin:13px 0}
+#profile #signedOut .field label{display:block;margin-bottom:7px;font-size:12px;font-weight:700}
+#profile #signedOut input{
+  width:100%;min-height:46px;padding:11px 13px;border:1px solid var(--nexap-line);
+  border-radius:11px;background:var(--nexap-canvas);color:inherit;font:inherit;font-size:14px
+}
+#profile #signedOut input:focus{outline:0;border-color:var(--nexap-green);box-shadow:0 0 0 3px rgba(76,217,100,.12)}
+#profile #signedOut>div:last-child{display:grid!important;grid-template-columns:1fr 1fr;gap:10px!important;margin-top:17px}
+#profile #signedOut>div:last-child .btn{min-height:46px;border-radius:11px;font-weight:700}
+#profile .account-profile-card{
+  padding:18px;border:1px solid var(--nexap-line);border-radius:17px;
+  background:var(--nexap-canvas)
+}
+#profile .account-identity{display:flex;align-items:center;gap:13px;min-width:0}
+#profile .account-avatar{width:58px;height:58px;flex:0 0 58px;border:2px solid var(--nexap-card);box-shadow:0 0 0 1px var(--nexap-line);font-size:20px}
+#profile .account-identity-copy{display:grid;gap:4px;min-width:0}
+#profile .account-identity-copy strong{font-size:16px;overflow-wrap:anywhere}
+#profile .account-identity-copy>span{font-size:11px;color:var(--nexap-muted);overflow-wrap:anywhere}
+#profile .account-status{display:flex;align-items:center;gap:6px}
+#profile .account-status i{width:7px;height:7px;border-radius:50%;background:#36b86a}
+#profile .account-bio{margin:15px 0;font-size:12px;line-height:1.65;color:var(--nexap-muted)}
+#profile .account-edit-profile{min-height:41px;border-radius:10px;font-size:12px}
+#profile .account-group-title{margin:22px 0 10px;font-size:10px;font-weight:800;letter-spacing:.1em;color:var(--nexap-muted)}
+#profile .account-shortcuts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+#profile .account-shortcut{
+  min-width:0;min-height:84px;padding:13px;border:1px solid var(--nexap-line);
+  border-radius:13px;background:var(--nexap-card);text-align:left;
+  transition:border-color .18s,transform .18s
+}
+#profile .account-shortcut:hover{border-color:var(--nexap-green);transform:translateY(-1px)}
+#profile .account-shortcut strong{font-size:12px}
+#profile .account-shortcut small{font-size:10px;line-height:1.4;color:var(--nexap-muted)}
+#activity>.section{padding:clamp(16px,3vw,25px);margin-top:18px}
+#activity .section-head{align-items:center;gap:12px;margin-bottom:14px}
+#activity .section-head h2{font-size:18px;letter-spacing:-.03em}
+#activity .backup-tools{
+  display:flex;align-items:center;justify-content:space-between;gap:14px;
+  margin-top:18px;padding:14px;border:1px solid var(--nexap-line);
+  border-radius:13px;background:var(--nexap-canvas)
+}
+#activity .backup-tools small{max-width:390px;font-size:10px;line-height:1.5;color:var(--nexap-muted)}
+#activity .backup-tools .btn{flex:0 0 auto;min-height:40px;border-radius:10px;font-size:11px}
+#activity .section>.panel{padding:17px;border:1px solid var(--nexap-line);border-radius:14px;background:var(--nexap-canvas)}
+#activity .section>.panel .btn{min-height:41px;border-radius:10px}
+#settings>.panel{max-width:820px;margin-left:auto;margin-right:auto;padding:clamp(17px,3vw,27px)}
+#settings>.panel+.panel{margin-top:14px!important}
+#settings .section-head{align-items:center;gap:12px;padding-bottom:14px;border-bottom:1px solid var(--nexap-line);margin-bottom:14px}
+#settings .section-head h2{font-size:18px;letter-spacing:-.03em}
+#settings .section-head>.sub{font-size:10px;text-align:right}
+#settings>.panel>.sub{font-size:12px;line-height:1.65}
+#settings .field{margin:17px 0}
+#settings .field label{display:block;margin-bottom:8px;font-size:12px;font-weight:750}
+#settings select{
+  width:100%;min-height:46px;padding:11px 13px;border:1px solid var(--nexap-line);
+  border-radius:11px;background:var(--nexap-canvas);color:inherit;font:inherit;font-size:13px
+}
+#settings #appearanceDescription{min-height:34px;margin:9px 0 15px;font-size:11px;line-height:1.55}
+#settings #saveAppearance{min-height:44px;padding:0 18px;border-radius:11px;font-size:12px;font-weight:750}
+#settings .account-menu-item{
+  display:flex;align-items:center;gap:12px;width:100%;min-height:66px;
+  padding:11px 4px;border:0;border-bottom:1px solid var(--nexap-line);
+  background:transparent;color:inherit;text-align:left
+}
+#settings .account-menu-item:last-child{border-bottom:0}
+#settings .account-menu-icon{
+  display:grid;place-items:center;width:37px;height:37px;flex:0 0 37px;
+  border-radius:11px;background:var(--nexap-canvas);color:var(--nexap-green);font-size:17px
+}
+#settings .account-menu-item>span:nth-child(2){display:grid;gap:4px;flex:1;min-width:0}
+#settings .account-menu-item strong{font-size:12px}
+#settings .account-menu-item small{font-size:10px;color:var(--nexap-muted)}
+#settings .account-menu-item>b{font-size:19px;color:var(--nexap-muted);font-weight:400}
+#profileSetupModal .profile-setup-dialog{
+  width:min(100% - 24px,560px);max-height:90dvh;overflow:auto;
+  padding:clamp(18px,3vw,28px);border:1px solid var(--nexap-line);
+  border-radius:21px;background:var(--nexap-card);box-shadow:0 24px 80px rgba(0,0,0,.2)
+}
+#profileSetupModal .profile-setup-dialog h2{font-size:23px;letter-spacing:-.04em;margin:8px 0}
+#profileSetupModal .profile-setup-dialog>p{font-size:12px;line-height:1.6;color:var(--nexap-muted)}
+#profileSetupModal #profileSetupForm{display:grid;gap:14px;margin-top:18px}
+#profileSetupModal .profile-photo-editor{
+  display:flex;align-items:center;gap:15px;padding:14px;
+  border:1px solid var(--nexap-line);border-radius:14px;background:var(--nexap-canvas)
+}
+#profileSetupModal .profile-photo-editor small{display:block;margin-top:7px;font-size:10px;color:var(--nexap-muted)}
+#profileSetupModal #profileSetupForm .field{margin:0}
+#profileSetupModal #profileSetupForm .field label{display:block;margin-bottom:7px;font-size:12px;font-weight:700}
+#profileSetupModal #profileSetupForm input:not([type=file]),
+#profileSetupModal #profileSetupForm select,
+#profileSetupModal #profileSetupForm textarea{
+  width:100%;min-height:45px;padding:11px 13px;border:1px solid var(--nexap-line);
+  border-radius:11px;background:var(--nexap-canvas);color:inherit;font:inherit;font-size:13px
+}
+#profileSetupModal #profileSetupForm textarea{min-height:105px}
+#profileSetupModal #saveProfileBtn{min-height:46px;border-radius:11px;font-weight:750}
+@media(max-width:560px){
+  #profile #accountPanel{padding:15px;border-radius:17px}
+  #profile .account-profile-card{padding:14px}
+  #profile .account-shortcuts{gap:8px}
+  #profile .account-shortcut{min-height:78px;padding:10px}
+  #activity>.section{padding:14px;border-radius:17px}
+  #activity .backup-tools{align-items:stretch;flex-direction:column;gap:9px}
+  #activity .backup-tools small{max-width:none}
+  #activity .backup-tools .btn{width:100%}
+  #settings>.panel{padding:15px;border-radius:17px}
+  #profileSetupModal .profile-setup-dialog{width:calc(100% - 16px);padding:16px;border-radius:18px}
+}
+@media(max-width:360px){
+  #profile #signedOut>div:last-child{grid-template-columns:1fr}
+  #profile .account-shortcuts{grid-template-columns:1fr}
+  #profile .account-shortcut{min-height:66px}
+}
+
 </style>
 </head>
 <body>
