@@ -1,4 +1,4 @@
-const CACHE = "nexap-v39";
+const CACHE = "nexap-v40";
 const CORE = [
   "./",
   "./index.html",
@@ -6,7 +6,13 @@ const CORE = [
   "./nexap-icon.svg",
   "./offline.html",
   "./supabase-client.js",
-  "./recruitment.js"
+  "./recruitment.js",
+  "./privacidade.html",
+  "./termos.html",
+  "./cookies.html",
+  "./reembolsos.html",
+  "./dados.html",
+  "./acessibilidade.html"
 ];
 const IMAGE_CACHE = "nexap-images-v1";
 const MAX_CACHED_IMAGES = 60;
@@ -49,13 +55,15 @@ self.addEventListener("fetch", event => {
     event.respondWith((async () => {
       try {
         const response = await fetch(request);
-        if (response.ok) {
+        const isHome = url.pathname === "/" || url.pathname.endsWith("/index.html");
+        if (response.ok && isHome) {
           const cache = await caches.open(CACHE);
-          cache.put("./index.html", response.clone());
+          await cache.put("./index.html", response.clone());
         }
         return response;
       } catch {
-        return (await caches.match("./offline.html")) ||
+        return (await caches.match(request)) ||
+          (await caches.match("./offline.html")) ||
           (await caches.match("./index.html")) ||
           new Response("Você está sem conexão.", { status: 503, headers: { "Content-Type": "text/plain; charset=utf-8" } });
       }
