@@ -1048,7 +1048,8 @@
   render = function() {
     baseRender();
     const mine = listings.filter(a => a.owner === "local" || (a.owner === "remote" && a.ownerId === window.XP_REMOTE.user?.id));
-    el("myCount").textContent = mine.length;
+    const myCount = el("myCount");
+    if (myCount) myCount.textContent = mine.length;
     renderInto("myGrid", mine);
     if (el("activityMyGrid")) renderInto("activityMyGrid", mine);
   };
