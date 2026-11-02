@@ -1424,6 +1424,66 @@ html[data-theme="dark"] #listingDetail .listing-detail-actions #deleteAd{backgro
   #listingDetail .listing-detail-info>div{padding:9px}
 }
 
+
+
+/* NEXAP — microanimações sutis */
+@keyframes nexap-page-in{
+  from{opacity:0;transform:translateY(7px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@keyframes nexap-card-in{
+  from{opacity:0;transform:translateY(8px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@keyframes nexap-modal-in{
+  from{opacity:0;transform:translateY(10px) scale(.99)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+@keyframes nexap-soft-in{
+  from{opacity:0}
+  to{opacity:1}
+}
+.page.active{animation:nexap-page-in .24s ease-out both}
+.listing{animation:nexap-card-in .28s ease-out both}
+.listing:nth-child(2){animation-delay:25ms}
+.listing:nth-child(3){animation-delay:45ms}
+.listing:nth-child(4){animation-delay:65ms}
+.listing:nth-child(n+5){animation-delay:0ms}
+.btn,.chip,.cat,.nav button,.more-menu-trigger,.download-top-trigger,.gallery-arrow{
+  transition:transform .16s ease,background-color .18s ease,border-color .18s ease,box-shadow .18s ease,color .18s ease;
+}
+.btn:active,.chip:active,.cat:active,.nav button:active,.more-menu-trigger:active,.download-top-trigger:active,.gallery-arrow:active{
+  transform:scale(.975);
+}
+.listing{transition:box-shadow .2s ease,border-color .2s ease,transform .2s ease}
+@media(hover:hover) and (pointer:fine){
+  .listing:hover{transform:translateY(-3px);border-color:#cfe5d1;box-shadow:0 12px 28px rgba(35,91,43,.09)}
+  .btn:hover{transform:translateY(-1px)}
+}
+.modal.open{animation:nexap-soft-in .18s ease-out both}
+.modal.open .dialog{animation:nexap-modal-in .22s cubic-bezier(.2,.75,.25,1) both}
+.more-menu-card{transform-origin:top right}
+.more-menu.open .more-menu-card{animation:nexap-modal-in .18s ease-out both}
+#listingDetail .listing-detail-content{animation:nexap-soft-in .24s ease-out both}
+#listingDetail .gallery-track{scroll-behavior:smooth}
+#listingDetail .gallery-arrow:active{transform:scale(.94)}
+.toast{animation:nexap-modal-in .18s ease-out both}
+button:focus-visible,.btn:focus-visible,a:focus-visible{transition:outline-offset .15s ease}
+@media(hover:none){
+  .listing:hover{transform:none}
+  .btn:hover{transform:none}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    scroll-behavior:auto!important;
+    animation-duration:.01ms!important;
+    animation-iteration-count:1!important;
+    transition-duration:.01ms!important;
+  }
+  .page.active,.listing,.modal.open,.modal.open .dialog,.more-menu.open .more-menu-card,
+  #listingDetail .listing-detail-content,.toast{animation:none!important}
+}
+
 </style>
 </head>
 <body>
