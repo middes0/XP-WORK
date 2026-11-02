@@ -1718,6 +1718,34 @@ html[data-theme="dark"] .top{border-bottom-color:var(--line)}
  .top,.listing,.btn,.cat{scroll-behavior:auto!important}
 }
 
+
+/* Login: layout compacto e responsivo */
+#profile #accountHero{padding:18px 0 8px}
+#profile #accountHero .auth-brand{margin-bottom:14px}
+#profile #accountHero h1{margin:6px 0;font-size:clamp(30px,5vw,40px)}
+#profile #accountHero p{margin:0;max-width:480px;font-size:13px}
+#profile #accountPanel{width:100%;max-width:680px;margin:18px auto 28px;padding:clamp(16px,3vw,26px);border-radius:20px}
+#profile #accountPanel>.section-head{padding-bottom:13px;margin-bottom:15px;border-bottom:1px solid var(--line)}
+#profile #accountPanelTitle{font-size:20px}
+#profile #connectionState{font-size:10px}
+#profile #signedOut>.notice{display:none}
+#profile #signedOut .google-login{min-height:50px;margin:0 0 16px;border-radius:13px}
+#profile #signedOut .auth-divider{margin:8px 0 14px}
+#profile #signedOut .field{gap:7px;margin:10px 0}
+#profile #signedOut .field label{font-size:12px}
+#profile #signedOut .field input{min-height:48px;padding:12px 14px;border-radius:12px}
+#profile #signedOut>div:last-child{display:grid!important;grid-template-columns:1fr 1fr;gap:10px!important;margin-top:15px}
+#profile #signedOut>div:last-child .btn{width:100%;min-height:48px}
+@media(max-width:600px){
+ #profile #accountHero{padding:10px 0 4px}
+ #profile #accountHero .auth-brand{margin-bottom:10px}
+ #profile #accountHero h1{font-size:34px}
+ #profile #accountPanel{margin-top:14px;padding:16px;border-radius:18px}
+ #profile #accountPanelTitle{font-size:18px}
+ #profile #signedOut .google-login{min-height:48px}
+ #profile #signedOut .field input{min-height:46px}
+}
+
 </style>
 </head>
 <body>
