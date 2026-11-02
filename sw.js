@@ -1,4 +1,4 @@
-const CACHE = "nexap-v47";
+const CACHE = "nexap-v48";
 const CORE = [
   "./",
   "./index.html",
