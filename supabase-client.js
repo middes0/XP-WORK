@@ -455,16 +455,43 @@
     if (categoryResult.error) throw categoryResult.error;
     window.XP_REMOTE.cityId = cityResult.data?.id || null;
     window.XP_REMOTE.categories = Object.fromEntries((categoryResult.data || []).map(c => [c.name, c.id]));
-    const { data, error } = await client.from("listings")
-      .select("id,owner_id,title,description,price,price_label,contact_phone,status,created_at,job_vacancies_total,job_vacancies_filled,job_application_deadline,categories(name),cities(name)")
+
+    // Campos de vagas são opcionais para instalações que ainda não executaram
+    // a migração de empregos. Nesse caso, anúncios comuns continuam carregando.
+    const baseSelect = "id,owner_id,title,description,price,price_label,contact_phone,status,created_at,categories(name),cities(name)";
+    const extendedSelect = baseSelect + ",job_vacancies_total,job_vacancies_filled,job_application_deadline";
+    const isMissingOptionalColumn = error => {
+      const message = String(error?.message || "");
+      return error?.code === "42703" || error?.code === "PGRST204" ||
+        /job_vacancies_total|job_vacancies_filled|job_application_deadline|column .* does not exist/i.test(message);
+    };
+    let listingResult = await client.from("listings")
+      .select(extendedSelect)
       .eq("status", "published").order("created_at", { ascending: false }).limit(100);
-    if (error) throw error;
-    const listingIds = (data || []).map(a => a.id);
+    let hasJobColumns = true;
+    if (listingResult.error && isMissingOptionalColumn(listingResult.error)) {
+      console.warn("NEXAP: campos de vagas ainda não existem no banco; carregando anúncios sem esses dados.");
+      hasJobColumns = false;
+      listingResult = await client.from("listings")
+        .select(baseSelect)
+        .eq("status", "published").order("created_at", { ascending: false }).limit(100);
+    }
+    if (listingResult.error) throw listingResult.error;
+    const data = listingResult.data || [];
+    const listingIds = data.map(a => a.id);
+
+    // Imagens e nomes de perfil são complementares: uma falha nessas consultas
+    // não deve esconder todos os anúncios.
     let imageRows = [];
     if (listingIds.length) {
-      const { data: images, error: imageError } = await client.from("listing_images").select("id,listing_id,storage_path,alt_text,sort_order").in("listing_id", listingIds).order("sort_order");
-      if (imageError) throw imageError;
-      imageRows = images || [];
+      const { data: images, error: imageError } = await client.from("listing_images")
+        .select("id,listing_id,storage_path,alt_text,sort_order")
+        .in("listing_id", listingIds).order("sort_order");
+      if (imageError) {
+        console.warn("NEXAP: não foi possível carregar imagens dos anúncios.", imageError);
+      } else {
+        imageRows = images || [];
+      }
     }
     const imageMap = new Map();
     imageRows.forEach(image => {
@@ -472,19 +499,29 @@
       if (!imageMap.has(image.listing_id)) imageMap.set(image.listing_id, []);
       imageMap.get(image.listing_id).push({ id:image.id, storage_path:image.storage_path, alt:image.alt_text, url });
     });
-    const ownerIds = [...new Set((data || []).map(a => a.owner_id).filter(Boolean))];
+
+    const ownerIds = [...new Set(data.map(a => a.owner_id).filter(Boolean))];
     let names = {};
     if (window.XP_REMOTE.user && ownerIds.length) {
-      const { data: profiles, error: profileError } = await client.from("profiles").select("id,display_name").in("id", ownerIds);
-      if (profileError) throw profileError;
-      names = Object.fromEntries((profiles || []).map(profile => [profile.id, profile.display_name]));
+      const { data: profiles, error: profileError } = await client.from("profiles")
+        .select("id,display_name").in("id", ownerIds);
+      if (profileError) {
+        console.warn("NEXAP: não foi possível carregar nomes dos anunciantes.", profileError);
+      } else {
+        names = Object.fromEntries((profiles || []).map(profile => [profile.id, profile.display_name]));
+      }
     }
-    const remote = (data || []).map(a => ({
+    const remote = data.map(a => ({
       id: a.id, title: a.title, category: a.categories?.name || "Classificados",
-      description: a.description, price: a.price_label || (a.price != null ? "R$ " + Number(a.price).toLocaleString("pt-BR", {minimumFractionDigits: 2}) : ""),
-      contact: a.contact_phone || "", author: names[a.owner_id] || "Anunciante XP WORK",
+      description: a.description,
+      price: a.price_label || (a.price != null ? "R$ " + Number(a.price).toLocaleString("pt-BR", {minimumFractionDigits: 2}) : ""),
+      contact: a.contact_phone || "", author: names[a.owner_id] || "Anunciante NEXAP",
       city: a.cities?.name || "Xapuri", createdAt: new Date(a.created_at).getTime(),
-      owner: "remote", ownerId: a.owner_id, vacanciesTotal:a.job_vacancies_total, vacanciesFilled:a.job_vacancies_filled||0, applicationDeadline:a.job_application_deadline, images: imageMap.get(a.id) || []
+      owner: "remote", ownerId: a.owner_id,
+      vacanciesTotal: hasJobColumns ? a.job_vacancies_total : null,
+      vacanciesFilled: hasJobColumns ? (a.job_vacancies_filled || 0) : 0,
+      applicationDeadline: hasJobColumns ? a.job_application_deadline : null,
+      images: imageMap.get(a.id) || []
     }));
     listings = listings.filter(a => a.owner !== "remote").concat(remote);
     render();
