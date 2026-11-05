@@ -1,6 +1,6 @@
 {
-  "name": "NEXAP — Xapuri conectada",
-  "short_name": "NEXAP",
+  "name": "AllXap — Xapuri conectada",
+  "short_name": "AllXap",
   "description": "Conectando pessoas, serviços, comércios e oportunidades em Xapuri.",
   "start_url": "./",
   "scope": "./",
@@ -10,13 +10,13 @@
   "lang": "pt-BR",
   "icons": [
     {
-      "src": "./nexap-icon.svg",
+      "src": "./allxap-icon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any"
     },
     {
-      "src": "./nexap-icon.svg",
+      "src": "./allxap-icon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "maskable"
