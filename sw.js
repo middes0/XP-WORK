@@ -1,9 +1,9 @@
-const CACHE = "nexap-v52";
+const CACHE = "nexap-v53";
 const CORE = [
   "./",
   "./index.html",
   "./manifest.json",
-  "./nexap-icon.svg",
+  "./allxap-icon.svg",
   "./offline.html",
   "./supabase-client.js",
   "./recruitment.js",
