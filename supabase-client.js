@@ -230,7 +230,7 @@
   let favoriteIds = new Set();
   const actionModal = () => el("detailModal");
   function showAccountAction(title, body) {
-    el("detailContent").innerHTML = '<h2 style="font-size:20px;margin:12px 0">' + title + '</h2>' + body;
+    el("detailContent").innerHTML = '<h2 style="font-size:20px;margin:12px 0">' + esc(title) + '</h2>' + body;
     actionModal().classList.add("open");
   }
   async function openFavorites() {
@@ -622,9 +622,11 @@
     const owner=window.XP_REMOTE.adminRole==="owner";
     const date=v=>v?new Date(v).toLocaleDateString("pt-BR"):"—";
     target.innerHTML=visible.map(row=>{
-      const role=row.admin_role||"user", label=role==="owner"?"Administrador principal":role==="admin"?"Administrador":"Usuário";
+      const roleValue=row.admin_role;
+      const role=roleValue==="owner"||roleValue==="admin"?roleValue:"user";
+      const label=role==="owner"?"Administrador principal":role==="admin"?"Administrador":"Usuário";
       const action=owner&&role!=="owner"&&row.user_id!==window.XP_REMOTE.user?.id?'<button class="btn '+(role==="admin"?"ghost":"secondary")+'" data-admin-role="'+(role==="admin"?"remove":"add")+'" data-user-id="'+esc(row.user_id)+'" type="button">'+(role==="admin"?"Remover administrador":"Tornar administrador")+'</button>':"";
-      return '<article class="admin-user"><div class="admin-user-head"><div><strong>'+esc(row.display_name||"Sem nome")+'</strong><small>'+esc(row.email||"E-mail indisponível")+'</small></div><span class="admin-role" data-role="'+role+'">'+label+'</span></div><div class="admin-user-meta"><span>Conta: '+esc(row.account_type||"—")+'</span><span>Anúncios: '+Number(row.listings_count||0)+'</span><span>Cadastro: '+date(row.created_at)+'</span><span>Último acesso: '+date(row.last_sign_in_at)+'</span></div>'+(row.bio?'<small>'+esc(row.bio)+'</small>':"")+(action?'<div class="admin-user-actions">'+action+'</div>':"")+'</article>';
+      return '<article class="admin-user"><div class="admin-user-head"><div><strong>'+esc(row.display_name||"Sem nome")+'</strong><small>'+esc(row.email||"E-mail indisponível")+'</small></div><span class="admin-role" data-role="'+esc(role)+'">'+label+'</span></div><div class="admin-user-meta"><span>Conta: '+esc(row.account_type||"—")+'</span><span>Anúncios: '+Number(row.listings_count||0)+'</span><span>Cadastro: '+date(row.created_at)+'</span><span>Último acesso: '+date(row.last_sign_in_at)+'</span></div>'+(row.bio?'<small>'+esc(row.bio)+'</small>':"")+(action?'<div class="admin-user-actions">'+action+'</div>':"")+'</article>';
     }).join("");
   }
   async function loadAdminUsers(){
