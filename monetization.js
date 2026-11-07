@@ -249,8 +249,10 @@
     if(event.target.id==="featuredPaymentForm")submitFeaturedPayment(event);
   });
   document.querySelectorAll("[data-money-tab]").forEach(b=>b.addEventListener("click",()=>setAdminTab(b.dataset.moneyTab)));
-  const originalAdminOpen=window.AllXap_ADMIN?.open;
-  window.AllXap_ADMIN={...(window.AllXap_ADMIN||{}),open:async()=>{if(typeof originalAdminOpen==="function")await originalAdminOpen();if(remote.isAdmin)await refreshAdmin();}};
+  const originalAdminOpen=window.NEXAP_ADMIN?.open;
+  const combinedAdminOpen=async()=>{if(typeof originalAdminOpen==="function")await originalAdminOpen();if(remote.isAdmin)await refreshAdmin();};
+  window.NEXAP_ADMIN={...(window.NEXAP_ADMIN||{}),open:combinedAdminOpen};
+  window.AllXap_ADMIN=window.NEXAP_ADMIN;
   const authSubscription=client.auth.onAuthStateChange((_event,session)=>{
     remote.user=session?.user||null;
     if($("plans")?.classList.contains("active"))openPlans();
