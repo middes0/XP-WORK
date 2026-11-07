@@ -632,7 +632,7 @@
   async function loadAdminUsers(){
     if(!window.XP_REMOTE.isAdmin)return;
     const target=el("adminUsersList");if(target)target.innerHTML='<div class="empty">Atualizando usuários...</div>';
-    const {data,error}=await client.rpc("nexap_admin_list_users");
+    const {data,error}=await client.functions.invoke("nexap-admin",{body:{action:"list_users"}});
     if(error){if(target)target.innerHTML='<div class="empty">Falha ao carregar: '+esc(error.message)+'</div>';return;}
     window.XP_REMOTE.adminUsers=Array.isArray(data)?data:[];
     renderAdminUsers(window.XP_REMOTE.adminUsers);
@@ -653,7 +653,7 @@
     const makeAdmin=button.dataset.adminRole==="add";
     if(!confirm((makeAdmin?"Promover":"Remover")+" este usuário "+(makeAdmin?"a administrador":"de administrador")+"?"))return;
     button.disabled=true;
-    const {error}=await client.rpc("nexap_admin_set_role",{p_user_id:button.dataset.userId,p_make_admin:makeAdmin});
+    const {error}=await client.functions.invoke("nexap-admin",{body:{action:"set_role",p_user_id:button.dataset.userId,p_make_admin:makeAdmin}});
     if(error){toast(error.message||"Não foi possível alterar a permissão.");button.disabled=false;return;}
     toast(makeAdmin?"Usuário promovido a administrador.":"Permissão removida.");
     await loadAdminUsers();
@@ -686,7 +686,7 @@
   async function loadAdminReports(){
     if(!window.XP_REMOTE.isAdmin)return;
     const target=el("adminReportsList");if(target)target.innerHTML='<div class="admin-moderation-empty">Carregando denúncias...</div>';
-    const {data,error}=await client.rpc("nexap_admin_list_reports");
+    const {data,error}=await client.functions.invoke("nexap-admin",{body:{action:"list_reports"}});
     if(error){if(target)target.innerHTML='<div class="admin-moderation-empty">Não foi possível carregar as denúncias: '+esc(error.message)+'</div>';return;}
     adminReportRows.splice(0,adminReportRows.length,...(Array.isArray(data)?data:[]));
     renderAdminReports();
@@ -708,7 +708,7 @@
   async function loadAdminListings(){
     if(!window.XP_REMOTE.isAdmin)return;
     const target=el("adminListingsList");if(target)target.innerHTML='<div class="admin-moderation-empty">Carregando anúncios...</div>';
-    const {data,error}=await client.rpc("nexap_admin_list_listings");
+    const {data,error}=await client.functions.invoke("nexap-admin",{body:{action:"list_listings"}});
     if(error){if(target)target.innerHTML='<div class="admin-moderation-empty">Não foi possível carregar os anúncios: '+esc(error.message)+'</div>';return;}
     adminListingRows.splice(0,adminListingRows.length,...(Array.isArray(data)?data:[]));
     renderAdminListings();
@@ -731,7 +731,7 @@
     if(!confirm("Confirma "+labels[action]+"?"))return;
     button.disabled=true;
     const status=action==="review"?"reviewing":action==="dismiss"?"dismissed":"resolved";
-    const {error}=await client.rpc("nexap_admin_update_report",{p_report_id:id,p_status:status,p_remove_listing:action==="remove"});
+    const {error}=await client.functions.invoke("nexap-admin",{body:{action:"update_report",p_report_id:id,p_status:status,p_remove_listing:action==="remove"}});
     if(error){toast(error.message||"Não foi possível atualizar a denúncia.");button.disabled=false;return;}
     toast(action==="remove"?"Anúncio removido e denúncia resolvida.":"Denúncia atualizada.");
     await Promise.all([loadAdminReports(),loadAdminListings()]);
@@ -742,7 +742,7 @@
     const labels={published:"reativar",paused:"pausar",removed:"remover"};
     if(!confirm("Confirma "+labels[status]+" este anúncio?"))return;
     button.disabled=true;
-    const {error}=await client.rpc("nexap_admin_update_listing",{p_listing_id:id,p_status:status});
+    const {error}=await client.functions.invoke("nexap-admin",{body:{action:"update_listing",p_listing_id:id,p_status:status}});
     if(error){toast(error.message||"Não foi possível atualizar o anúncio.");button.disabled=false;return;}
     toast(status==="removed"?"Anúncio removido da área pública.":status==="paused"?"Anúncio pausado.":"Anúncio reativado.");
     await Promise.all([loadAdminListings(),loadAdminReports()]);
@@ -752,7 +752,7 @@
     window.XP_REMOTE.isAdmin=false;window.XP_REMOTE.adminRole=null;window.XP_REMOTE.adminUsers=[];
     if(el("adminMenuItem"))el("adminMenuItem").hidden=true;
     if(!user)return;
-    const {data,error}=await client.rpc("nexap_admin_list_users");
+    const {data,error}=await client.functions.invoke("nexap-admin",{body:{action:"list_users"}});
     if(error||!Array.isArray(data))return;
     window.XP_REMOTE.adminUsers=data;
     const me=data.find(row=>row.user_id===user.id);
