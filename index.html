@@ -2549,7 +2549,7 @@ html[data-theme="dark"] .nav button.active:before{background:#62d47a}
 }
 
 </style>
-<link rel="stylesheet" href="./monetization.css?v=20261107-3">
+<link rel="stylesheet" href="./monetization.css?v=20261107-4">
 </head>
 <body>
 <a class="skip-link" href="#mainContent">Pular para o conteúdo</a>
@@ -2645,7 +2645,7 @@ html[data-theme="dark"] .nav button.active:before{background:#62d47a}
  <div class="admin-security-note"><span aria-hidden="true">♙</span><div><strong>Permissões administrativas</strong><p>Somente o administrador principal pode conceder ou remover acesso administrativo.</p></div></div>
 </section>
 <section id="plans" class="page monetization-page">
- <div class="hero"><div class="eyebrow">AllXap para quem vende</div><h1>Planos e <span>divulgação.</span></h1><p>Escolha um plano mensal ou dê mais visibilidade a um anúncio. O pagamento é feito por Pix, com análise manual.</p></div>
+ <div class="hero"><div class="eyebrow">AllXap para quem anuncia</div><h1>Divulgue seu negócio com <span>mais alcance.</span></h1><p>Comece gratuitamente, escolha um plano para publicar mais anúncios ou destaque uma vaga quando quiser ampliar seu alcance. Pagamentos por Pix com conferência manual.</p></div>
  <div class="monetization-current panel" id="mySubscription"><div class="monetization-loading">Carregando sua assinatura...</div></div>
  <div class="monetization-section-head"><div><span class="monetization-kicker">PLANOS MENSAIS</span><h2>Encontre o plano ideal</h2><p>Os benefícios e valores serão exibidos antes da solicitação.</p></div></div>
  <div class="monetization-plans-grid" id="publicPlans"><div class="monetization-loading">Carregando planos...</div></div><div id="moneyPurchaseFormHost"></div>
@@ -2812,7 +2812,7 @@ window.addEventListener("load",()=>setTimeout(openListingFromUrl,900));
   const app=document.createElement("script");
   app.src="./supabase-client.js?v=20261107-1";
   app.onerror=()=>{if(state)state.textContent="Falha ao carregar o login";};
-  app.onload=()=>{const moderation=document.createElement("script");moderation.src="./admin-moderation.js?v=20261102-1";moderation.onerror=()=>console.error("AllXap: falha ao carregar módulo de moderação");moderation.onload=()=>{const feature=document.createElement("script");feature.src="./recruitment.js?v=20261030-1";feature.onerror=()=>console.error("AllXap: falha ao carregar módulo de empregos");feature.onload=()=>{const money=document.createElement("script");money.src="./monetization.js?v=20261107-2";money.onerror=()=>console.error("AllXap: falha ao carregar monetização");document.body.appendChild(money);};document.body.appendChild(feature);};document.body.appendChild(moderation);};
+  app.onload=()=>{const moderation=document.createElement("script");moderation.src="./admin-moderation.js?v=20261102-1";moderation.onerror=()=>console.error("AllXap: falha ao carregar módulo de moderação");moderation.onload=()=>{const feature=document.createElement("script");feature.src="./recruitment.js?v=20261030-1";feature.onerror=()=>console.error("AllXap: falha ao carregar módulo de empregos");feature.onload=()=>{const money=document.createElement("script");money.src="./monetization.js?v=20261107-3";money.onerror=()=>console.error("AllXap: falha ao carregar monetização");document.body.appendChild(money);};document.body.appendChild(feature);};document.body.appendChild(moderation);};
   document.body.appendChild(app);
  }
  function loadSdk(url,fallback){
