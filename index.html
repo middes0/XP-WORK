@@ -2419,6 +2419,37 @@ html[data-theme="dark"] #listingDetail .listing-detail-content .tag{background:r
 }
 @media(prefers-reduced-motion:reduce){#settings .ax-settings-card,#settings .ax-settings-hero-icon,#settings .ax-theme-choice-icon,#settings .ax-settings-action-icon,#settings .ax-settings-action>b,#listingDetail .listing-gallery img{transition:none!important}}
 
+
+/* Restore the original, lighter home hero header */
+#home .ax-home-hero-classic{position:relative;isolation:isolate;overflow:hidden;min-height:0;padding:31px 30px 29px;border:1px solid rgba(69,133,83,.16);border-radius:25px;background:linear-gradient(115deg,#edf7ef 0%,#e4f2e7 54%,#f1f8f1 100%);box-shadow:0 12px 32px rgba(28,78,40,.07)}
+#home .ax-home-hero-classic:before{content:"";position:absolute;z-index:-1;right:-85px;top:-155px;width:390px;height:390px;border:1px solid rgba(38,135,68,.1);border-radius:50%;box-shadow:0 0 0 28px rgba(38,135,68,.025),0 0 0 58px rgba(38,135,68,.02)}
+#home .ax-home-hero-classic .ax-home-copy{max-width:620px;margin:0}
+#home .ax-home-hero-classic .ax-home-kicker{padding:9px 14px;border:1px solid rgba(38,135,68,.1);border-radius:999px;background:#dcefe0;color:#287b42;font-size:10px;letter-spacing:.07em}
+#home .ax-home-hero-classic .ax-home-copy h1{margin:23px 0 14px;color:#17291d;font-size:clamp(38px,6vw,58px);line-height:1.04;letter-spacing:-.06em}
+#home .ax-home-hero-classic .ax-home-copy h1 em{color:#16834a}
+#home .ax-home-hero-classic .ax-home-copy p{max-width:570px;color:#617568;font-size:15px;line-height:1.75}
+#home .ax-home-hero-classic .ax-home-search{max-width:720px;min-height:66px;margin-top:29px;padding:7px 8px 7px 19px;border:1px solid rgba(57,119,69,.15);border-radius:17px;background:rgba(255,255,255,.56);box-shadow:0 7px 20px rgba(25,70,36,.045)}
+#home .ax-home-hero-classic .ax-home-search>svg{stroke:#628d6c}
+#home .ax-home-hero-classic .ax-home-search input{color:#203b29!important;font-size:14px}
+#home .ax-home-hero-classic .ax-home-search input::placeholder{color:#819487}
+#home .ax-home-hero-classic .ax-home-search button{min-width:125px;min-height:52px;border-radius:13px;background:#16834a;color:white;font-size:12px}
+html[data-theme="dark"] #home .ax-home-hero-classic{background:linear-gradient(115deg,#1a3021 0%,#1c3827 54%,#172c1e 100%);border-color:#34513a;box-shadow:0 12px 32px rgba(0,0,0,.16)}
+html[data-theme="dark"] #home .ax-home-hero-classic:before{border-color:rgba(108,194,126,.12);box-shadow:0 0 0 28px rgba(108,194,126,.025),0 0 0 58px rgba(108,194,126,.02)}
+html[data-theme="dark"] #home .ax-home-hero-classic .ax-home-kicker{background:rgba(76,190,100,.12);border-color:rgba(108,194,126,.18);color:#a8e2b2}
+html[data-theme="dark"] #home .ax-home-hero-classic .ax-home-copy h1{color:#eff7f0}
+html[data-theme="dark"] #home .ax-home-hero-classic .ax-home-copy h1 em{color:#56d477}
+html[data-theme="dark"] #home .ax-home-hero-classic .ax-home-copy p{color:#b4c8b8}
+html[data-theme="dark"] #home .ax-home-hero-classic .ax-home-search{background:#101e15;border-color:#38543e}
+html[data-theme="dark"] #home .ax-home-hero-classic .ax-home-search input{color:#eff7f0!important}
+@media(max-width:700px){
+ #home .ax-home-hero-classic{padding:24px 17px 19px;border-radius:20px}
+ #home .ax-home-hero-classic .ax-home-copy h1{margin:19px 0 12px;font-size:clamp(36px,10vw,47px)}
+ #home .ax-home-hero-classic .ax-home-copy p{max-width:330px;font-size:12px;line-height:1.7}
+ #home .ax-home-hero-classic .ax-home-search{min-height:58px;margin-top:23px;padding:6px 6px 6px 12px;border-radius:14px}
+ #home .ax-home-hero-classic .ax-home-search input{font-size:10px}
+ #home .ax-home-hero-classic .ax-home-search button{min-width:84px;min-height:45px;padding:0 10px;font-size:10px}
+}
+
 </style>
 <link rel="stylesheet" href="./monetization.css?v=20261107-3">
 </head>
@@ -2427,13 +2458,9 @@ html[data-theme="dark"] #listingDetail .listing-detail-content .tag{background:r
 <header class="top"><div class="brand"><div class="logo logo-wordmark" aria-label="AllXap">AllXap</div><div><strong>AllXap</strong><small>Xapuri conectada</small></div></div><div class="top-actions"><div class="city">Xapuri, AC</div><button class="download-top-trigger" id="downloadTopButton" type="button" aria-label="Abrir página de download" title="Download"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M4 17v3h16v-3"/></svg></button><button class="more-menu-trigger" id="moreMenuTrigger" type="button" aria-label="Mais opções" aria-expanded="false" aria-controls="moreMenu">⋮</button></div></header>
 <main class="wrap" id="mainContent" tabindex="-1">
 <section id="home" class="page active">
- <div class="ax-home-hero">
-  <div class="ax-home-glow" aria-hidden="true"></div>
-  <div class="ax-home-topline"><i></i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg> XAPURI, ACRE <b></b> TUDO PERTO DE VOCÊ</div>
-  <div class="ax-home-copy"><span class="ax-home-kicker"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/></svg> A CIDADE EM UM SÓ LUGAR</span><h1>O que você<br>precisa está <em>por aqui.</em></h1><p>Encontre serviços, lojas, produtos e oportunidades de quem faz Xapuri acontecer.</p></div>
-  <div class="ax-home-search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg><input id="searchInput" placeholder="O que você está procurando?" aria-label="Buscar anúncios"><button class="btn" id="searchBtn">Buscar <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></button></div>
-  <div class="ax-home-trust"><span>Uma plataforma local</span><i></i><span>Feita para Xapuri</span><i></i><span>Conexões diretas</span></div>
-  <div class="ax-home-decoration" aria-hidden="true"><div></div><div></div><span>XA<br>PU<br>RI</span></div>
+ <div class="ax-home-hero ax-home-hero-classic">
+  <div class="ax-home-copy"><span class="ax-home-kicker">O QUE VOCÊ PRECISA HOJE?</span><h1>Encontre tudo<br><em>perto de você.</em></h1><p>Serviços, lojas, oportunidades e anúncios de Xapuri em um só lugar.</p></div>
+  <div class="ax-home-search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg><input id="searchInput" placeholder="Buscar serviços, produtos, vagas..." aria-label="Buscar anúncios"><button class="btn" id="searchBtn">Buscar</button></div>
  </div>
  <div class="section category-section ax-home-categories"><div class="section-head ax-home-section-head"><div><span class="ax-section-label">EXPLORE A CIDADE</span><h2>Encontre por categoria</h2><span class="sub">O que você precisa, sem complicação.</span></div><button class="category-toggle" id="toggleCategories" type="button" aria-expanded="false">Ver todas <span aria-hidden="true">⌄</span></button></div><div class="categories collapsed" id="categories">
   <button class="cat" data-cat="Serviços"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 19 11-11 4 4L8 23H4zM13 10l4 4"/></svg></span><b>Serviços</b><small>Profissionais locais</small></button>
