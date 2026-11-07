@@ -90,7 +90,7 @@
     if (!settings?.pix_key) {notify("O Pix ainda não foi configurado pela administração.");return;}
     selectedPlan=plan;
     const host=$("moneyPurchaseFormHost");
-    host.innerHTML='<form class="monetization-form" id="planPaymentForm"><h3>Solicitar plano '+esc(plan.name)+'</h3><p class="sub">Valor: <strong>'+money(plan.monthly_price_cents)+'</strong> por mês. Faça o Pix usando a chave exibida abaixo e anexe o comprovante.</p><div class="field"><label for="planProof">Comprovante do Pix *</label><input id="planProof" type="file" accept="image/jpeg,image/png,image/webp,application/pdf" required></div><div class="field"><label for="planNote">Observação (opcional)</label><textarea id="planNote" maxlength="500" placeholder="Informações adicionais"></textarea></div><button class="btn" type="submit">Enviar comprovante</button></form>';
+    host.innerHTML='<form class="monetization-form" id="planPaymentForm"><h3>Solicitar plano '+esc(plan.name)+'</h3><p class="sub">Valor: <strong>'+money(plan.monthly_price_cents)+'</strong> por mês. Faça o Pix para a chave abaixo e anexe o comprovante.</p><div class="monetization-pix-key"><code>'+esc(settings.pix_key)+'</code><button class="btn secondary" type="button" data-copy-pix>Copiar chave</button></div><small class="sub">Favorecido: '+esc(settings.pix_receiver_name||"Não informado")+'</small><div class="field"><label for="planProof">Comprovante do Pix *</label><input id="planProof" type="file" accept="image/jpeg,image/png,image/webp,application/pdf" required></div><div class="field"><label for="planNote">Observação (opcional)</label><textarea id="planNote" maxlength="500" placeholder="Informações adicionais"></textarea></div><button class="btn" type="submit">Enviar comprovante</button></form>';
     host.scrollIntoView({behavior:"smooth",block:"center"});
   }
   async function submitPlanPayment(event) {
@@ -116,7 +116,7 @@
     if (!settings?.pix_key) {notify("O Pix ainda não foi configurado pela administração.");return;}
     const amount=days===7?settings.featured_7d_price_cents:settings.featured_15d_price_cents;
     const host=$("featuredFormHost");
-    host.innerHTML='<form class="monetization-form" id="featuredPaymentForm" data-days="'+days+'" data-amount="'+amount+'"><h3>Destacar por '+days+' dias</h3><p class="sub">Valor: <strong>'+money(amount)+'</strong>. Faça o Pix e anexe o comprovante.</p><div class="field"><label for="featuredProof">Comprovante do Pix *</label><input id="featuredProof" type="file" accept="image/jpeg,image/png,image/webp,application/pdf" required></div><button class="btn" type="submit">Enviar comprovante</button></form>';
+    host.innerHTML='<form class="monetization-form" id="featuredPaymentForm" data-days="'+days+'" data-amount="'+amount+'"><h3>Destacar por '+days+' dias</h3><p class="sub">Valor: <strong>'+money(amount)+'</strong>. Faça o Pix para a chave abaixo e anexe o comprovante.</p><div class="monetization-pix-key"><code>'+esc(settings.pix_key)+'</code><button class="btn secondary" type="button" data-copy-pix>Copiar chave</button></div><small class="sub">Favorecido: '+esc(settings.pix_receiver_name||"Não informado")+'</small><div class="field"><label for="featuredProof">Comprovante do Pix *</label><input id="featuredProof" type="file" accept="image/jpeg,image/png,image/webp,application/pdf" required></div><button class="btn" type="submit">Enviar comprovante</button></form>';
     host.scrollIntoView({behavior:"smooth",block:"center"});
   }
   async function submitFeaturedPayment(event) {
@@ -234,7 +234,7 @@
     catch(error){console.error("AllXap monetization:",error);notify("Não foi possível carregar os planos: "+(error.message||"erro"));}
   }
   document.addEventListener("click",event=>{
-    const account=event.target.closest('[data-account-action="plans"]');
+    const copyPix=event.target.closest("[data-copy-pix]");if(copyPix){navigator.clipboard?.writeText(settings?.pix_key||"").then(()=>notify("Chave Pix copiada.")).catch(()=>notify("Não foi possível copiar a chave."));return;}\n    const account=event.target.closest('[data-account-action="plans"]');
     if(account){window.page?.("plans");openPlans();return;}
     const planButton=event.target.closest("[data-buy-plan]");
     if(planButton){const plan=plans.find(p=>p.id===planButton.dataset.buyPlan);if(plan)renderPlanForm(plan);return;}
