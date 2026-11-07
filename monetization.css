@@ -139,3 +139,16 @@ html[data-theme="dark"] .monetization-status.rejected,html[data-theme="dark"] .m
  .monetization-pix-key code{width:100%;flex-basis:100%}
  .monetization-pix-key .btn{width:100%}
 }
+
+
+.monetization-free-card{border-color:#cfe6d2;background:linear-gradient(145deg,#f4faf4,#fff)}
+.monetization-benefits{display:grid;gap:9px;margin:14px 0 17px;padding:0;list-style:none}
+.monetization-benefits li{position:relative;padding-left:22px;color:var(--muted);font-size:11px;line-height:1.55}
+.monetization-benefits li:before{content:"✓";position:absolute;left:0;top:0;color:#258044;font-weight:900}
+.monetization-plan-note{display:block;padding:10px 11px;border:1px solid #dceede;border-radius:10px;background:#edf7ee;color:#39764a;font-size:10px;line-height:1.55}
+.monetization-jobs-note{margin:12px 2px 0;padding:11px 13px;border-left:3px solid #3ca35a;border-radius:0 9px 9px 0;background:rgba(76,190,100,.07);color:var(--muted);font-size:11px;line-height:1.6}
+html[data-theme="dark"] .monetization-free-card{background:linear-gradient(145deg,#1b3021,#17251b);border-color:#3d6345}
+html[data-theme="dark"] .monetization-benefits li{color:#b1c2b4}
+html[data-theme="dark"] .monetization-benefits li:before{color:#9ce4aa}
+html[data-theme="dark"] .monetization-plan-note{background:#203a28;border-color:#365a3e;color:#b4e6bd}
+html[data-theme="dark"] .monetization-jobs-note{background:rgba(76,190,100,.08);color:#b1c2b4}
