@@ -2548,6 +2548,10 @@ html[data-theme="dark"] .nav button.active:before{background:#62d47a}
  #home .listing,#explore .listing,#home .categories .cat,#explore .categories .cat,.nav button,.nav button span{transition:none!important}
 }
 
+
+/* Na tela inicial, manter apenas quatro categorias até expandir. */
+#home .categories.collapsed .cat:nth-child(n+5){display:none!important}
+#home .categories.expanded .cat{display:flex}
 </style>
 <link rel="stylesheet" href="./monetization.css?v=20261107-6">
 </head>
