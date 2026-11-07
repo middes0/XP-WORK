@@ -174,7 +174,7 @@
     $("adminPlanForm").scrollIntoView({behavior:"smooth",block:"center"});
   }
   async function saveAdminPlan(event) {
-    event.preventDefault();const form=event.currentTarget,button=form.querySelector("button[type=submit");button.disabled=true;
+    event.preventDefault();const form=event.currentTarget,button=form.querySelector("button[type=submit]");button.disabled=true;
     try {
       const name=$("adminPlanName").value.trim(),price=Number($("adminPlanPrice").value.replace(",","."));
       if(!name||!Number.isFinite(price)||price<=0)throw new Error("Informe um nome e um preço mensal válido.");
