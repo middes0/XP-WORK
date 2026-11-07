@@ -38,13 +38,23 @@
   function renderPublicPlans() {
     const host = $("publicPlans"); if (!host) return;
     const available = plans.filter(p => Number(p.monthly_price_cents) > 0);
-    host.innerHTML = available.length ? available.map(p => `
+    const free = `
+      <article class="monetization-plan-card monetization-free-card">
+       <div class="monetization-plan-card-top"><span class="monetization-plan-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 7h16v13H4zM8 7V4h8v3M8 12h8M8 16h5"/></svg></span><span class="monetization-kicker">PARA COMEÇAR</span></div>
+       <h3>Gratuito</h3><p>Para quem quer anunciar e encontrar oportunidades em Xapuri.</p>
+       <div class="monetization-plan-price">R$ 0 <small>/ sempre</small></div>
+       <ul class="monetization-benefits"><li>Até 3 anúncios comuns ativos</li><li>Publicação de vagas de emprego sem limite</li><li>Recebimento e gerenciamento de candidaturas</li><li>Contato direto com interessados</li></ul>
+       <span class="monetization-plan-note">Vagas e candidaturas continuam gratuitas em todos os planos.</span>
+      </article>`;
+    const paid = available.map(p => `
       <article class="monetization-plan-card">
        <div class="monetization-plan-card-top"><span class="monetization-plan-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 7.5 12 3l8 4.5v9L12 21l-8-4.5z"/><path d="m4.5 7.8 7.5 4.4 7.5-4.4M12 12.2V21"/></svg></span><span class="monetization-kicker">PLANO MENSAL</span></div><h3>${esc(p.name)}</h3>
        <p>${esc(p.description || "Plano mensal para divulgar seu negócio no AllXap.")}</p>
        <div class="monetization-plan-price">${money(p.monthly_price_cents)} <small>/ mês</small></div>
+       <ul class="monetization-benefits"><li>${p.listing_limit == null ? "Anúncios comuns ilimitados" : "Até "+Number(p.listing_limit)+" anúncios comuns ativos"}</li><li>Vagas de emprego continuam gratuitas</li><li>Recebimento de contatos e candidaturas sem cobrança</li></ul>
        <button class="btn" type="button" data-buy-plan="${esc(p.id)}">Escolher plano</button>
-      </article>`).join("") : '<div class="monetization-empty">Ainda não há planos mensais disponíveis.</div>';
+      </article>`).join("");
+    host.innerHTML = free + paid;
   }
   function renderPixInfo() {
     const host = $("pixInstructions"); if (!host) return;
@@ -157,8 +167,8 @@
   async function loadAdminPlans() {
     const host=$("moneyAdminPlans");const {data,error}=await client.from("monetization_plans").select("*").order("sort_order").order("name");
     if(error){host.innerHTML='<div class="monetization-empty">'+esc(error.message)+'</div>';return;}
-    host.innerHTML='<h3>Planos mensais</h3><form class="monetization-admin-form" id="adminPlanForm"><div class="form-grid"><div class="field"><label for="adminPlanName">Nome do plano</label><input id="adminPlanName" maxlength="60" required placeholder="Ex.: Profissional"></div><div class="field"><label for="adminPlanPrice">Preço mensal (R$)</label><input id="adminPlanPrice" inputmode="decimal" required placeholder="0,00"></div></div><div class="field"><label for="adminPlanDescription">Descrição e benefícios</label><textarea id="adminPlanDescription" maxlength="500" placeholder="Descreva o que está incluído"></textarea></div><div class="field"><label for="adminPlanOrder">Ordem de exibição</label><input id="adminPlanOrder" type="number" value="0"></div><label><input id="adminPlanActive" type="checkbox"> Disponibilizar para usuários</label><button class="btn" type="submit">Cadastrar plano</button></form>'+((data||[]).map(p=>`
-      <div class="monetization-row"><div class="monetization-row-main"><strong>${esc(p.name)} · ${money(p.monthly_price_cents)}/mês</strong><small>${esc(p.description||"Sem descrição")} · ${p.is_active?"Disponível":"Desativado"}</small></div><div class="monetization-admin-actions"><button class="btn secondary" type="button" data-edit-plan="${esc(p.id)}">Editar</button><button class="btn secondary" type="button" data-toggle-plan="${esc(p.id)}" data-active="${p.is_active}">${p.is_active?"Desativar":"Ativar"}</button></div></div>`).join("")||'<div class="monetization-empty">Cadastre o primeiro plano quando os valores e benefícios estiverem definidos.</div>');
+    host.innerHTML='<h3>Planos mensais</h3><form class="monetization-admin-form" id="adminPlanForm"><div class="form-grid"><div class="field"><label for="adminPlanName">Nome do plano</label><input id="adminPlanName" maxlength="60" required placeholder="Ex.: Profissional"></div><div class="field"><label for="adminPlanPrice">Preço mensal (R$)</label><input id="adminPlanPrice" inputmode="decimal" required placeholder="0,00"></div></div><div class="field"><label for="adminPlanDescription">Descrição e benefícios</label><textarea id="adminPlanDescription" maxlength="500" placeholder="Descreva o que está incluído"></textarea></div><div class="form-grid"><div class="field"><label for="adminPlanOrder">Ordem de exibição</label><input id="adminPlanOrder" type="number" value="0"></div><div class="field"><label for="adminPlanLimit">Limite de anúncios comuns ativos</label><input id="adminPlanLimit" type="number" min="1" step="1" placeholder="Em branco = ilimitado"></div></div><label><input id="adminPlanActive" type="checkbox"> Disponibilizar para usuários</label><button class="btn" type="submit">Cadastrar plano</button></form>'+((data||[]).map(p=>`
+      <div class="monetization-row"><div class="monetization-row-main"><strong>${esc(p.name)} · ${money(p.monthly_price_cents)}/mês</strong><small>${esc(p.description||"Sem descrição")} · ${p.listing_limit==null?"Anúncios ilimitados":"Até "+Number(p.listing_limit)+" anúncios"} · ${p.is_active?"Disponível":"Desativado"}</small></div><div class="monetization-admin-actions"><button class="btn secondary" type="button" data-edit-plan="${esc(p.id)}">Editar</button><button class="btn secondary" type="button" data-toggle-plan="${esc(p.id)}" data-active="${p.is_active}">${p.is_active?"Desativar":"Ativar"}</button></div></div>`).join("")||'<div class="monetization-empty">Cadastre o primeiro plano quando os valores e benefícios estiverem definidos.</div>');
     host.querySelector("#adminPlanForm")?.addEventListener("submit",saveAdminPlan);
     host.querySelectorAll("[data-edit-plan]").forEach(b=>b.addEventListener("click",()=>fillPlanForm((data||[]).find(p=>p.id===b.dataset.editPlan))));
     host.querySelectorAll("[data-toggle-plan]").forEach(b=>b.addEventListener("click",async()=>{const p=(data||[]).find(x=>x.id===b.dataset.togglePlan);if(!p)return;const {error}=await client.from("monetization_plans").update({is_active:!p.is_active}).eq("id",p.id);if(error)return notify(error.message);notify("Plano atualizado.");await refreshAdmin();}));
@@ -168,7 +178,7 @@
     if(!p)return;
     $("adminPlanName").value=p.name;$("adminPlanPrice").value=(p.monthly_price_cents/100).toFixed(2).replace(".",",");
     $("adminPlanDescription").value=p.description||"";
-    $("adminPlanOrder").value=p.sort_order??0;$("adminPlanActive").checked=!!p.is_active;
+    $("adminPlanOrder").value=p.sort_order??0;$("adminPlanLimit").value=p.listing_limit??"";$("adminPlanActive").checked=!!p.is_active;
     $("adminPlanForm").dataset.editId=p.id;$("adminPlanForm").querySelector("button[type=submit]").textContent="Salvar alterações";
     $("adminPlanForm").scrollIntoView({behavior:"smooth",block:"center"});
   }
@@ -178,7 +188,8 @@
       const name=$("adminPlanName").value.trim(),price=Number($("adminPlanPrice").value.replace(",","."));
       if(!name||!Number.isFinite(price)||price<=0)throw new Error("Informe um nome e um preço mensal válido.");
       const id=form.dataset.editId||name.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
-      const payload={id,name,monthly_price_cents:Math.round(price*100),description:$("adminPlanDescription").value.trim(),sort_order:Number($("adminPlanOrder").value)||0,is_active:$("adminPlanActive").checked};
+      const rawLimit=$("adminPlanLimit").value.trim(),limit=rawLimit===""?null:Number(rawLimit);if(limit!==null&&(!Number.isInteger(limit)||limit<1))throw new Error("O limite deve ser um número inteiro positivo ou ficar em branco para ilimitado.");
+      const payload={id,name,monthly_price_cents:Math.round(price*100),listing_limit:limit,description:$("adminPlanDescription").value.trim(),sort_order:Number($("adminPlanOrder").value)||0,is_active:$("adminPlanActive").checked};
       const {error}=await client.from("monetization_plans").upsert(payload,{onConflict:"id"});
       if(error)throw error;notify("Plano salvo.");await refreshAdmin();
     }catch(error){notify(error.message||"Não foi possível salvar o plano.");}finally{button.disabled=false;}
