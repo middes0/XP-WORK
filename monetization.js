@@ -43,7 +43,6 @@
        <span class="monetization-kicker">PLANO MENSAL</span><h3>${esc(p.name)}</h3>
        <p>${esc(p.description || "Plano mensal para divulgar seu negócio no AllXap.")}</p>
        <div class="monetization-plan-price">${money(p.monthly_price_cents)} <small>/ mês</small></div>
-       ${p.listing_limit == null ? '<small class="sub">Limite de anúncios não definido</small>' : '<small class="sub">Até '+esc(p.listing_limit)+' anúncio(s)</small>'}
        <button class="btn" type="button" data-buy-plan="${esc(p.id)}">Escolher plano</button>
       </article>`).join("") : '<div class="monetization-empty">Ainda não há planos mensais disponíveis.</div>';
   }
@@ -168,7 +167,7 @@
   function fillPlanForm(p) {
     if(!p)return;
     $("adminPlanName").value=p.name;$("adminPlanPrice").value=(p.monthly_price_cents/100).toFixed(2).replace(".",",");
-    $("adminPlanDescription").value=p.description||"";$("adminPlanLimit").value=p.listing_limit??"";
+    $("adminPlanDescription").value=p.description||"";
     $("adminPlanOrder").value=p.sort_order??0;$("adminPlanActive").checked=!!p.is_active;
     $("adminPlanForm").dataset.editId=p.id;$("adminPlanForm").querySelector("button[type=submit]").textContent="Salvar alterações";
     $("adminPlanForm").scrollIntoView({behavior:"smooth",block:"center"});
