@@ -479,6 +479,13 @@
     if (listingResult.error) throw listingResult.error;
     const data = listingResult.data || [];
     const listingIds = data.map(a => a.id);
+    let featuredIds = new Set();
+    if (listingIds.length) {
+      const { data: featuredRows, error: featuredError } = await client.from("monetization_featured_listings")
+        .select("listing_id").in("listing_id", listingIds).eq("status", "active").gt("ends_at", new Date().toISOString());
+      if (featuredError) console.warn("AllXap: não foi possível consultar anúncios em destaque.", featuredError);
+      else featuredIds = new Set((featuredRows || []).map(row => row.listing_id));
+    }
 
     // Imagens e nomes de perfil são complementares: uma falha nessas consultas
     // não deve esconder todos os anúncios.
@@ -521,7 +528,7 @@
       vacanciesTotal: hasJobColumns ? a.job_vacancies_total : null,
       vacanciesFilled: hasJobColumns ? (a.job_vacancies_filled || 0) : 0,
       applicationDeadline: hasJobColumns ? a.job_application_deadline : null,
-      images: imageMap.get(a.id) || []
+      images: imageMap.get(a.id) || [], featured: featuredIds.has(a.id)
     }));
     listings = listings.filter(a => a.owner !== "remote").concat(remote);
     render();
