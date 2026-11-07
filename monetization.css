@@ -152,3 +152,44 @@ html[data-theme="dark"] .monetization-benefits li{color:#b1c2b4}
 html[data-theme="dark"] .monetization-benefits li:before{color:#9ce4aa}
 html[data-theme="dark"] .monetization-plan-note{background:#203a28;border-color:#365a3e;color:#b4e6bd}
 html[data-theme="dark"] .monetization-jobs-note{background:rgba(76,190,100,.08);color:#b1c2b4}
+
+
+/* Planos — hierarquia visual e leitura rápida */
+.monetization-plan-card{isolation:isolate;gap:0}
+.monetization-plan-card:before{z-index:-1}
+.monetization-plan-card-top{min-height:42px}
+.monetization-plan-card .monetization-kicker{padding:6px 9px;border:1px solid rgba(47,130,64,.16);border-radius:999px;background:rgba(76,190,100,.08)}
+.monetization-free-card{border:1.5px solid #b9dfc0;background:linear-gradient(155deg,#f1faf2 0%,#fff 65%)}
+.monetization-free-card:before{background:linear-gradient(90deg,#2e7d32,#65c879)}
+.monetization-paid-card{background:var(--surface);border-color:var(--line)}
+.monetization-pro-card:before{background:linear-gradient(90deg,#7b9b83,#b6cbb9)}
+.monetization-store-card{border-color:#9bcba5;box-shadow:0 10px 28px rgba(32,105,52,.09)}
+.monetization-store-card:before{height:5px;background:linear-gradient(90deg,#23783a,#4cd964)}
+.monetization-plan-description{min-height:44px}
+.monetization-plan-limit{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:3px 0 8px;padding:12px 13px;border:1px solid var(--line);border-radius:12px;background:var(--bg)}
+.monetization-plan-limit span{font-size:9px;line-height:1.4;letter-spacing:.08em;font-weight:800;color:var(--muted)}
+.monetization-plan-limit strong{font-size:17px;white-space:nowrap;color:var(--text)}
+.monetization-plan-price{min-height:40px}
+.monetization-price-soon{font-size:18px;letter-spacing:-.02em;color:var(--muted)}
+.monetization-plan-card .monetization-benefits{margin:12px 0 18px}
+.monetization-plan-card .monetization-benefits li{font-size:12px}
+.monetization-plan-cta:disabled{opacity:1;cursor:not-allowed;background:var(--bg);border:1px solid var(--line);color:var(--muted);box-shadow:none}
+.monetization-free-card .monetization-plan-note{margin-top:auto}
+.monetization-free-card .monetization-plan-price{margin:12px 0 4px}
+.monetization-free-card .monetization-benefits{margin-top:14px}
+@media(min-width:760px){
+ .monetization-plans-grid{grid-template-columns:repeat(3,minmax(0,1fr));align-items:stretch}
+ .monetization-plan-card{padding:23px;min-height:100%}
+}
+@media(max-width:640px){
+ .monetization-plan-description{min-height:0}
+ .monetization-plan-limit{padding:11px 12px}
+ .monetization-plan-card .monetization-benefits li{font-size:11px}
+}
+html[data-theme="dark"] .monetization-free-card{background:linear-gradient(155deg,#1b3021,#17251b);border-color:#477a50}
+html[data-theme="dark"] .monetization-paid-card{background:linear-gradient(155deg,#1b2920,#17231a);border-color:#344b38}
+html[data-theme="dark"] .monetization-store-card{border-color:#4d8b59;box-shadow:0 10px 28px rgba(0,0,0,.22)}
+html[data-theme="dark"] .monetization-plan-limit{background:#101a13;border-color:#344b38}
+html[data-theme="dark"] .monetization-plan-limit strong{color:#edf5ee}
+html[data-theme="dark"] .monetization-price-soon{color:#a8b8aa}
+html[data-theme="dark"] .monetization-plan-cta:disabled{background:#101a13;border-color:#344b38;color:#91a293}
