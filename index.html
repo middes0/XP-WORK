@@ -2420,7 +2420,7 @@ html[data-theme="dark"] #listingDetail .listing-detail-content .tag{background:r
 @media(prefers-reduced-motion:reduce){#settings .ax-settings-card,#settings .ax-settings-hero-icon,#settings .ax-theme-choice-icon,#settings .ax-settings-action-icon,#settings .ax-settings-action>b,#listingDetail .listing-gallery img{transition:none!important}}
 
 </style>
-<link rel="stylesheet" href="./monetization.css?v=20261107-2">
+<link rel="stylesheet" href="./monetization.css?v=20261107-3">
 </head>
 <body>
 <a class="skip-link" href="#mainContent">Pular para o conteúdo</a>
@@ -2687,7 +2687,7 @@ window.addEventListener("load",()=>setTimeout(openListingFromUrl,900));
   const app=document.createElement("script");
   app.src="./supabase-client.js?v=20261107-1";
   app.onerror=()=>{if(state)state.textContent="Falha ao carregar o login";};
-  app.onload=()=>{const moderation=document.createElement("script");moderation.src="./admin-moderation.js?v=20261102-1";moderation.onerror=()=>console.error("AllXap: falha ao carregar módulo de moderação");moderation.onload=()=>{const feature=document.createElement("script");feature.src="./recruitment.js?v=20261030-1";feature.onerror=()=>console.error("AllXap: falha ao carregar módulo de empregos");feature.onload=()=>{const money=document.createElement("script");money.src="./monetization.js?v=20261107-1";money.onerror=()=>console.error("AllXap: falha ao carregar monetização");document.body.appendChild(money);};document.body.appendChild(feature);};document.body.appendChild(moderation);};
+  app.onload=()=>{const moderation=document.createElement("script");moderation.src="./admin-moderation.js?v=20261102-1";moderation.onerror=()=>console.error("AllXap: falha ao carregar módulo de moderação");moderation.onload=()=>{const feature=document.createElement("script");feature.src="./recruitment.js?v=20261030-1";feature.onerror=()=>console.error("AllXap: falha ao carregar módulo de empregos");feature.onload=()=>{const money=document.createElement("script");money.src="./monetization.js?v=20261107-2";money.onerror=()=>console.error("AllXap: falha ao carregar monetização");document.body.appendChild(money);};document.body.appendChild(feature);};document.body.appendChild(moderation);};
   document.body.appendChild(app);
  }
  function loadSdk(url,fallback){
