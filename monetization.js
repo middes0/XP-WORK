@@ -234,7 +234,8 @@
     catch(error){console.error("AllXap monetization:",error);notify("Não foi possível carregar os planos: "+(error.message||"erro"));}
   }
   document.addEventListener("click",event=>{
-    const copyPix=event.target.closest("[data-copy-pix]");if(copyPix){navigator.clipboard?.writeText(settings?.pix_key||"").then(()=>notify("Chave Pix copiada.")).catch(()=>notify("Não foi possível copiar a chave."));return;}\n    const account=event.target.closest('[data-account-action="plans"]');
+    const copyPix=event.target.closest("[data-copy-pix]");if(copyPix){navigator.clipboard?.writeText(settings?.pix_key||"").then(()=>notify("Chave Pix copiada.")).catch(()=>notify("Não foi possível copiar a chave."));return;}
+    const account=event.target.closest('[data-account-action="plans"]');
     if(account){window.page?.("plans");openPlans();return;}
     const planButton=event.target.closest("[data-buy-plan]");
     if(planButton){const plan=plans.find(p=>p.id===planButton.dataset.buyPlan);if(plan)renderPlanForm(plan);return;}
