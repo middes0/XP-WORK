@@ -214,7 +214,9 @@
     const note=prompt("Motivo da recusa:")||"";
     if(!note.trim())return notify("Informe o motivo da recusa.");
     const {error}=await client.from("monetization_payments").update({status:"rejected",reviewed_by:currentUser().id,reviewed_at:new Date().toISOString(),admin_note:note.slice(0,1000)}).eq("id",id).eq("status","pending");
-    if(error){notify(error.message);return;}notify("Pagamento recusado.");await refreshAdmin();
+    if(error){notify(error.message);return;}
+    await client.from("monetization_subscriptions").update({status:"rejected",updated_at:new Date().toISOString()}).eq("payment_id",id).eq("status","pending");
+    notify("Pagamento recusado.");await refreshAdmin();
   }
   async function cancelSubscription(id) {
     if(!confirm("Cancelar esta assinatura?"))return;
