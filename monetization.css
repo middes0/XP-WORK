@@ -89,3 +89,53 @@
  .monetization-admin-form{padding:15px}
 }
 @media(prefers-reduced-motion:reduce){.monetization-plan-card,.monetization-admin-tabs button{transition:none}}
+
+
+/* AllXap monetization — icon system, spacing and dark theme */
+.monetization-plan-card{overflow:hidden;background:linear-gradient(155deg,var(--surface),var(--bg));border-color:var(--line)}
+.monetization-plan-card-top{display:flex;align-items:center;gap:11px;margin-bottom:8px}
+.monetization-plan-icon,.monetization-inline-icon{display:grid;place-items:center;flex:0 0 43px;width:43px;height:43px;border:1px solid rgba(76,190,100,.2);border-radius:13px;background:rgba(76,190,100,.11);color:#278d49}
+.monetization-plan-icon svg,.monetization-inline-icon svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.monetization-plan-card-top .monetization-kicker{margin:0}
+.monetization-plan-card h3{margin-top:7px}
+.monetization-inline-heading{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.monetization-inline-heading h3{margin:3px 0 0}
+.monetization-inline-heading .monetization-kicker{display:block;font-size:9px}
+.monetization-inline-icon{flex-basis:40px;width:40px;height:40px;border-radius:12px}
+.monetization-payment-icon{display:inline-grid;place-items:center;vertical-align:middle;width:27px;height:27px;margin-right:9px;border-radius:9px;background:rgba(76,190,100,.11);color:#278d49;font-size:15px}
+.monetization-current{padding:21px 23px}
+.monetization-current .monetization-inline-heading{margin-bottom:7px}
+.monetization-current p{margin-left:52px}
+.monetization-pix-info{padding:21px 23px}
+.monetization-pix-key code{flex:1;min-width:0}
+.monetization-pix-key .btn{min-height:40px;border-radius:10px}
+.monetization-form .field input,.monetization-form .field select,.monetization-form .field textarea{border:1px solid var(--line);border-radius:11px;background:var(--bg);color:var(--text);padding:12px;font-size:12px}
+.monetization-form .field input:focus,.monetization-form .field select:focus,.monetization-form .field textarea:focus{border-color:#4caf66;box-shadow:0 0 0 3px rgba(76,190,100,.1)}
+.monetization-status{border:1px solid transparent}
+.monetization-status.approved,.monetization-status.active{background:rgba(76,190,100,.13);color:#278044;border-color:rgba(76,190,100,.2)}
+.monetization-status.pending{background:rgba(235,181,61,.13);color:#946a12;border-color:rgba(235,181,61,.22)}
+.monetization-status.rejected,.monetization-status.canceled,.monetization-status.expired{background:rgba(209,93,76,.1);color:#a04435;border-color:rgba(209,93,76,.17)}
+html[data-theme="dark"] .monetization-plan-card{background:linear-gradient(155deg,#1b2c21,#152219);border-color:#304233;box-shadow:0 8px 24px rgba(0,0,0,.17)}
+html[data-theme="dark"] .monetization-plan-card h3,html[data-theme="dark"] .monetization-plan-price{color:#e9f2ea}
+html[data-theme="dark"] .monetization-plan-card p{color:#a8b8aa}
+html[data-theme="dark"] .monetization-current,html[data-theme="dark"] .monetization-pix-info{background:linear-gradient(125deg,#203a28,#17251b);border-color:#3a6042}
+html[data-theme="dark"] .monetization-current h3,html[data-theme="dark"] .monetization-pix-info h3{color:#e5f2e7}
+html[data-theme="dark"] .monetization-current p,html[data-theme="dark"] .monetization-pix-info p{color:#b1c3b4}
+html[data-theme="dark"] .monetization-pix-key code{background:#101a13;border-color:#36533b;color:#e5f2e7}
+html[data-theme="dark"] .monetization-form,html[data-theme="dark"] .monetization-admin-panel{background:#17251b;border-color:#304233}
+html[data-theme="dark"] .monetization-form .field input,html[data-theme="dark"] .monetization-form .field select,html[data-theme="dark"] .monetization-form .field textarea{background:#101a13;border-color:#304233;color:#edf5ee}
+html[data-theme="dark"] .monetization-admin-tabs{background:#142018;border-color:#304233}
+html[data-theme="dark"] .monetization-admin-tabs button{background:#17251b;color:#b3c4b5}
+html[data-theme="dark"] .monetization-admin-tabs button.active{background:#294632;color:#a3e6b0}
+html[data-theme="dark"] .monetization-row{border-color:#304233}
+html[data-theme="dark"] .monetization-status.approved,html[data-theme="dark"] .monetization-status.active{background:rgba(76,190,100,.16);color:#9ce4aa}
+html[data-theme="dark"] .monetization-status.pending{background:rgba(235,181,61,.14);color:#f0ca70}
+html[data-theme="dark"] .monetization-status.rejected,html[data-theme="dark"] .monetization-status.canceled,html[data-theme="dark"] .monetization-status.expired{background:rgba(209,93,76,.14);color:#f09b8d}
+@media(max-width:640px){
+ .monetization-current,.monetization-pix-info{padding:16px}
+ .monetization-current p{margin-left:0}
+ .monetization-plan-icon{flex-basis:39px;width:39px;height:39px}
+ .monetization-pix-key{align-items:stretch}
+ .monetization-pix-key code{width:100%;flex-basis:100%}
+ .monetization-pix-key .btn{width:100%}
+}
