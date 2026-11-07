@@ -2049,6 +2049,59 @@ html[data-theme="dark"] #explore .profile-search-box{box-shadow:none}
  .categories .cat b{font-size:11px}
 }
 
+
+/* AllXap Motion System — microinterações rápidas e leves */
+:root{--motion-fast:150ms;--motion-base:230ms;--motion-smooth:cubic-bezier(.2,.75,.25,1)}
+@keyframes allxapPageIn{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}
+@keyframes allxapRise{from{opacity:0;transform:translateY(13px)}to{opacity:1;transform:translateY(0)}}
+@keyframes allxapPop{0%{transform:scale(.96);opacity:.65}65%{transform:scale(1.015)}100%{transform:scale(1);opacity:1}}
+@keyframes allxapModalIn{from{opacity:0;transform:translateY(22px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes allxapMenuIn{from{opacity:0;transform:translateY(-8px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
+.page.active{animation:allxapPageIn .32s var(--motion-smooth) both}
+.page.active>.hero{animation:allxapRise .42s var(--motion-smooth) both}
+.page.active>.section,.page.active>.panel{animation:allxapRise .4s var(--motion-smooth) both}
+.page.active>.section:nth-of-type(2){animation-delay:45ms}
+.page.active>.section:nth-of-type(3){animation-delay:85ms}
+.page.active>.section:nth-of-type(4){animation-delay:125ms}
+#home .categories .cat{animation:allxapRise .34s var(--motion-smooth) both}
+#home .categories .cat:nth-child(2){animation-delay:35ms}
+#home .categories .cat:nth-child(3){animation-delay:65ms}
+#home .categories .cat:nth-child(4){animation-delay:95ms}
+#home .categories .cat:nth-child(5){animation-delay:125ms}
+#home .categories .cat:nth-child(6){animation-delay:155ms}
+.listing{transition:transform var(--motion-base) var(--motion-smooth),box-shadow var(--motion-base) ease,border-color var(--motion-fast) ease}
+.listing:active{transform:scale(.975)}
+.listing .detail,.btn,.chip,.category-toggle,.nav button,.more-menu-item{transition:transform var(--motion-fast) var(--motion-smooth),background-color var(--motion-fast) ease,color var(--motion-fast) ease,border-color var(--motion-fast) ease,box-shadow var(--motion-fast) ease}
+.btn:active,.category-toggle:active,.chip:active,.more-menu-item:active{transform:scale(.97)}
+.nav button{position:relative;overflow:hidden}
+.nav button:active{transform:scale(.94)}
+.nav button.active{transition:background-color .24s ease,color .24s ease,transform .15s ease}
+.nav button.active:before{content:"";position:absolute;inset:5px;border-radius:13px;background:currentColor;opacity:.075;pointer-events:none;animation:allxapPop .25s ease both}
+.nav button span svg{transition:transform .22s var(--motion-smooth)}
+.nav button.active span svg{transform:translateY(-2px) scale(1.06)}
+.categories .cat{transition:transform .18s var(--motion-smooth),background-color .18s ease,border-color .18s ease,box-shadow .18s ease}
+.categories .cat:active{transform:scale(.96)}
+.categories .cat .ico{transition:transform .2s var(--motion-smooth),background-color .2s ease}
+.categories .cat:active .ico{transform:scale(.9)}
+#toggleCategories span{display:inline-block;transition:transform .22s var(--motion-smooth)}
+#toggleCategories[aria-expanded="true"] span{transform:rotate(180deg)}
+.modal.open .dialog{animation:allxapModalIn .28s var(--motion-smooth) both}
+.modal{transition:background-color .2s ease}
+.more-menu.open .more-menu-card{animation:allxapMenuIn .22s var(--motion-smooth) both}
+.more-menu-item>span:first-child{transition:transform .18s var(--motion-smooth)}
+.more-menu-item:active>span:first-child{transform:scale(.88)}
+button:focus-visible,a:focus-visible,[role="button"]:focus-visible{outline:2px solid #55b96c;outline-offset:3px}
+#toast[style*="display: block"]{animation:allxapRise .2s var(--motion-smooth) both}
+@media(hover:hover){
+ .listing:hover{transform:translateY(-3px)}
+ .categories .cat:hover{transform:translateY(-2px)}
+ .btn:hover{box-shadow:0 5px 14px rgba(35,130,71,.14)}
+}
+@media(prefers-reduced-motion:reduce){
+ *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+ .page.active,.page.active>.hero,.page.active>.section,.page.active>.panel,.listing,.categories .cat{animation:none!important}
+}
+
 </style>
 <link rel="stylesheet" href="./monetization.css?v=20261107-2">
 </head>
