@@ -2145,6 +2145,33 @@ html[data-theme="dark"] #settings .settings-control select{background:#202d23;bo
  #settings .settings-hint{min-height:0}
 }
 
+
+/* Design de configurações criado no MagicPath e integrado ao app */
+#settings{max-width:1040px;margin:0 auto;padding-top:8px}
+#settings .ax-settings-hero{display:flex;align-items:center;justify-content:space-between;gap:18px;margin:0 0 17px;padding:25px 27px;border:1px solid var(--line);border-radius:21px;background:radial-gradient(ellipse at 88% 0%,rgba(76,217,100,.12),transparent 42%),linear-gradient(125deg,var(--surface),var(--bg));box-shadow:0 14px 34px rgba(0,0,0,.09)}
+#settings .ax-settings-kicker{display:flex;align-items:center;gap:9px;color:#55b96e;font-size:10px;font-weight:850;letter-spacing:.16em}#settings .ax-settings-kicker i,#settings .ax-settings-footer>span{width:5px;height:5px;border-radius:50%;background:#4cd964}
+#settings .ax-settings-hero h1{margin:12px 0 5px;font-size:clamp(29px,5vw,39px);font-weight:780;line-height:1.05;letter-spacing:-.055em}#settings .ax-settings-hero p{margin:0;color:var(--muted);font-size:13px}
+#settings .ax-settings-hero-icon{display:grid;place-items:center;flex:0 0 57px;width:57px;height:57px;border:1px solid rgba(76,217,100,.24);border-radius:17px;background:rgba(76,217,100,.1);color:#38a95c}#settings .ax-settings-hero-icon svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round}
+#settings .ax-settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;align-items:stretch}#settings .ax-settings-card{min-width:0;padding:21px;border:1px solid var(--line);border-radius:19px;background:var(--surface);box-shadow:0 8px 24px rgba(0,0,0,.055)}
+#settings .ax-settings-card-heading{display:flex;align-items:center;gap:12px;margin-bottom:18px}#settings .ax-settings-icon{display:grid;place-items:center;flex:0 0 42px;width:42px;height:42px;border:1px solid rgba(76,217,100,.16);border-radius:13px;background:rgba(76,217,100,.1);color:#38a95c}
+#settings .ax-settings-icon svg,#settings .ax-theme-choice-icon svg,#settings .ax-settings-action-icon svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+#settings .ax-settings-card-heading h2{margin:0;font-size:16px;font-weight:760;letter-spacing:-.025em}#settings .ax-settings-card-heading p{margin:4px 0 0;color:var(--muted);font-size:11px;line-height:1.4}
+#settings .ax-theme-options{display:grid;gap:8px}#settings .ax-theme-choice{display:flex;align-items:center;gap:11px;width:100%;min-height:68px;padding:10px 12px;border:1px solid var(--line);border-radius:13px;background:var(--bg);color:var(--text);text-align:left;cursor:pointer;transition:border-color .18s,background .18s,transform .18s}
+#settings .ax-theme-choice:active,#settings .ax-settings-action:active{transform:scale(.985)}#settings .ax-theme-choice.selected{border-color:rgba(76,190,100,.7);background:rgba(76,190,100,.09);box-shadow:inset 0 0 0 1px rgba(76,190,100,.08)}
+#settings .ax-theme-choice-icon,#settings .ax-settings-action-icon{display:grid;place-items:center;flex:0 0 38px;width:38px;height:38px;border-radius:11px;background:rgba(76,190,100,.12);color:#38a95c}
+#settings .ax-theme-choice>span:nth-child(2),#settings .ax-settings-action>span:nth-child(2){display:grid;gap:4px;min-width:0}#settings .ax-theme-choice strong,#settings .ax-settings-action strong{font-size:12px;font-weight:760}#settings .ax-theme-choice small,#settings .ax-settings-action small{color:var(--muted);font-size:10px;line-height:1.4}
+#settings .ax-theme-choice>i{display:block;flex:0 0 19px;width:19px;height:19px;margin-left:auto;border:1.5px solid var(--muted);border-radius:50%}#settings .ax-theme-choice.selected>i{border:5px solid #4cd964}
+#settings .ax-theme-select-label{display:block;margin:13px 0 6px;color:var(--muted);font-size:10px;font-weight:700}
+#settings .ax-theme-native-select{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+#settings .ax-settings-description{min-height:30px;margin:7px 0 12px;color:var(--muted);font-size:10px;line-height:1.5}#settings .ax-settings-apply{width:100%;min-height:45px;border-radius:12px;font-size:12px;font-weight:760;transition:transform .18s,filter .18s}#settings .ax-settings-apply:active{transform:scale(.985)}
+#settings .ax-settings-actions{display:grid;gap:5px}#settings .ax-settings-action{display:flex;align-items:center;gap:11px;width:100%;min-height:74px;padding:10px 9px;border:1px solid transparent;border-radius:13px;background:transparent;color:var(--text);text-align:left;cursor:pointer;transition:background .18s,border-color .18s,transform .18s}
+#settings .ax-settings-action:hover{border-color:var(--line);background:rgba(76,190,100,.055)}#settings .ax-settings-action>b{display:grid;place-items:center;margin-left:auto;color:var(--muted)}#settings .ax-settings-action>b svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+#settings .ax-settings-footer{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:22px;color:var(--muted);font-size:10px}#settings .ax-settings-footer>span{width:6px;height:6px}#settings .ax-settings-footer i{font-style:normal}
+#settings button:focus-visible{outline:2px solid #7ce58d;outline-offset:3px}
+html[data-theme="dark"] #settings .ax-settings-card{background:#17251b;border-color:#304233}html[data-theme="dark"] #settings .ax-theme-choice{background:#101a13;border-color:#304233;color:#edf5ee}html[data-theme="dark"] #settings .ax-theme-choice.selected{background:rgba(76,217,100,.09);border-color:#4cbd68}html[data-theme="dark"] #settings .ax-settings-action:hover{background:rgba(76,217,100,.07)}
+@media(max-width:680px){#settings{padding-top:3px}#settings .ax-settings-hero{padding:21px 18px;margin-bottom:12px;border-radius:18px}#settings .ax-settings-hero-icon{flex-basis:47px;width:47px;height:47px;border-radius:14px}#settings .ax-settings-grid{grid-template-columns:1fr;gap:11px}#settings .ax-settings-card{padding:17px;border-radius:16px}#settings .ax-settings-card-heading{margin-bottom:15px}#settings .ax-theme-choice{min-height:64px}#settings .ax-settings-action{min-height:67px}}
+@media(prefers-reduced-motion:reduce){#settings .ax-settings-card *,#settings .ax-settings-hero *{transition:none!important;animation:none!important}}
+
 </style>
 <link rel="stylesheet" href="./monetization.css?v=20261107-2">
 </head>
@@ -2241,24 +2268,28 @@ html[data-theme="dark"] #settings .settings-control select{background:#202d23;bo
  <div class="panel monetization-pix-info" id="pixInstructions"><div class="monetization-loading">Carregando informações do Pix...</div></div>
 </section>
 <section id="settings" class="page">
- <div class="settings-header">
-  <div class="settings-heading-copy"><span class="settings-eyebrow">ALLXAP / PREFERÊNCIAS</span><h1>Configurações</h1><p>Personalize sua experiência e gerencie sua conta.</p></div>
-  <div class="settings-header-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-1.8 1.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5v.1h-2.6v-.1a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1-1.8-1.8.1-.1A1.7 1.7 0 0 0 8 15a1.7 1.7 0 0 0-1.5-1H6.4v-2.6h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1 1.8-1.8.1.1a1.7 1.7 0 0 0 1.9.3 1.7 1.7 0 0 0 1-1.5v-.1H15v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1 1.8 1.8-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.5 1h.1V14h-.1a1.7 1.7 0 0 0-1.5 1Z"/></svg></div>
- </div>
- <div class="settings-layout">
-  <section class="settings-card settings-appearance">
-   <div class="settings-card-heading"><span class="settings-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg></span><div><h2>Aparência</h2><p>Escolha como o aplicativo será exibido.</p></div></div>
-   <div class="settings-control"><label for="appearanceSelect">Tema do aplicativo</label><select id="appearanceSelect"><option value="system">Automático — acompanhar o celular</option><option value="light">Claro</option><option value="dark">Escuro</option></select><p class="settings-hint" id="appearanceDescription">O AllXap acompanha automaticamente o tema definido no sistema do aparelho.</p></div>
-   <button class="btn settings-save" id="saveAppearance" type="button">Aplicar aparência</button>
+ <div class="ax-settings-hero"><div><span class="ax-settings-kicker">ALLXAP <i></i> PREFERÊNCIAS</span><h1>Configurações</h1><p>Deixe o AllXap do seu jeito.</p></div><span class="ax-settings-hero-icon"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="8" cy="6" r="2"/><circle cx="15" cy="12" r="2"/><circle cx="10" cy="18" r="2"/></svg></span></div>
+ <div class="ax-settings-grid">
+  <section class="ax-settings-card">
+   <div class="ax-settings-card-heading"><span class="ax-settings-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg></span><div><h2>Aparência</h2><p>Escolha como o aplicativo aparece para você.</p></div></div>
+   <div class="ax-theme-options">
+    <button class="ax-theme-choice" type="button" data-theme-choice="system"><span class="ax-theme-choice-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4"/></svg></span><span><strong>Automático</strong><small>Segue o tema do celular</small></span><i></i></button>
+    <button class="ax-theme-choice" type="button" data-theme-choice="light"><span class="ax-theme-choice-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg></span><span><strong>Claro</strong><small>Visual claro e luminoso</small></span><i></i></button>
+    <button class="ax-theme-choice" type="button" data-theme-choice="dark"><span class="ax-theme-choice-icon"><svg viewBox="0 0 24 24"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5 8.5 8.5 0 1 0 20.5 14.5Z"/></svg></span><span><strong>Escuro</strong><small>Mais confortável à noite</small></span><i></i></button>
+   </div>
+   <label class="ax-theme-select-label" for="appearanceSelect">Tema selecionado</label><select id="appearanceSelect" class="ax-theme-native-select" aria-describedby="appearanceDescription"><option value="system">Automático — acompanhar o celular</option><option value="light">Claro</option><option value="dark">Escuro</option></select>
+   <p class="ax-settings-description" id="appearanceDescription">O AllXap acompanha automaticamente o tema definido no sistema do aparelho.</p><button class="btn ax-settings-apply" id="saveAppearance" type="button">Aplicar aparência</button>
   </section>
-  <section class="settings-card settings-options">
-   <div class="settings-card-heading"><span class="settings-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></span><div><h2>Conta e suporte</h2><p>Gerencie acesso, avisos e ajuda.</p></div></div>
-   <div class="settings-links">
-    <button class="settings-link" data-account-action="notifications" type="button"><span class="settings-link-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg></span><span><strong>Notificações</strong><small>Preferências de avisos</small></span><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></b></button>
-    <button class="settings-link" data-account-action="security" type="button"><span class="settings-link-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3m-4 4v3"/></svg></span><span><strong>Segurança</strong><small>Senha e acesso à conta</small></span><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></b></button>
-    <button class="settings-link" data-account-action="help" type="button"><span class="settings-link-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.6 9a2.5 2.5 0 1 1 4.5 1.5c-1.2 1.1-2.1 1.4-2.1 3m0 3h.01"/></svg></span><span><strong>Ajuda e suporte</strong><small>Dúvidas e informações sobre a plataforma</small></span><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></b></button>
+  <section class="ax-settings-card">
+   <div class="ax-settings-card-heading"><span class="ax-settings-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></span><div><h2>Conta e suporte</h2><p>Gerencie sua experiência e encontre ajuda.</p></div></div>
+   <div class="ax-settings-actions">
+    <button class="ax-settings-action" data-account-action="notifications" type="button"><span class="ax-settings-action-icon"><svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg></span><span><strong>Notificações</strong><small>Escolha quais avisos deseja receber</small></span><b><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></b></button>
+    <button class="ax-settings-action" data-account-action="security" type="button"><span class="ax-settings-action-icon"><svg viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3m-4 4v3"/></svg></span><span><strong>Segurança</strong><small>Senha e acesso à conta</small></span><b><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></b></button>
+    <button class="ax-settings-action" data-account-action="help" type="button"><span class="ax-settings-action-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 4.5 1.5c-1.2 1.1-2 1.4-2 3m0 3h.01"/></svg></span><span><strong>Ajuda e suporte</strong><small>Dúvidas e informações sobre a plataforma</small></span><b><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></b></button>
    </div>
   </section>
+ </div><div class="ax-settings-footer"><span></span>AllXap <i>·</i> Xapuri conectada</div>
+</section>
  </div>
 </section></main>
 <nav class="bottom" aria-label="Navegação principal"><div class="nav"><button class="active" data-page="home"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1V10Z"/></svg></span>Início</button><button data-page="explore"><span><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg></span>Explorar</button><button data-page="publish"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span>Anunciar</button><button data-page="activity"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h14v16H5zM8 8h8M8 12h8M8 16h5"/></svg></span>Atividade</button></div></nav>
@@ -2379,8 +2410,12 @@ window.addEventListener("load",()=>setTimeout(openListingFromUrl,900));
  if(!select||!description||!save||!window.__nexapTheme)return;
  const descriptions={system:"O AllXap acompanha automaticamente o tema definido no sistema do aparelho.",light:"O AllXap permanecerá no tema claro, mesmo que o celular esteja no modo escuro.",dark:"O AllXap permanecerá no tema escuro, mesmo que o celular esteja no modo claro."};
  select.value=window.__nexapTheme.get();
+ const choices=[...document.querySelectorAll("[data-theme-choice]")];
+ const syncChoices=()=>choices.forEach(button=>{const active=button.dataset.themeChoice===select.value;button.classList.toggle("selected",active);button.setAttribute("aria-pressed",String(active));});
+ choices.forEach(button=>button.addEventListener("click",()=>{select.value=button.dataset.themeChoice;select.dispatchEvent(new Event("change",{bubbles:true}));syncChoices();}));
+ syncChoices();
  description.textContent=descriptions[select.value];
- select.addEventListener("change",()=>description.textContent=descriptions[select.value]);
+ select.addEventListener("change",()=>{description.textContent=descriptions[select.value];syncChoices();});
  save.addEventListener("click",()=>{window.__nexapTheme.set(select.value);toast("Aparência atualizada.");});
 })();
 </script>
