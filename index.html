@@ -2273,6 +2273,71 @@ html[data-theme="dark"] #settings .ax-settings-card{background:#17251b;border-co
 }
 @media(prefers-reduced-motion:reduce){#home *,#home *:before,#home *:after,.page.active{animation:none!important;transition:none!important}}
 
+
+/* Consistent visual language across the remaining AllXap sections */
+#explore>.hero,#publish>.hero,#activity>.hero,#profile>.hero{position:relative;overflow:hidden;padding:26px 27px 24px;margin:10px 0 18px;border:1px solid var(--line);border-radius:20px;background:radial-gradient(ellipse at 95% 0,rgba(76,190,100,.12),transparent 45%),linear-gradient(125deg,var(--surface),var(--bg));box-shadow:0 10px 28px rgba(20,45,24,.055)}
+#explore>.hero .eyebrow,#publish>.hero .eyebrow,#activity>.hero .eyebrow,#profile>.hero .eyebrow{color:#329c50;font-size:9px;letter-spacing:.15em}
+#explore>.hero h1,#publish>.hero h1,#activity>.hero h1,#profile>.hero h1{margin:10px 0 8px;font-size:clamp(29px,5vw,39px);line-height:1.05;letter-spacing:-.055em;font-weight:800;color:var(--text)}
+#explore>.hero h1 span,#publish>.hero h1 span,#activity>.hero h1 span,#profile>.hero h1 span{color:#2b9a4d}
+#explore>.hero p,#publish>.hero p,#activity>.hero p,#profile>.hero p{max-width:590px;margin:0;color:var(--muted);font-size:12px;line-height:1.65}
+#explore .profile-search-box,#publish>.panel,#activity .panel,#profile>.panel{padding:19px;border:1px solid var(--line);border-radius:17px;background:var(--surface);box-shadow:0 7px 22px rgba(20,45,24,.045)}
+#explore .profile-search-box{margin:0 0 18px}
+#explore .profile-search-box .field{margin:0}
+#explore .profile-search-box .field label,#publish .field label,#profile .field label{color:var(--text);font-size:11px;font-weight:750}
+#explore .profile-search-row{display:flex;gap:8px}
+#explore .profile-search-row input{min-width:0;flex:1}
+#explore .toolbar,#explore .listing-controls{margin-top:14px}
+#explore .listing-controls{display:flex;align-items:center;justify-content:space-between;gap:12px}
+#explore .listing-controls select{min-height:39px;padding:0 11px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--text);font-size:10px}
+#publish>.panel{margin-top:0}
+#publish .notice,#profile .notice{padding:13px 14px;border:1px solid rgba(76,190,100,.18);border-radius:12px;background:rgba(76,190,100,.07);color:var(--muted);font-size:11px;line-height:1.6}
+#publish .field input,#publish .field textarea,#publish .field select,#profile .field input,#profile .field textarea,#profile .field select,#explore .profile-search-box input{border:1px solid var(--line);border-radius:11px;background:var(--bg);color:var(--text);padding:12px 13px;font-size:12px;transition:border-color .18s,box-shadow .18s}
+#publish .field input:focus,#publish .field textarea:focus,#publish .field select:focus,#profile .field input:focus,#profile .field textarea:focus,#profile .field select:focus,#explore .profile-search-box input:focus{border-color:#55b96c;box-shadow:0 0 0 3px rgba(76,190,100,.1)}
+#publish .field,#profile .field{gap:7px;margin:15px 0}
+#publish .form-grid{gap:0 14px}
+#publish .panel .btn,#profile .panel .btn,#activity .panel .btn{border-radius:11px}
+#activity>.section{padding:18px;border:1px solid var(--line);border-radius:17px;background:var(--surface);box-shadow:0 7px 22px rgba(20,45,24,.04)}
+#activity>.section+.section{margin-top:14px}
+#activity .section-head{margin-bottom:15px}
+#activity .section-head h2{font-size:16px;font-weight:780}
+#activity .backup-tools{padding:13px;border:1px solid var(--line);border-radius:12px;background:var(--bg)}
+#profile .auth-brand{position:relative;z-index:1;margin-bottom:18px}
+#profile .auth-brand img{width:43px;height:43px;border-radius:12px}
+#profile .auth-brand strong{font-size:16px}
+#profile .auth-brand small{font-size:10px}
+#profile #accountPanel{margin-top:0}
+#profile #accountPanelTitle{font-size:16px;font-weight:780}
+#profile .google-login{min-height:45px;border-radius:11px}
+#profile .auth-divider{color:var(--muted);font-size:10px}
+#listingDetail .detail-page-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:6px 0 15px}
+#listingDetail .listing-detail-content{overflow:hidden;border:1px solid var(--line);border-radius:18px;background:var(--surface);box-shadow:0 10px 30px rgba(20,45,24,.055)}
+#listingDetail .listing-detail-content h1{font-size:clamp(22px,4vw,31px);letter-spacing:-.04em}
+#listingDetail .listing-detail-content .btn{border-radius:11px}
+#download .download-hero{overflow:hidden;border:1px solid var(--line);border-radius:22px;box-shadow:0 14px 36px rgba(20,45,24,.08)}
+#download .download-details>div{border:1px solid var(--line);border-radius:15px;background:var(--surface);padding:17px}
+#download .download-details strong{font-size:13px}
+#home .empty,#explore .empty,#activity .empty{border:1px dashed var(--line);border-radius:15px;background:var(--surface);color:var(--muted)}
+#home .empty strong,#explore .empty strong,#activity .empty strong{color:var(--text)}
+/* Dark theme refinements */
+html[data-theme="dark"] #explore>.hero,html[data-theme="dark"] #publish>.hero,html[data-theme="dark"] #activity>.hero,html[data-theme="dark"] #profile>.hero{background:radial-gradient(ellipse at 95% 0,rgba(76,190,100,.1),transparent 45%),linear-gradient(125deg,#1a2b20,#141f17);border-color:#304233}
+html[data-theme="dark"] #explore .profile-search-box,html[data-theme="dark"] #publish>.panel,html[data-theme="dark"] #activity .panel,html[data-theme="dark"] #profile>.panel,html[data-theme="dark"] #activity>.section,html[data-theme="dark"] #listingDetail .listing-detail-content{background:#17251b;border-color:#304233}
+html[data-theme="dark"] #publish .field input,html[data-theme="dark"] #publish .field textarea,html[data-theme="dark"] #publish .field select,html[data-theme="dark"] #profile .field input,html[data-theme="dark"] #profile .field textarea,html[data-theme="dark"] #profile .field select,html[data-theme="dark"] #explore .profile-search-box input,html[data-theme="dark"] #explore .listing-controls select{background:#101a13;border-color:#304233;color:#edf5ee}
+html[data-theme="dark"] #publish .notice,html[data-theme="dark"] #profile .notice{background:rgba(76,217,100,.07);border-color:rgba(76,217,100,.17)}
+html[data-theme="dark"] #activity .backup-tools{background:#101a13;border-color:#304233}
+html[data-theme="dark"] #home .listing,html[data-theme="dark"] #explore .listing{background:#17251b;border-color:#304233}
+html[data-theme="dark"] #home .listing h3,html[data-theme="dark"] #explore .listing h3{color:#e5efe6}
+html[data-theme="dark"] #home .listing .tag,html[data-theme="dark"] #explore .listing .tag{background:rgba(76,217,100,.12);color:#91e1a1}
+@media(max-width:700px){
+ #explore>.hero,#publish>.hero,#activity>.hero,#profile>.hero{padding:20px 17px;margin:5px 0 13px;border-radius:17px}
+ #explore>.hero h1,#publish>.hero h1,#activity>.hero h1,#profile>.hero h1{font-size:29px}
+ #explore .profile-search-box,#publish>.panel,#activity .panel,#profile>.panel{padding:14px;border-radius:14px}
+ #activity>.section{padding:14px;border-radius:14px}
+ #publish .form-grid{grid-template-columns:1fr}
+ #explore .profile-search-row{flex-wrap:wrap}
+ #explore .profile-search-row .btn{min-width:84px}
+ #listingDetail .detail-page-top{margin-top:2px}
+}
+
 </style>
 <link rel="stylesheet" href="./monetization.css?v=20261107-2">
 </head>
