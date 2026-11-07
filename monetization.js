@@ -40,7 +40,7 @@
     const available = plans.filter(p => Number(p.monthly_price_cents) > 0);
     host.innerHTML = available.length ? available.map(p => `
       <article class="monetization-plan-card">
-       <span class="monetization-kicker">PLANO MENSAL</span><h3>${esc(p.name)}</h3>
+       <div class="monetization-plan-card-top"><span class="monetization-plan-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 7.5 12 3l8 4.5v9L12 21l-8-4.5z"/><path d="m4.5 7.8 7.5 4.4 7.5-4.4M12 12.2V21"/></svg></span><span class="monetization-kicker">PLANO MENSAL</span></div><h3>${esc(p.name)}</h3>
        <p>${esc(p.description || "Plano mensal para divulgar seu negócio no AllXap.")}</p>
        <div class="monetization-plan-price">${money(p.monthly_price_cents)} <small>/ mês</small></div>
        <button class="btn" type="button" data-buy-plan="${esc(p.id)}">Escolher plano</button>
@@ -49,10 +49,10 @@
   function renderPixInfo() {
     const host = $("pixInstructions"); if (!host) return;
     if (!settings?.pix_key) {
-      host.innerHTML = '<h3>Pagamento por Pix</h3><p>A chave Pix ainda não foi configurada. Assim que estiver disponível, você poderá solicitar seu plano por aqui.</p>';
+      host.innerHTML = '<div class="monetization-inline-heading"><span class="monetization-inline-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 7.5 10.5 4h3L17 7.5l3.5 3.5v2L17 16.5 13.5 20h-3L7 16.5 3.5 13v-2z"/><path d="m9 9 6 6m0-6-6 6"/></svg></span><h3>Pagamento por Pix</h3></div><p>A chave Pix ainda não foi configurada. Assim que estiver disponível, você poderá solicitar seu plano por aqui.</p>';
       return;
     }
-    host.innerHTML = '<h3>Dados para pagamento</h3><p>'+esc(settings.pix_instructions || "Faça o Pix e envie o comprovante para análise.")+'</p><div class="monetization-pix-key"><code id="allxapPixKey">'+esc(settings.pix_key)+'</code><button class="btn secondary" type="button" id="copyAllxapPix">Copiar chave</button></div><small class="sub">Favorecido: '+esc(settings.pix_receiver_name || "Não informado")+'</small>';
+    host.innerHTML = '<div class="monetization-inline-heading"><span class="monetization-inline-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 7.5 10.5 4h3L17 7.5l3.5 3.5v2L17 16.5 13.5 20h-3L7 16.5 3.5 13v-2z"/><path d="m9 9 6 6m0-6-6 6"/></svg></span><h3>Dados para pagamento</h3></div><p>'+esc(settings.pix_instructions || "Faça o Pix e envie o comprovante para análise.")+'</p><div class="monetization-pix-key"><code id="allxapPixKey">'+esc(settings.pix_key)+'</code><button class="btn secondary" type="button" id="copyAllxapPix">Copiar chave</button></div><small class="sub">Favorecido: '+esc(settings.pix_receiver_name || "Não informado")+'</small>';
     $("copyAllxapPix")?.addEventListener("click",()=>{navigator.clipboard?.writeText(settings.pix_key).then(()=>notify("Chave Pix copiada.")).catch(()=>notify("Não foi possível copiar a chave."));});
   }
   async function loadMyAccount() {
@@ -72,10 +72,10 @@
     const active = (subs.data||[]).find(x=>x.status==="active" && (!x.ends_at || new Date(x.ends_at)>new Date()));
     const activePlan = active && plans.find(p=>p.id===active.plan_id);
     $("mySubscription").innerHTML = active
-      ? '<h3>Seu plano: '+esc(activePlan?.name || active.plan_id)+'</h3><p>Ativo até '+date(active.ends_at)+'.</p>'
-      : '<h3>Você ainda não tem um plano ativo</h3><p>Escolha um plano mensal ou mantenha seus anúncios gratuitos.</p>';
+      ? '<div class="monetization-inline-heading"><span class="monetization-inline-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></svg></span><div><span class="monetization-kicker">ASSINATURA ATIVA</span><h3>Seu plano: '+esc(activePlan?.name || active.plan_id)+'</h3></div></div><p>Ativo até '+date(active.ends_at)+'.</p>'
+      : '<div class="monetization-inline-heading"><span class="monetization-inline-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3v18m9-9H3"/></svg></span><div><span class="monetization-kicker">SUA CONTA</span><h3>Você ainda não tem um plano ativo</h3></div></div><p>Escolha um plano mensal ou mantenha seus anúncios gratuitos.</p>';
     $("myPayments").innerHTML = (pays.data||[]).length ? pays.data.map(p=>`
-      <div class="monetization-row"><div class="monetization-row-main"><strong>${p.payment_type==="subscription"?"Plano mensal":"Anúncio em destaque"} · ${money(p.amount_cents)}</strong><small>${date(p.created_at)} · ${p.payment_type==="subscription"?"Plano "+esc(p.plan_id):esc(p.duration_days)+" dias"}</small></div><span class="monetization-status ${esc(p.status)}">${statusLabel[p.status]||esc(p.status)}</span></div>`).join("") : '<div class="monetization-empty">Nenhum pagamento enviado ainda.</div>';
+      <div class="monetization-row"><div class="monetization-row-main"><strong><span class="monetization-payment-icon" aria-hidden="true">${p.payment_type==="subscription"?"▣":"✦"}</span>${p.payment_type==="subscription"?"Plano mensal":"Anúncio em destaque"} · ${money(p.amount_cents)}</strong><small>${date(p.created_at)} · ${p.payment_type==="subscription"?"Plano "+esc(p.plan_id):esc(p.duration_days)+" dias"}</small></div><span class="monetization-status ${esc(p.status)}">${statusLabel[p.status]||esc(p.status)}</span></div>`).join("") : '<div class="monetization-empty">Nenhum pagamento enviado ainda.</div>';
     ownListings = ads.data || []; renderFeaturedOptions();
   }
   function renderFeaturedOptions() {
