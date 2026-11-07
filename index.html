@@ -2025,6 +2025,30 @@ html[data-theme="dark"] #explore .profile-search-box{box-shadow:none}
  .listing-cover{aspect-ratio:16/9}
 }
 
+
+/* Ajuste real da grade de categorias no celular: sem títulos cortados */
+.category-section{margin-bottom:20px}
+.category-section .section-head{margin-bottom:12px}
+.categories{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.categories .cat{width:100%;min-width:0;height:62px;min-height:62px;padding:10px 12px;gap:10px;overflow:hidden}
+.categories .cat .ico{flex:0 0 36px;width:36px;height:36px;min-width:36px;display:grid;place-items:center}
+.categories .cat .ico svg{width:19px;height:19px}
+.categories .cat b{min-width:0;white-space:normal;overflow-wrap:anywhere;font-size:12px;line-height:1.25}
+.categories.expanded{grid-template-columns:repeat(2,minmax(0,1fr))}
+.categories.expanded .cat{height:62px;flex-direction:row;justify-content:flex-start;gap:10px}
+.categories.expanded .cat small{display:none}
+@media(min-width:700px){
+ .categories{grid-template-columns:repeat(4,minmax(0,1fr))}
+ .categories.expanded{grid-template-columns:repeat(4,minmax(0,1fr))}
+ .categories.expanded .cat{height:66px;flex-direction:row;justify-content:flex-start}
+}
+@media(max-width:380px){
+ .categories{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ .categories .cat{height:58px;min-height:58px;padding:8px;gap:7px}
+ .categories .cat .ico{flex-basis:32px;width:32px;height:32px;min-width:32px}
+ .categories .cat b{font-size:11px}
+}
+
 </style>
 <link rel="stylesheet" href="./monetization.css?v=20261107-2">
 </head>
@@ -2034,9 +2058,9 @@ html[data-theme="dark"] #explore .profile-search-box{box-shadow:none}
 <main class="wrap" id="mainContent" tabindex="-1">
 <section id="home" class="page active">
 <div class="hero"><div class="eyebrow">O que você precisa hoje?</div><h1>Encontre tudo<br> <span>perto de você.</span></h1><p>Serviços, lojas, oportunidades e anúncios de Xapuri em um só lugar.</p><div class="search"><input id="searchInput" placeholder="Buscar serviços, produtos, vagas..." aria-label="Buscar anúncios"><button class="btn" id="searchBtn">Buscar</button></div></div>
-<div class="section category-section"><div class="section-head"><div><h2>Explore por categoria</h2><span class="sub">Encontre o que precisa em Xapuri</span></div><button class="category-toggle" id="toggleCategories" type="button" aria-expanded="false">Ver todas <span aria-hidden="true">⌄</span></button></div><div class="categories collapsed" id="categories">
+<div class="section category-section"><div class="section-head"><div><h2>Encontre por categoria</h2><span class="sub">Encontre o que precisa em Xapuri</span></div><button class="category-toggle" id="toggleCategories" type="button" aria-expanded="false">Ver todas <span aria-hidden="true">⌄</span></button></div><div class="categories collapsed" id="categories">
 <button class="cat" data-cat="Serviços"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 20 4 16l11-11a3 3 0 0 1 4 4L8 20ZM14 6l4 4"/></svg></span><b>Serviços</b><small>Profissionais locais</small></button><button class="cat" data-cat="Comércio"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10h18l-2-6H5l-2 6ZM5 10v10h14V10M9 20v-6h6v6M3 10a3 3 0 0 0 6 0 3 3 0 0 0 6 0 3 3 0 0 0 6 0"/></svg></span><b>Comércio</b><small>Lojas e negócios</small></button><button class="cat" data-cat="Classificados"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16l-1 13H5L4 7ZM9 9V6a3 3 0 0 1 6 0v3"/></svg></span><b>Classificados</b><small>Produtos e usados</small></button><button class="cat" data-cat="Entregas"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h11v10H3zM14 10h4l3 3v4h-7M7 18h.01M18 18h.01"/></svg></span><b>Entregas</b><small>Comodidade perto</small></button><button class="cat" data-cat="Empregos"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8h18v12H3zM8 8V5h8v3M3 13h18M10 13v2h4v-2"/></svg></span><b>Empregos</b><small>Vagas e trabalho</small></button><button class="cat" data-cat="Eventos"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18v16H3zM8 3v4M16 3v4M3 10h18M8 14h3M8 17h6"/></svg></span><b>Eventos</b><small>Agenda da cidade</small></button></div></div>
-<div class="section"><div class="section-head"><h2>Anúncios recentes</h2><button class="btn ghost" id="clearFilter" style="padding:7px 10px;font-size:10px">Ver todos</button></div><div class="toolbar" id="filters"><button class="chip active" data-filter="Todos">Todos</button><button class="chip" data-filter="Serviços">Serviços</button><button class="chip" data-filter="Comércio">Comércio</button><button class="chip" data-filter="Classificados">Classificados</button><button class="chip" data-filter="Empregos">Empregos</button><button class="chip" data-filter="Entregas">Entregas</button><button class="chip" data-filter="Eventos">Eventos</button></div><div class="listing-controls"><span class="sub" id="homeResultsCount">Anúncios disponíveis</span><select id="homeSort" aria-label="Ordenar anúncios"><option value="newest">Mais recentes</option><option value="oldest">Mais antigos</option><option value="priceAsc">Menor preço</option><option value="priceDesc">Maior preço</option></select></div><div class="grid" id="listingGrid" style="margin-top:12px"></div></div>
+<div class="section"><div class="section-head"><h2>Novidades em Xapuri</h2><button class="btn ghost" id="clearFilter" style="padding:7px 10px;font-size:10px">Ver todos</button></div><div class="toolbar" id="filters"><button class="chip active" data-filter="Todos">Todos</button><button class="chip" data-filter="Serviços">Serviços</button><button class="chip" data-filter="Comércio">Comércio</button><button class="chip" data-filter="Classificados">Classificados</button><button class="chip" data-filter="Empregos">Empregos</button><button class="chip" data-filter="Entregas">Entregas</button><button class="chip" data-filter="Eventos">Eventos</button></div><div class="listing-controls"><span class="sub" id="homeResultsCount">Anúncios disponíveis</span><select id="homeSort" aria-label="Ordenar anúncios"><option value="newest">Mais recentes</option><option value="oldest">Mais antigos</option><option value="priceAsc">Menor preço</option><option value="priceDesc">Maior preço</option></select></div><div class="grid" id="listingGrid" style="margin-top:12px"></div></div>
 <div class="footer-note">AllXap • Conectando pessoas e oportunidades em Xapuri</div>
 <div class="footer-note legal-links" style="margin-top:8px"><a href="./privacidade.html">Privacidade</a><span aria-hidden="true">·</span><a href="./termos.html">Termos de serviço</a><span aria-hidden="true">·</span><a href="./cookies.html">Cookies</a><span aria-hidden="true">·</span><a href="./reembolsos.html">Pagamentos e reembolsos</a><span aria-hidden="true">·</span><a href="./dados.html">Solicitações LGPD</a><span aria-hidden="true">·</span><a href="./acessibilidade.html">Acessibilidade</a></div>
 </section>
