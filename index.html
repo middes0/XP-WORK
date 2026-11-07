@@ -2362,6 +2362,63 @@ html[data-theme="dark"] #admin .admin-moderation-tabs button.active{background:#
 html[data-theme="dark"] #admin .admin-security-note{background:#17251b;border-color:#304233}
 @media(max-width:700px){#admin .admin-welcome{min-height:170px;padding:21px;border-radius:19px}#admin .admin-welcome-mark{flex-basis:76px;width:76px;height:76px;border-radius:22px}#admin .admin-overview-grid{gap:8px}#admin .admin-overview-card{padding:12px;border-radius:14px}#admin .admin-users-panel-head,#admin .admin-moderation-head{padding:14px}}
 
+
+/* Final polish — settings, listing detail and consistent icon motion */
+#settings .ax-settings-hero{position:relative;isolation:isolate;overflow:hidden;min-height:145px;padding:28px 30px;background:radial-gradient(ellipse at 100% 0,rgba(76,217,100,.19),transparent 42%),linear-gradient(120deg,var(--surface),var(--bg));box-shadow:0 12px 32px rgba(13,38,20,.07)}
+#settings .ax-settings-hero:after{content:"";position:absolute;z-index:-1;right:92px;top:-90px;width:230px;height:230px;border:1px solid rgba(76,190,100,.13);border-radius:50%;box-shadow:0 0 0 24px rgba(76,190,100,.025),0 0 0 48px rgba(76,190,100,.02)}
+#settings .ax-settings-hero-icon{box-shadow:0 8px 20px rgba(36,133,61,.1);transition:transform .25s,box-shadow .25s}
+#settings .ax-settings-hero:hover .ax-settings-hero-icon{transform:rotate(-7deg) scale(1.04);box-shadow:0 12px 25px rgba(36,133,61,.16)}
+#settings .ax-settings-card{position:relative;overflow:hidden;transition:transform .22s,border-color .22s,box-shadow .22s}
+#settings .ax-settings-card:before{content:"";position:absolute;inset:0 0 auto;height:2px;background:linear-gradient(90deg,transparent,#4cd964,transparent);opacity:.55}
+#settings .ax-settings-card:hover{transform:translateY(-2px);border-color:rgba(76,190,100,.35);box-shadow:0 14px 30px rgba(13,38,20,.08)}
+#settings .ax-theme-choice{min-height:72px;padding:12px 13px}
+#settings .ax-theme-choice:hover{border-color:rgba(76,190,100,.42);background:rgba(76,190,100,.045)}
+#settings .ax-theme-choice-icon,#settings .ax-settings-action-icon{transition:transform .2s,background .2s,color .2s}
+#settings .ax-theme-choice:hover .ax-theme-choice-icon,#settings .ax-settings-action:hover .ax-settings-action-icon{transform:scale(1.07);background:rgba(76,190,100,.18)}
+#settings .ax-settings-action{min-height:76px;padding:12px;border:1px solid transparent}
+#settings .ax-settings-action:hover{border-color:rgba(76,190,100,.24);background:rgba(76,190,100,.055)}
+#settings .ax-settings-action>b{transition:transform .2s,color .2s}
+#settings .ax-settings-action:hover>b{transform:translateX(3px);color:#35a95a}
+#settings .ax-settings-apply{box-shadow:0 7px 17px rgba(38,145,66,.16)}
+#settings .ax-settings-footer{padding:15px;border-top:1px solid var(--line)}
+#listingDetail .detail-page-top{margin:7px 0 17px}
+#listingDetail .detail-page-top .btn{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:0 14px;border-radius:11px}
+#listingDetail .detail-page-top .eyebrow{font-size:9px;font-weight:800;letter-spacing:.13em;color:var(--muted)}
+#listingDetail .listing-detail-content{padding:clamp(17px,3vw,30px);border-radius:21px;border:1px solid var(--line);background:var(--surface);box-shadow:0 12px 32px rgba(18,45,24,.07)}
+#listingDetail .listing-detail-content h1{margin:15px 0 9px;color:var(--text);font-size:clamp(25px,4vw,35px);line-height:1.12;letter-spacing:-.045em}
+#listingDetail .listing-detail-content .tag{border:1px solid rgba(76,190,100,.17);background:rgba(76,190,100,.1);color:#278b46}
+#listingDetail .listing-detail-description{color:var(--muted);font-size:14px;line-height:1.8}
+#listingDetail .listing-detail-info>div{padding:15px;border-radius:14px;background:var(--bg);border-color:var(--line)}
+#listingDetail .listing-detail-info small{font-size:10px;letter-spacing:.035em;text-transform:uppercase}
+#listingDetail .listing-detail-info strong{color:var(--text);font-size:13px}
+#listingDetail .listing-detail-price{font-size:clamp(24px,4vw,32px)!important;color:#26934b!important}
+#listingDetail .listing-gallery{margin:17px 0 20px;border-radius:16px;overflow:hidden}
+#listingDetail .listing-gallery img{width:100%;max-height:430px;object-fit:cover;transition:transform .35s}
+#listingDetail .listing-gallery img:hover{transform:scale(1.015)}
+#listingDetail .listing-detail-actions{gap:9px}
+#listingDetail .listing-detail-actions .btn{min-height:48px;border-radius:12px;font-weight:750}
+html[data-theme="dark"] #settings .ax-settings-hero{background:radial-gradient(ellipse at 100% 0,rgba(76,217,100,.12),transparent 42%),linear-gradient(120deg,#1a2b20,#142018);border-color:#304233}
+html[data-theme="dark"] #settings .ax-settings-card{background:linear-gradient(145deg,#19291f,#152219);border-color:#304233;box-shadow:0 10px 25px rgba(0,0,0,.13)}
+html[data-theme="dark"] #settings .ax-theme-choice{background:#101a13;border-color:#304233}
+html[data-theme="dark"] #settings .ax-theme-choice:hover{background:#19291f;border-color:#477b51}
+html[data-theme="dark"] #settings .ax-settings-action:hover{background:rgba(76,217,100,.07);border-color:#304233}
+html[data-theme="dark"] #settings .ax-settings-footer{border-color:#304233}
+html[data-theme="dark"] #listingDetail .listing-detail-content{background:#17251b;border-color:#304233;box-shadow:0 12px 32px rgba(0,0,0,.2)}
+html[data-theme="dark"] #listingDetail .listing-detail-content h1,html[data-theme="dark"] #listingDetail .listing-detail-info strong{color:#e9f2ea}
+html[data-theme="dark"] #listingDetail .listing-detail-info>div{background:#101a13;border-color:#304233}
+html[data-theme="dark"] #listingDetail .listing-detail-content .tag{background:rgba(76,217,100,.1);color:#94e1a5}
+@media(max-width:680px){
+ #settings .ax-settings-hero{min-height:125px;padding:21px 18px}
+ #settings .ax-settings-hero:after{right:-35px;top:-105px}
+ #settings .ax-settings-card:hover{transform:none}
+ #settings .ax-theme-choice{min-height:65px}
+ #listingDetail .listing-detail-content{padding:17px;border-radius:17px}
+ #listingDetail .listing-detail-info{gap:8px}
+ #listingDetail .listing-detail-info>div{padding:12px}
+ #listingDetail .listing-detail-actions .btn{min-height:46px}
+}
+@media(prefers-reduced-motion:reduce){#settings .ax-settings-card,#settings .ax-settings-hero-icon,#settings .ax-theme-choice-icon,#settings .ax-settings-action-icon,#settings .ax-settings-action>b,#listingDetail .listing-gallery img{transition:none!important}}
+
 </style>
 <link rel="stylesheet" href="./monetization.css?v=20261107-2">
 </head>
