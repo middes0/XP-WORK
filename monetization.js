@@ -27,7 +27,7 @@
   };
   async function loadPublicData() {
     const [p,s] = await Promise.all([
-      client.from("monetization_plans").select("*").eq("is_active",true).order("sort_order").order("name"),
+      client.from("monetization_plans").select("*").order("sort_order").order("name"),
       client.from("monetization_settings").select("*").eq("id",true).maybeSingle()
     ]);
     if (p.error) throw p.error;
@@ -48,11 +48,11 @@
       </article>`;
     const paid = available.map(p => `
       <article class="monetization-plan-card">
-       <div class="monetization-plan-card-top"><span class="monetization-plan-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 7.5 12 3l8 4.5v9L12 21l-8-4.5z"/><path d="m4.5 7.8 7.5 4.4 7.5-4.4M12 12.2V21"/></svg></span><span class="monetization-kicker">PLANO MENSAL</span></div><h3>${esc(p.name)}</h3>
+       <div class="monetization-plan-card-top"><span class="monetization-plan-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 7.5 12 3l8 4.5v9L12 21l-8-4.5z"/><path d="m4.5 7.8 7.5 4.4 7.5-4.4M12 12.2V21"/></svg></span><span class="monetization-kicker">${p.is_active ? "PLANO MENSAL" : "DISPONÍVEL EM BREVE"}</span></div><h3>${esc(p.name)}</h3>
        <p>${esc(p.description || "Plano mensal para divulgar seu negócio no AllXap.")}</p>
-       <div class="monetization-plan-price">${money(p.monthly_price_cents)} <small>/ mês</small></div>
+       <div class="monetization-plan-price">${p.is_active ? money(p.monthly_price_cents)+" <small>/ mês</small>" : "Preço em definição"}</div>
        <ul class="monetization-benefits"><li>${p.listing_limit == null ? "Anúncios comuns ilimitados" : "Até "+Number(p.listing_limit)+" anúncios comuns ativos"}</li><li>Vagas de emprego continuam gratuitas</li><li>Recebimento de contatos e candidaturas sem cobrança</li></ul>
-       <button class="btn" type="button" data-buy-plan="${esc(p.id)}">Escolher plano</button>
+       <button class="btn" type="button" ${p.is_active ? 'data-buy-plan="'+esc(p.id)+'"' : "disabled"}>${p.is_active ? "Escolher plano" : "Em breve"}</button>
       </article>`).join("");
     host.innerHTML = free + paid;
   }
