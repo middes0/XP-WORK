@@ -15,18 +15,19 @@
     host.innerHTML = '<div class="review-loading">Carregando avaliações...</div>';
     try {
       const {data: rows, error} = await db.from("listing_reviews")
-        .select("id,reviewer_id,rating,comment,created_at")
-        .eq("listing_id", listing.id).eq("status","published")
+         .select("id,reviewer_id,rating,comment,created_at,status")
+        .eq("listing_id", listing.id)
         .order("created_at",{ascending:false}).limit(50);
       if (error) throw error;
-      const reviews = rows || [];
+      const allRows = rows || [];
+      const reviews = allRows.filter(row=>row.status==="published");
       const avg = reviews.length ? reviews.reduce((sum,row)=>sum+row.rating,0)/reviews.length : 0;
       const current = user();
-      const own = current ? reviews.find(row=>row.reviewer_id===current.id) : null;
+      const own = current ? allRows.find(row=>row.reviewer_id===current.id) : null;
       const canReview = !!current && current.id !== listing.ownerId;
       host.innerHTML =
         '<div class="reviews-summary"><div><strong class="reviews-average">'+(reviews.length?avg.toFixed(1).replace(".",","):"—")+'</strong><span class="reviews-stars">'+stars(Math.round(avg))+'</span><small>'+(reviews.length+' '+(reviews.length===1?'avaliação':'avaliações'))+'</small></div><p>'+(reviews.length?'Média das avaliações publicadas.':'Este anúncio ainda não recebeu avaliações.')+'</p></div>'+
-        (canReview?'<form id="listingReviewForm" data-listing-id="'+esc(listing.id)+'" class="review-form"><h3>'+(own?'Editar sua avaliação':'Avaliar este anúncio')+'</h3><div class="field"><label for="reviewRating">Sua nota</label><select id="reviewRating" required><option value="">Escolha de 1 a 5 estrelas</option><option value="5" '+(own?.rating===5?'selected':'')+'>5 — Excelente</option><option value="4" '+(own?.rating===4?'selected':'')+'>4 — Muito bom</option><option value="3" '+(own?.rating===3?'selected':'')+'>3 — Bom</option><option value="2" '+(own?.rating===2?'selected':'')+'>2 — Regular</option><option value="1" '+(own?.rating===1?'selected':'')+'>1 — Ruim</option></select></div><div class="field"><label for="reviewComment">Comentário (opcional)</label><textarea id="reviewComment" maxlength="800" placeholder="Conte brevemente como foi sua experiência...">'+esc(own?.comment||"")+'</textarea></div><button class="btn" type="submit">'+(own?'Atualizar avaliação':'Enviar avaliação')+'</button></form>':(!current?'<p class="review-signin">Entre na sua conta para avaliar este anúncio.</p>':(current.id===listing.ownerId?'<p class="review-signin">Você não pode avaliar seu próprio anúncio.</p>':'')))+
+        (canReview&&own?.status==="hidden"?'<p class="review-signin">Sua avaliação está oculta pela moderação e não aparece publicamente.</p>':canReview?'<form id="listingReviewForm" data-listing-id="'+esc(listing.id)+'" class="review-form"><h3>'+(own?'Editar sua avaliação':'Avaliar este anúncio')+'</h3><div class="field"><label for="reviewRating">Sua nota</label><select id="reviewRating" required><option value="">Escolha de 1 a 5 estrelas</option><option value="5" '+(own?.rating===5?'selected':'')+'>5 — Excelente</option><option value="4" '+(own?.rating===4?'selected':'')+'>4 — Muito bom</option><option value="3" '+(own?.rating===3?'selected':'')+'>3 — Bom</option><option value="2" '+(own?.rating===2?'selected':'')+'>2 — Regular</option><option value="1" '+(own?.rating===1?'selected':'')+'>1 — Ruim</option></select></div><div class="field"><label for="reviewComment">Comentário (opcional)</label><textarea id="reviewComment" maxlength="800" placeholder="Conte brevemente como foi sua experiência...">'+esc(own?.comment||"")+'</textarea></div><button class="btn" type="submit">'+(own?'Atualizar avaliação':'Enviar avaliação')+'</button></form>':(!current?'<p class="review-signin">Entre na sua conta para avaliar este anúncio.</p>':(current.id===listing.ownerId?'<p class="review-signin">Você não pode avaliar seu próprio anúncio.</p>':'')))+
         '<div class="reviews-list">'+(reviews.length?reviews.map(row=>'<article class="review-item"><div class="review-item-head"><span class="reviews-stars" aria-label="'+row.rating+' de 5 estrelas">'+stars(row.rating)+'</span><time>'+new Date(row.created_at).toLocaleDateString("pt-BR")+'</time></div>'+(row.comment?'<p>'+esc(row.comment)+'</p>':'<p class="review-no-comment">Avaliação sem comentário.</p>')+(current&&current.id!==row.reviewer_id?'<button type="button" class="review-report" data-review-report="'+esc(row.id)+'">Denunciar avaliação</button>':'')+'</article>').join(""):'<div class="reviews-empty">As avaliações aparecerão aqui quando forem enviadas.</div>')+'</div>'+
         '<p class="review-disclaimer">As avaliações são enviadas por usuários e não representam, necessariamente, uma compra verificada.</p>';
     } catch (error) {
