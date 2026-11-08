@@ -2554,6 +2554,34 @@ html[data-theme="dark"] .nav button.active:before{background:#62d47a}
 #home .categories.expanded .cat{display:flex}
 </style>
 <link rel="stylesheet" href="./monetization.css?v=20261107-6">
+<style>
+.listing-reviews{margin:22px 24px 20px;padding:18px;border:1px solid var(--nexap-line);border-radius:16px;background:var(--nexap-canvas)}
+.listing-reviews h3{margin:0 0 13px;font-size:15px;color:var(--text)}
+.reviews-summary{display:flex;align-items:center;gap:14px;padding-bottom:15px;border-bottom:1px solid var(--nexap-line)}
+.reviews-summary>div{display:grid;gap:3px;min-width:75px}
+.reviews-average{font-size:29px;line-height:1;font-weight:850;color:var(--text)}
+.reviews-stars{color:#e6a52f;letter-spacing:1px;font-size:16px}
+.reviews-summary small,.reviews-summary p,.review-signin,.review-disclaimer{font-size:10px;color:var(--muted);margin:0;line-height:1.5}
+.review-form{display:grid;gap:10px;padding:16px 0;border-bottom:1px solid var(--nexap-line)}
+.review-form .field{margin:0}
+.review-form .field label{display:block;margin-bottom:6px;font-size:11px;font-weight:700}
+.review-form select,.review-form textarea{width:100%;min-height:42px;padding:10px;border:1px solid var(--nexap-line);border-radius:10px;background:var(--nexap-card);color:var(--text);font:inherit;font-size:12px}
+.review-form textarea{min-height:82px;resize:vertical}
+.review-form .btn{justify-self:start;min-height:39px;font-size:11px}
+.review-signin{padding:13px 0;border-bottom:1px solid var(--nexap-line)}
+.reviews-list{display:grid;gap:0}
+.review-item{padding:13px 0;border-bottom:1px solid var(--nexap-line)}
+.review-item-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.review-item time{font-size:9px;color:var(--muted)}
+.review-item p{font-size:12px;line-height:1.6;color:var(--text);margin:7px 0 0;white-space:pre-wrap;overflow-wrap:anywhere}
+.review-item .review-no-comment{color:var(--muted);font-style:italic}
+.review-report{margin-top:8px;padding:4px 0;border:0;background:transparent;color:var(--muted);font-size:10px;text-decoration:underline}
+.review-report:disabled{color:var(--nexap-green);text-decoration:none}
+.reviews-empty,.review-loading{padding:16px 0;color:var(--muted);font-size:11px}
+.review-disclaimer{padding-top:12px}
+html[data-theme="dark"] .listing-reviews{background:#202d23;border-color:#354638}
+@media(max-width:520px){.listing-reviews{margin:17px;padding:14px;border-radius:14px}.reviews-summary{gap:10px}.reviews-average{font-size:26px}}
+</style>
 </head>
 <body>
 <a class="skip-link" href="#mainContent">Pular para o conteúdo</a>
@@ -2722,12 +2750,14 @@ function openDetail(id){
    '<div><small>Preço</small><strong class="listing-detail-price">'+money(a.price)+'</strong></div>'+
    '<div><small>Categoria</small><strong>'+esc(a.category)+'</strong></div>'+
   '</div>'+
+  (a.owner==='remote'&&!/^(emprego|empregos|vagas)$/i.test(String(a.category||'').trim())?'<section id="listingReviews" class="listing-reviews" aria-label="Avaliações do anúncio"><div class="review-loading">Carregando avaliações...</div></section>':'')+
   '<div class="listing-detail-actions">'+
    '<button class="btn secondary" id="shareListing" data-id="'+esc(a.id)+'" type="button">Compartilhar anúncio</button>'+
    (valid?'<a class="btn" style="display:block;text-align:center;text-decoration:none" target="_blank" rel="noopener" href="https://wa.me/55'+phone+'?text='+encodeURIComponent('Olá! Vi seu anúncio no AllXap: '+a.title)+'">Conversar no WhatsApp</a>':'<div class="notice">O anunciante não informou um telefone válido.</div>')+
    (a.owner==='local'?'<button class="btn ghost" id="deleteAd" data-id="'+esc(a.id)+'" type="button">Excluir meu anúncio</button>':'')+
   '</div>';
  page('listingDetail');
+ if(a.owner==='remote'&&!/^(emprego|empregos|vagas)$/i.test(String(a.category||'').trim()))window.AllXap_RATINGS?.render(a);
  const track=document.getElementById('galleryTrack');
  if(track){
   const slides=[...track.children],counter=document.getElementById('galleryCounter');
@@ -2816,7 +2846,7 @@ window.addEventListener("load",()=>setTimeout(openListingFromUrl,900));
   const app=document.createElement("script");
   app.src="./supabase-client.js?v=20261107-1";
   app.onerror=()=>{if(state)state.textContent="Falha ao carregar o login";};
-  app.onload=()=>{const moderation=document.createElement("script");moderation.src="./admin-moderation.js?v=20261102-1";moderation.onerror=()=>console.error("AllXap: falha ao carregar módulo de moderação");moderation.onload=()=>{const feature=document.createElement("script");feature.src="./recruitment.js?v=20261030-1";feature.onerror=()=>console.error("AllXap: falha ao carregar módulo de empregos");feature.onload=()=>{const money=document.createElement("script");money.src="./monetization.js?v=20261107-5";money.onerror=()=>console.error("AllXap: falha ao carregar monetização");document.body.appendChild(money);};document.body.appendChild(feature);};document.body.appendChild(moderation);};
+  app.onload=()=>{const ratings=document.createElement("script");ratings.src="./ratings.js?v=20261108-1";ratings.onerror=()=>console.error("AllXap: falha ao carregar módulo de avaliações");ratings.onload=()=>{const moderation=document.createElement("script");moderation.src="./admin-moderation.js?v=20261102-1";moderation.onerror=()=>console.error("AllXap: falha ao carregar módulo de moderação");moderation.onload=()=>{const feature=document.createElement("script");feature.src="./recruitment.js?v=20261030-1";feature.onerror=()=>console.error("AllXap: falha ao carregar módulo de empregos");feature.onload=()=>{const money=document.createElement("script");money.src="./monetization.js?v=20261107-5";money.onerror=()=>console.error("AllXap: falha ao carregar monetização");document.body.appendChild(money);};document.body.appendChild(feature);};document.body.appendChild(moderation);};document.body.appendChild(ratings);};
   document.body.appendChild(app);
  }
  function loadSdk(url,fallback){
