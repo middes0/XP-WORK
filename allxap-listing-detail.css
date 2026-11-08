@@ -1,0 +1,68 @@
+/* ALLXAP — refinamento da página de detalhes dos anúncios */
+#listingDetail{max-width:980px;margin:0 auto}
+#listingDetail .detail-page-top{max-width:920px;margin:0 auto 10px;padding:10px 2px 14px}
+#listingDetail #backFromListing{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:0 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--text);font-size:12px;font-weight:700;transition:background .18s,border-color .18s,transform .18s}
+#listingDetail #backFromListing:hover{background:var(--surface-2);border-color:#b9dabc;transform:translateX(-2px)}
+#listingDetail .detail-page-top .eyebrow{font-size:10px;font-weight:800;letter-spacing:1.1px}
+#listingDetail .listing-detail-content{max-width:920px;padding:0 0 26px;overflow:hidden;border:1px solid var(--line);border-radius:22px;background:var(--surface);box-shadow:0 12px 38px rgba(24,50,29,.075)}
+#listingDetail .listing-detail-content>.tag{margin:25px 30px 0;padding:7px 12px;background:var(--green-soft);color:var(--green);font-size:10px;letter-spacing:.35px;text-transform:uppercase}
+#listingDetail .listing-detail-content>h1{margin:13px 30px 12px;color:var(--text);font-size:clamp(25px,4.2vw,36px);font-weight:820;line-height:1.13;letter-spacing:-1.05px}
+#listingDetail .listing-gallery{margin:0 0 23px;background:#111a13}
+#listingDetail .gallery-slide{aspect-ratio:16/8.5;background:#111a13}
+#listingDetail .gallery-slide img{object-fit:contain}
+#listingDetail .gallery-controls{left:18px;right:18px;bottom:16px}
+#listingDetail .gallery-arrow{width:40px;height:40px;backdrop-filter:blur(8px);transition:background .18s,transform .18s}
+#listingDetail .gallery-arrow:hover{background:#2e7d32;transform:scale(1.06)}
+#listingDetail .gallery-counter{padding:7px 12px;font-variant-numeric:tabular-nums;backdrop-filter:blur(8px)}
+#listingDetail .listing-detail-description{margin:0 30px 22px;padding:0 0 22px;border-bottom:1px solid var(--line);color:var(--muted);font-size:14px;line-height:1.8}
+#listingDetail .listing-detail-info{margin:0 30px 22px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+#listingDetail .listing-detail-info>div{position:relative;display:flex;flex-direction:column;justify-content:center;gap:6px;min-height:76px;padding:15px 17px;border:1px solid var(--line);border-radius:15px;background:var(--surface-2)}
+#listingDetail .listing-detail-info small{font-size:10px;font-weight:750;letter-spacing:.65px;text-transform:uppercase;color:var(--muted)}
+#listingDetail .listing-detail-info strong{font-size:13px;line-height:1.4;font-weight:720;color:var(--text)}
+#listingDetail .listing-detail-info>div:nth-child(3){background:var(--green-soft);border-color:#d6ead8}
+#listingDetail .listing-detail-price{font-size:clamp(20px,3vw,26px)!important;font-weight:850!important;color:var(--green)!important;letter-spacing:-.5px}
+#listingDetail .listing-detail-actions{margin:0 30px;display:flex;flex-direction:column;gap:10px;padding-top:20px;border-top:1px solid var(--line)}
+#listingDetail .listing-detail-actions .btn{display:flex;align-items:center;justify-content:center;min-height:48px;width:100%;border-radius:13px;font-size:12px;font-weight:750;text-decoration:none;transition:transform .18s,box-shadow .18s,background .18s}
+#listingDetail .listing-detail-actions .btn:hover{transform:translateY(-1px);box-shadow:0 5px 14px rgba(35,95,43,.12)}
+#listingDetail #shareListing{order:2;background:var(--surface);border:1px solid var(--line);color:var(--text)}
+#listingDetail .listing-detail-actions>a.btn{order:1;background:#218c45;color:#fff;box-shadow:0 5px 14px rgba(33,140,69,.17)}
+#listingDetail .listing-detail-actions .notice{order:1;margin:0;padding:13px 15px;border-radius:12px;background:var(--surface-2);color:var(--muted);font-size:11px;line-height:1.5}
+#listingDetail #deleteAd{order:3;min-height:40px;background:transparent;border:1px solid transparent;color:#b45353;box-shadow:none}
+#listingDetail .listing-reviews{margin:24px 30px 20px;border-radius:16px}
+html[data-theme="dark"] #listingDetail .listing-detail-content{background:var(--surface);border-color:var(--line);box-shadow:0 12px 38px rgba(0,0,0,.18)}
+html[data-theme="dark"] #listingDetail .listing-detail-content>.tag{background:#203c25;color:#9ee5a5}
+html[data-theme="dark"] #listingDetail .listing-detail-info>div{background:#1b2920;border-color:#344739}
+html[data-theme="dark"] #listingDetail .listing-detail-info>div:nth-child(3){background:#203c25;border-color:#365d3a}
+html[data-theme="dark"] #listingDetail .listing-detail-price{color:#83d98c!important}
+html[data-theme="dark"] #listingDetail .listing-detail-actions>a.btn{background:#287f3d}
+html[data-theme="dark"] #listingDetail #shareListing{background:#1b2920;border-color:#344739;color:var(--text)}
+html[data-theme="dark"] #listingDetail #backFromListing{background:#1b2920;border-color:#344739;color:var(--text)}
+@media(max-width:600px){
+ #listingDetail{width:100%;padding:0}
+ #listingDetail .detail-page-top{padding:6px 0 12px}
+ #listingDetail .detail-page-top .eyebrow{font-size:9px}
+ #listingDetail .listing-detail-content{border-radius:18px;padding-bottom:20px}
+ #listingDetail .listing-detail-content>.tag{margin:19px 18px 0}
+ #listingDetail .listing-detail-content>h1{margin:11px 18px 10px;font-size:25px;letter-spacing:-.65px}
+ #listingDetail .listing-gallery{margin-bottom:19px}
+ #listingDetail .gallery-slide{aspect-ratio:4/3}
+ #listingDetail .gallery-controls{left:11px;right:11px;bottom:11px}
+ #listingDetail .gallery-arrow{width:36px;height:36px}
+ #listingDetail .listing-detail-description{margin:0 18px 18px;padding-bottom:18px;font-size:13px;line-height:1.7}
+ #listingDetail .listing-detail-info{margin:0 18px 18px;gap:8px}
+ #listingDetail .listing-detail-info>div{min-height:68px;padding:11px 12px;border-radius:12px}
+ #listingDetail .listing-detail-info small{font-size:9px}
+ #listingDetail .listing-detail-info strong{font-size:12px}
+ #listingDetail .listing-detail-price{font-size:19px!important}
+ #listingDetail .listing-detail-actions{margin:0 18px;gap:8px;padding-top:16px}
+ #listingDetail .listing-detail-actions .btn{min-height:46px}
+ #listingDetail .listing-reviews{margin:18px 18px 16px;padding:14px}
+}
+@media(max-width:360px){
+ #listingDetail .listing-detail-info{grid-template-columns:1fr}
+ #listingDetail .listing-detail-content>h1{font-size:23px}
+ #listingDetail .detail-page-top .eyebrow{display:none}
+}
+@media(prefers-reduced-motion:reduce){
+ #listingDetail #backFromListing,#listingDetail .gallery-arrow,#listingDetail .listing-detail-actions .btn{transition:none!important}
+}
