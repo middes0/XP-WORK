@@ -442,8 +442,13 @@
     }
   });
 
-  function setListingsState(kind,message){
-    ["listingGrid","exploreGrid"].forEach(id=>{const target=el(id);if(!target)return;target.dataset.state=kind;if(kind==="loading")target.innerHTML='<div class="nexap-loading-state"><span class="nexap-spinner" aria-hidden="true"></span><span>Carregando anúncios...</span></div>';else if(kind==="error")target.innerHTML='<div class="nexap-error-state"><strong>Não foi possível carregar os anúncios</strong><span>'+esc(message||"Verifique sua conexão e tente novamente.")+'</span><button class="btn secondary" type="button" id="retryListings">Tentar novamente</button></div>';});
+  function setListingsState(kind){
+    ["listingGrid","exploreGrid"].forEach(id=>{
+      const target=el(id);if(!target)return;
+      target.dataset.state=kind;
+      if(kind==="loading")target.innerHTML='<div class="nexap-loading-state"><span class="nexap-spinner" aria-hidden="true"></span><span>Carregando anúncios...</span></div>';
+      else if(kind==="error")target.innerHTML='<div class="nexap-error-state"><strong>Não foi possível carregar os anúncios</strong><span>Ocorreu um problema ao buscar as publicações. Tente novamente em alguns instantes.</span><button class="btn secondary" type="button" id="retryListings">Tentar novamente</button></div>';
+    });
   }
   async function loadRemote() {
     setListingsState("loading");
@@ -534,7 +539,7 @@
     render();
     if (typeof window.openListingFromUrl === "function") window.openListingFromUrl();
   }
-  window.NEXAP_RETRY_LISTINGS=async()=>{try{await loadRemote();}catch(error){console.error("NEXAP: falha ao carregar anúncios",error);const detail=[error?.code,error?.message,error?.details,error?.hint].filter(Boolean).join(" — ").slice(0,500);setListingsState("error",detail||"Erro sem detalhes. Abra o console do navegador para diagnóstico.");}};
+  window.NEXAP_RETRY_LISTINGS=async()=>{try{await loadRemote();}catch(error){console.error("AllXap: falha ao carregar anúncios",error);setListingsState("error");}};
   document.addEventListener("click",event=>{if(!event.target.closest("#retryListings"))return;window.NEXAP_RETRY_LISTINGS();});
 
   async function refreshAccount(session) {
@@ -554,7 +559,7 @@
       window.XP_REMOTE.profile = null;
       await refreshAdminAccess(null);
       el("connectionState").textContent = "Entre ou cadastre-se";
-      try { await loadRemote(); } catch (error) { console.error("NEXAP: falha ao carregar anúncios",error); const detail=[error?.code,error?.message,error?.details,error?.hint].filter(Boolean).join(" — ").slice(0,500); setListingsState("error",detail||"Erro sem detalhes. Abra o console do navegador para diagnóstico."); }
+      try { await loadRemote(); } catch (error) { console.error("AllXap: falha ao carregar anúncios",error); setListingsState("error"); }
       return;
     }
 
@@ -573,9 +578,8 @@
     } catch (error) {
       // Falha de carregamento fica registrada no console, sem exibir aviso técnico
       // durante a apresentação inicial do site.
-      console.error("NEXAP: falha ao carregar anúncios", error);
-      const detail = [error?.code,error?.message,error?.details,error?.hint].filter(Boolean).join(" — ").slice(0,500);
-      setListingsState("error", detail || "Erro sem detalhes. Abra o console do navegador para diagnóstico.");
+      console.error("AllXap: falha ao carregar anúncios", error);
+      setListingsState("error");
     }
 
     try {
@@ -769,8 +773,16 @@
   }
 
   function showError(error) {
-    console.error("XP WORK Supabase:", error);
-    toast(error?.message || "Não foi possível concluir. Tente novamente.");
+    console.error("AllXap:", error);
+    const code = String(error?.code || "");
+    const message = code === "23505"
+      ? "Este registro já existe."
+      : code === "42501" || code === "PGRST301"
+        ? "Você não tem permissão para realizar esta ação."
+        : code === "PGRST000" || !navigator.onLine
+          ? "Não foi possível conectar. Verifique sua internet e tente novamente."
+          : "Não foi possível concluir esta ação. Tente novamente.";
+    toast(message);
   }
 
   el("googleSignInBtn").addEventListener("click", async () => {
