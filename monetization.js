@@ -56,11 +56,14 @@
        <p class="monetization-plan-description">${esc(p.description || (p.id === "loja" ? "Para lojas e negócios com grande volume de anúncios." : "Para quem precisa divulgar mais produtos e serviços."))}</p>
        <div class="monetization-plan-price">${p.is_active ? money(p.monthly_price_cents)+" <small>/ mês</small>" : '<span class="monetization-price-soon">Preço a definir</span>'}</div>
        <div class="monetization-plan-limit"><span>ANÚNCIOS COMUNS ATIVOS</span><strong>${p.listing_limit == null ? "Ilimitados" : "Até "+Number(p.listing_limit)}</strong></div>
-       <ul class="monetization-benefits">
+        <ul class="monetization-benefits">
         <li>${p.listing_limit == null ? "Anúncios comuns ilimitados" : "Até "+Number(p.listing_limit)+" anúncios comuns ativos"}</li>
-        <li>Vagas de emprego sem limite</li>
-        <li>Candidaturas e gestão de candidatos gratuitas</li>
+        ${p.id === "loja"
+          ? "<li>Página exclusiva da loja dentro do AllXap</li><li>Logo e capa personalizadas</li><li>Catálogo organizado por categorias</li><li>Controle de estoque</li><li>Horários de funcionamento</li><li>Botão direto para WhatsApp</li><li>Estatísticas de desempenho da loja</li><li>Maior destaque nas buscas</li>"
+          : "<li>Perfil profissional personalizado</li><li>Mais espaço para fotos nos anúncios</li><li>Estatísticas de visualizações e interessados</li><li>Maior destaque nas buscas</li><li>Ferramentas para organizar anúncios</li>"}
+        <li>Vagas de emprego e candidaturas gratuitas</li>
        </ul>
+       <span class="monetization-plan-note">Benefícios planejados. As funcionalidades ainda não estão disponíveis.</span>
        <button class="btn monetization-plan-cta" type="button" ${p.is_active ? 'data-buy-plan="'+esc(p.id)+'"' : 'disabled aria-disabled="true"'}>${p.is_active ? "Escolher plano" : "Disponível em breve"}</button>
       </article>`).join("");
     host.innerHTML = free + paid;
